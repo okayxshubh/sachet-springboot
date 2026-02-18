@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginRequest {
-    private String phone;
-    private String password;
+public class ArrestStatusRequest {
+    private Boolean arrested;
 }

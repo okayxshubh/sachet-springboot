@@ -4,10 +4,9 @@ import in.gov.cybercrime.sachet.dto.AuthResponse;
 import in.gov.cybercrime.sachet.dto.LoginRequest;
 import in.gov.cybercrime.sachet.dto.RegisterRequest;
 import in.gov.cybercrime.sachet.entity.User;
-import in.gov.cybercrime.sachet.masters.RoleMaster;
-import in.gov.cybercrime.sachet.repository.RoleRepository;
+import in.gov.cybercrime.sachet.entity.UserRole;
 import in.gov.cybercrime.sachet.repository.UserRepository;
-import in.gov.cybercrime.sachet.config.JwtUtil;
+import in.gov.cybercrime.sachet.utils.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,33 +14,31 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     public AuthService(UserRepository userRepository,
-                       RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
     public String register(RegisterRequest request) {
 
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+        if (userRepository.existsByPhone(request.getPhone())) {
+            throw new RuntimeException("Phone already exists");
         }
 
-        RoleMaster role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
         User user = new User();
-        user.setUsername(request.getUsername());
+        user.setName(request.getName());
+        user.setRank(request.getRank());
+        user.setPsName(request.getPsName());
+        user.setDistrict(request.getDistrict());
+        user.setPhone(request.getPhone());
+        user.setRole(UserRole.valueOf(request.getRole().toUpperCase()));
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setRole(role);
 
         userRepository.save(user);
 
@@ -50,15 +47,18 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid username or password");
+        User user = userRepository.findByPhone(request.getPhone())
+                .orElseThrow(() -> new RuntimeException("Invalid phone or password"));
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new RuntimeException("User is inactive");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().getRoleName());
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new RuntimeException("Invalid phone or password");
+        }
 
-        return new AuthResponse(token, user.getUsername(), user.getRole().getRoleName());
+        String token = jwtUtil.generateToken(user.getPhone(), user.getRole().name());
+
+        return new AuthResponse(token, user.getName(), user.getRole().name());
     }
 }

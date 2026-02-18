@@ -34,7 +34,7 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()  // login/register open
+                .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")
                 .anyRequest().authenticated()
         );

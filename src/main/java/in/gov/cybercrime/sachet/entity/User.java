@@ -1,6 +1,6 @@
 package in.gov.cybercrime.sachet.entity;
 
-import in.gov.cybercrime.sachet.masters.RoleMaster;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +11,28 @@ import lombok.Setter;
 @Setter
 public class User extends BaseEntity {
 
-    @Column(name = "username", unique = true, nullable = false, length = 100)
-    private String username;
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "rank")
+    private String rank;
+
+    @Column(name = "ps_name", nullable = false)
+    private String psName;
+
+    @Column(name = "district", nullable = false)
+    private String district;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private UserRole role;
 
     // BCrypt
+    @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    private RoleMaster role;
 
 }

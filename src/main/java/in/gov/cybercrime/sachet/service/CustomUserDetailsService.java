@@ -20,14 +20,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByPhone(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new UsernameNotFoundException("User inactive: " + username);
+        }
 
-
-        String roleName = user.getRole().getRoleName();
+        String roleName = user.getRole().name();
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getPhone(),
                 user.getPasswordHash(),
                 List.of(new SimpleGrantedAuthority("ROLE_" + roleName))
         );
