@@ -1,5 +1,6 @@
 package in.gov.cybercrime.sachet.controller;
 
+import in.gov.cybercrime.sachet.dto.CaseIdRequest;
 import in.gov.cybercrime.sachet.dto.GenericResponse;
 import in.gov.cybercrime.sachet.dto.NoticeRequest;
 import in.gov.cybercrime.sachet.entity.Notice;
@@ -17,19 +18,19 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
-    @GetMapping("/api/cases/{caseId}/notices")
-    public GenericResponse<List<Notice>> list(@PathVariable Long caseId) {
-        return GenericResponse.ok(noticeService.listByCase(caseId));
+    @PostMapping("/api/notices/list")
+    public GenericResponse<List<Notice>> list(@RequestBody CaseIdRequest request) {
+        return GenericResponse.ok(noticeService.listByCase(request.getCaseId()));
     }
 
-    @PostMapping("/api/cases/{caseId}/notices")
-    public GenericResponse<Notice> create(@PathVariable Long caseId, @RequestBody NoticeRequest request) {
-        return GenericResponse.ok(noticeService.create(caseId, request));
+    @PostMapping("/api/notices/create")
+    public GenericResponse<Notice> create(@RequestBody NoticeRequest request) {
+        return GenericResponse.ok(noticeService.create(request.getCaseId(), request));
     }
 
-    @PutMapping("/api/notices/{id}")
-    public GenericResponse<Notice> update(@PathVariable Long id, @RequestBody NoticeRequest request) {
-        return GenericResponse.ok(noticeService.update(id, request));
+    @PutMapping("/api/notices/update")
+    public GenericResponse<Notice> update(@RequestBody NoticeRequest request) {
+        return GenericResponse.ok(noticeService.update(request.getId(), request));
     }
 }
 

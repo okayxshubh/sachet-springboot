@@ -1,6 +1,7 @@
 package in.gov.cybercrime.sachet.controller;
 
 import in.gov.cybercrime.sachet.dto.GenericResponse;
+import in.gov.cybercrime.sachet.dto.IdRequest;
 import in.gov.cybercrime.sachet.dto.StatusUpdateRequest;
 import in.gov.cybercrime.sachet.dto.UserCreateRequest;
 import in.gov.cybercrime.sachet.dto.UserResponse;
@@ -31,20 +32,20 @@ public class UserController {
         return GenericResponse.ok(userService.createUser(request));
     }
 
-    @GetMapping("/{id}")
-    public GenericResponse<UserResponse> getUser(@PathVariable Long id) {
-        return GenericResponse.ok(userService.getUser(id));
+    @PostMapping("/get")
+    public GenericResponse<UserResponse> getUser(@RequestBody IdRequest request) {
+        return GenericResponse.ok(userService.getUser(request.getId()));
     }
 
-    @PutMapping("/{id}")
-    public GenericResponse<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        return GenericResponse.ok(userService.updateUser(id, request));
+    @PutMapping("/update")
+    public GenericResponse<UserResponse> updateUser(@RequestBody UserUpdateRequest request) {
+        return GenericResponse.ok(userService.updateUser(request.getId(), request));
     }
 
-    @PatchMapping("/{id}/status")
-    public GenericResponse<UserResponse> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
+    @PatchMapping("/status")
+    public GenericResponse<UserResponse> updateStatus(@RequestBody StatusUpdateRequest request) {
         return GenericResponse.ok(userService.updateStatus(
-                id,
+                request.getId(),
                 Boolean.TRUE.equals(request.getIsActive()),
                 request.getUpdatedBy()
         ));

@@ -4,6 +4,7 @@ import in.gov.cybercrime.sachet.dto.AssignCaseRequest;
 import in.gov.cybercrime.sachet.dto.CaseCreateRequest;
 import in.gov.cybercrime.sachet.dto.CaseUpdateRequest;
 import in.gov.cybercrime.sachet.dto.GenericResponse;
+import in.gov.cybercrime.sachet.dto.IdRequest;
 import in.gov.cybercrime.sachet.entity.CaseFile;
 import in.gov.cybercrime.sachet.service.CaseService;
 import org.springframework.web.bind.annotation.*;
@@ -38,19 +39,19 @@ public class CaseController {
         return GenericResponse.ok(caseService.createCase(request));
     }
 
-    @GetMapping("/{id}")
-    public GenericResponse<CaseFile> getCase(@PathVariable Long id) {
-        return GenericResponse.ok(caseService.getCase(id));
+    @PostMapping("/get")
+    public GenericResponse<CaseFile> getCase(@RequestBody IdRequest request) {
+        return GenericResponse.ok(caseService.getCase(request.getId()));
     }
 
-    @PutMapping("/{id}")
-    public GenericResponse<CaseFile> updateCase(@PathVariable Long id, @RequestBody CaseUpdateRequest request) {
-        return GenericResponse.ok(caseService.updateCase(id, request));
+    @PutMapping("/update")
+    public GenericResponse<CaseFile> updateCase(@RequestBody CaseUpdateRequest request) {
+        return GenericResponse.ok(caseService.updateCase(request.getId(), request));
     }
 
-    @PatchMapping("/{id}/assign")
-    public GenericResponse<CaseFile> assignCase(@PathVariable Long id, @RequestBody AssignCaseRequest request) {
-        return GenericResponse.ok(caseService.assignCase(id, request));
+    @PatchMapping("/assign")
+    public GenericResponse<CaseFile> assignCase(@RequestBody AssignCaseRequest request) {
+        return GenericResponse.ok(caseService.assignCase(request.getCaseId(), request));
     }
 }
 

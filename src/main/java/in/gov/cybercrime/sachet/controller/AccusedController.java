@@ -2,6 +2,7 @@ package in.gov.cybercrime.sachet.controller;
 
 import in.gov.cybercrime.sachet.dto.AccusedRequest;
 import in.gov.cybercrime.sachet.dto.ArrestStatusRequest;
+import in.gov.cybercrime.sachet.dto.CaseIdRequest;
 import in.gov.cybercrime.sachet.dto.GenericResponse;
 import in.gov.cybercrime.sachet.entity.Accused;
 import in.gov.cybercrime.sachet.service.AccusedService;
@@ -18,24 +19,24 @@ public class AccusedController {
         this.accusedService = accusedService;
     }
 
-    @GetMapping("/api/cases/{caseId}/accused")
-    public GenericResponse<List<Accused>> list(@PathVariable Long caseId) {
-        return GenericResponse.ok(accusedService.listByCase(caseId));
+    @PostMapping("/api/accused/list")
+    public GenericResponse<List<Accused>> list(@RequestBody CaseIdRequest request) {
+        return GenericResponse.ok(accusedService.listByCase(request.getCaseId()));
     }
 
-    @PostMapping("/api/cases/{caseId}/accused")
-    public GenericResponse<Accused> create(@PathVariable Long caseId, @RequestBody AccusedRequest request) {
-        return GenericResponse.ok(accusedService.create(caseId, request));
+    @PostMapping("/api/accused/create")
+    public GenericResponse<Accused> create(@RequestBody AccusedRequest request) {
+        return GenericResponse.ok(accusedService.create(request.getCaseId(), request));
     }
 
-    @PutMapping("/api/accused/{id}")
-    public GenericResponse<Accused> update(@PathVariable Long id, @RequestBody AccusedRequest request) {
-        return GenericResponse.ok(accusedService.update(id, request));
+    @PutMapping("/api/accused/update")
+    public GenericResponse<Accused> update(@RequestBody AccusedRequest request) {
+        return GenericResponse.ok(accusedService.update(request.getId(), request));
     }
 
-    @PatchMapping("/api/accused/{id}/arrested")
-    public GenericResponse<Accused> updateArrested(@PathVariable Long id, @RequestBody ArrestStatusRequest request) {
-        return GenericResponse.ok(accusedService.updateArrested(id, request));
+    @PatchMapping("/api/accused/arrested")
+    public GenericResponse<Accused> updateArrested(@RequestBody ArrestStatusRequest request) {
+        return GenericResponse.ok(accusedService.updateArrested(request.getId(), request));
     }
 }
 

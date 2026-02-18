@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AssignCaseRequest {
+    private Long caseId;
     private Long assignedToId;
     private String updatedBy;
 }

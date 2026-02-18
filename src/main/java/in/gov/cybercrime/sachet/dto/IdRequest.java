@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ArrestStatusRequest {
+public class IdRequest {
     private Long id;
-    private Boolean arrested;
-    private String updatedBy;
 }

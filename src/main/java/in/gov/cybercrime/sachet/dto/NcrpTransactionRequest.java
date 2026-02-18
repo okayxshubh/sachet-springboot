@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class NcrpTransactionRequest {
+    private Long id;
+    private Long caseId;
     private String ackNo;
     private String bankName;
     private String accountNo;

@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CaseDiaryRequest {
+    private Long id;
+    private Long caseId;
     private LocalDate diaryDate;
     private String content;
     private Integer version;

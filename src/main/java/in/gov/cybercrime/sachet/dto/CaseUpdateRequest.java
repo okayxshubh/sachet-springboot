@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CaseUpdateRequest {
+    private Long id;
     private String firNo;
     private Integer firYear;
     private String psName;

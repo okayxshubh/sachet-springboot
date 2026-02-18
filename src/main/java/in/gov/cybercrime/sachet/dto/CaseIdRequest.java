@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NoticeTransactionRequest {
-    private Long noticeId;
-    private Long transactionId;
+public class CaseIdRequest {
+    private Long caseId;
 }

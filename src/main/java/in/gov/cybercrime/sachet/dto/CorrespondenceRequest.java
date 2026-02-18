@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CorrespondenceRequest {
+    private Long id;
+    private Long caseId;
     private String type;
     private String subject;
     private LocalDate dateSent;

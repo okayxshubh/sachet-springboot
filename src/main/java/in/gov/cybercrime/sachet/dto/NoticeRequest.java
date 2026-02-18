@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class NoticeRequest {
+    private Long id;
+    private Long caseId;
     private String noticeId;
     private String noticeType;
     private String issuedTo;
