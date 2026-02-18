@@ -17,20 +17,21 @@ public class NoticeTransactionController {
         this.noticeTransactionService = noticeTransactionService;
     }
 
-    @GetMapping("/api/v1/notices/{noticeId}/transactions")
+    @GetMapping("/api/notices/{noticeId}/transactions")
     public GenericResponse<List<NoticeTransaction>> list(@PathVariable Long noticeId) {
         return GenericResponse.ok(noticeTransactionService.listByNotice(noticeId));
     }
 
-    @PostMapping("/api/v1/notices/{noticeId}/transactions")
+    @PostMapping("/api/notices/{noticeId}/transactions")
     public GenericResponse<NoticeTransaction> create(@PathVariable Long noticeId,
                                                      @RequestBody NoticeTransactionRequest request) {
         return GenericResponse.ok(noticeTransactionService.create(noticeId, request));
     }
 
-    @DeleteMapping("/api/v1/notices/{noticeId}/transactions/{transactionId}")
+    @DeleteMapping("/api/notices/{noticeId}/transactions/{transactionId}")
     public GenericResponse<String> delete(@PathVariable Long noticeId, @PathVariable Long transactionId) {
         noticeTransactionService.delete(noticeId, transactionId);
         return GenericResponse.ok("Mapping removed", "OK");
     }
 }
+

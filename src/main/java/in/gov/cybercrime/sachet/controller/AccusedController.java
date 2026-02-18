@@ -18,23 +18,24 @@ public class AccusedController {
         this.accusedService = accusedService;
     }
 
-    @GetMapping("/api/v1/cases/{caseId}/accused")
+    @GetMapping("/api/cases/{caseId}/accused")
     public GenericResponse<List<Accused>> list(@PathVariable Long caseId) {
         return GenericResponse.ok(accusedService.listByCase(caseId));
     }
 
-    @PostMapping("/api/v1/cases/{caseId}/accused")
+    @PostMapping("/api/cases/{caseId}/accused")
     public GenericResponse<Accused> create(@PathVariable Long caseId, @RequestBody AccusedRequest request) {
         return GenericResponse.ok(accusedService.create(caseId, request));
     }
 
-    @PutMapping("/api/v1/accused/{id}")
+    @PutMapping("/api/accused/{id}")
     public GenericResponse<Accused> update(@PathVariable Long id, @RequestBody AccusedRequest request) {
         return GenericResponse.ok(accusedService.update(id, request));
     }
 
-    @PatchMapping("/api/v1/accused/{id}/arrested")
+    @PatchMapping("/api/accused/{id}/arrested")
     public GenericResponse<Accused> updateArrested(@PathVariable Long id, @RequestBody ArrestStatusRequest request) {
         return GenericResponse.ok(accusedService.updateArrested(id, request));
     }
 }
+

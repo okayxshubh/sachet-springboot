@@ -11,4 +11,5 @@ public class CaseDiaryRequest {
     private LocalDate diaryDate;
     private String content;
     private Integer version;
+    private String updatedBy;
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/cases")
+@RequestMapping("/api/cases")
 public class CaseController {
 
     private final CaseService caseService;
@@ -53,3 +53,4 @@ public class CaseController {
         return GenericResponse.ok(caseService.assignCase(id, request));
     }
 }
+

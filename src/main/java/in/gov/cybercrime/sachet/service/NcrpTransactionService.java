@@ -46,6 +46,7 @@ public class NcrpTransactionService {
         if (request.getTransactionDate() != null) transaction.setTransactionDate(request.getTransactionDate());
         if (request.getAmount() != null) transaction.setAmount(request.getAmount());
         if (request.getLayer() != null) transaction.setLayer(request.getLayer());
+        if (request.getUpdatedBy() != null) transaction.setUpdatedBy(request.getUpdatedBy());
         return transactionRepository.save(transaction);
     }
 

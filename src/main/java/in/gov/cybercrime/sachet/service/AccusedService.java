@@ -42,12 +42,14 @@ public class AccusedService {
         if (request.getFatherName() != null) accused.setFatherName(request.getFatherName());
         if (request.getAddress() != null) accused.setAddress(request.getAddress());
         if (request.getArrested() != null) accused.setArrested(request.getArrested());
+        if (request.getUpdatedBy() != null) accused.setUpdatedBy(request.getUpdatedBy());
         return accusedRepository.save(accused);
     }
 
     public Accused updateArrested(Long id, ArrestStatusRequest request) {
         Accused accused = getAccused(id);
         accused.setArrested(Boolean.TRUE.equals(request.getArrested()));
+        if (request.getUpdatedBy() != null) accused.setUpdatedBy(request.getUpdatedBy());
         return accusedRepository.save(accused);
     }
 

@@ -17,18 +17,19 @@ public class NoticeReplyController {
         this.noticeReplyService = noticeReplyService;
     }
 
-    @GetMapping("/api/v1/notices/{noticeId}/replies")
+    @GetMapping("/api/notices/{noticeId}/replies")
     public GenericResponse<List<NoticeReply>> list(@PathVariable Long noticeId) {
         return GenericResponse.ok(noticeReplyService.listByNotice(noticeId));
     }
 
-    @PostMapping("/api/v1/notices/{noticeId}/replies")
+    @PostMapping("/api/notices/{noticeId}/replies")
     public GenericResponse<NoticeReply> create(@PathVariable Long noticeId, @RequestBody NoticeReplyRequest request) {
         return GenericResponse.ok(noticeReplyService.create(noticeId, request));
     }
 
-    @PutMapping("/api/v1/replies/{id}")
+    @PutMapping("/api/replies/{id}")
     public GenericResponse<NoticeReply> update(@PathVariable Long id, @RequestBody NoticeReplyRequest request) {
         return GenericResponse.ok(noticeReplyService.update(id, request));
     }
 }
+

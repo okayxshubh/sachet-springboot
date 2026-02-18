@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class ArrestStatusRequest {
     private Boolean arrested;
+    private String updatedBy;
 }

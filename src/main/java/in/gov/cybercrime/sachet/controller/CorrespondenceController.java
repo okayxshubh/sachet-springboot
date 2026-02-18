@@ -17,20 +17,21 @@ public class CorrespondenceController {
         this.correspondenceService = correspondenceService;
     }
 
-    @GetMapping("/api/v1/cases/{caseId}/correspondence")
+    @GetMapping("/api/cases/{caseId}/correspondence")
     public GenericResponse<List<Correspondence>> list(@PathVariable Long caseId) {
         return GenericResponse.ok(correspondenceService.listByCase(caseId));
     }
 
-    @PostMapping("/api/v1/cases/{caseId}/correspondence")
+    @PostMapping("/api/cases/{caseId}/correspondence")
     public GenericResponse<Correspondence> create(@PathVariable Long caseId,
                                                   @RequestBody CorrespondenceRequest request) {
         return GenericResponse.ok(correspondenceService.create(caseId, request));
     }
 
-    @PutMapping("/api/v1/correspondence/{id}")
+    @PutMapping("/api/correspondence/{id}")
     public GenericResponse<Correspondence> update(@PathVariable Long id,
                                                   @RequestBody CorrespondenceRequest request) {
         return GenericResponse.ok(correspondenceService.update(id, request));
     }
 }
+

@@ -15,4 +15,5 @@ public class NcrpTransactionRequest {
     private LocalDate transactionDate;
     private BigDecimal amount;
     private String layer;
+    private String updatedBy;
 }

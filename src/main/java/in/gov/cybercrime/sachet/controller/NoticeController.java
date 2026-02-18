@@ -17,18 +17,19 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
-    @GetMapping("/api/v1/cases/{caseId}/notices")
+    @GetMapping("/api/cases/{caseId}/notices")
     public GenericResponse<List<Notice>> list(@PathVariable Long caseId) {
         return GenericResponse.ok(noticeService.listByCase(caseId));
     }
 
-    @PostMapping("/api/v1/cases/{caseId}/notices")
+    @PostMapping("/api/cases/{caseId}/notices")
     public GenericResponse<Notice> create(@PathVariable Long caseId, @RequestBody NoticeRequest request) {
         return GenericResponse.ok(noticeService.create(caseId, request));
     }
 
-    @PutMapping("/api/v1/notices/{id}")
+    @PutMapping("/api/notices/{id}")
     public GenericResponse<Notice> update(@PathVariable Long id, @RequestBody NoticeRequest request) {
         return GenericResponse.ok(noticeService.update(id, request));
     }
 }
+

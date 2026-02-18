@@ -39,6 +39,7 @@ public class CaseDiaryService {
         if (request.getDiaryDate() != null) diary.setDiaryDate(request.getDiaryDate());
         if (request.getContent() != null) diary.setContent(request.getContent());
         if (request.getVersion() != null) diary.setVersion(request.getVersion());
+        if (request.getUpdatedBy() != null) diary.setUpdatedBy(request.getUpdatedBy());
         return caseDiaryRepository.save(diary);
     }
 

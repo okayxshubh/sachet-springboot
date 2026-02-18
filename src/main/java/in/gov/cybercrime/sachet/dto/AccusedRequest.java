@@ -10,4 +10,5 @@ public class AccusedRequest {
     private String fatherName;
     private String address;
     private Boolean arrested;
+    private String updatedBy;
 }

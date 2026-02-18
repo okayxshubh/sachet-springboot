@@ -58,7 +58,25 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(user.getPhone(), user.getRole().name());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getPhone(), user.getRole().name());
 
-        return new AuthResponse(token, user.getName(), user.getRole().name());
+        return new AuthResponse(token, user.getName(), user.getRole().name(), refreshToken);
+    }
+
+    public AuthResponse refreshToken(String refreshToken) {
+        if (!jwtUtil.validateRefreshToken(refreshToken)) {
+            throw new RuntimeException("Invalid or expired refresh token");
+        }
+
+        String phone = jwtUtil.extractUsername(refreshToken);
+        User user = userRepository.findByPhone(phone)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new RuntimeException("User is inactive");
+        }
+
+        String newAccessToken = jwtUtil.generateToken(user.getPhone(), user.getRole().name());
+        String newRefreshToken = jwtUtil.generateRefreshToken(user.getPhone(), user.getRole().name());
+        return new AuthResponse(newAccessToken, user.getName(), user.getRole().name(), newRefreshToken);
     }
 }

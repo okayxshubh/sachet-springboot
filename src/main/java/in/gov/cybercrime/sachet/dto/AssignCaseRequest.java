@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class AssignCaseRequest {
     private Long assignedToId;
+    private String updatedBy;
 }

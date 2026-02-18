@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StatusUpdateRequest {
-    private Boolean isActive;
-    private String updatedBy;
+public class RefreshTokenRequest {
+    private String refreshToken;
 }

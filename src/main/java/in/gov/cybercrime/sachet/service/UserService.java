@@ -65,6 +65,7 @@ public class UserService {
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         }
+        if (request.getUpdatedBy() != null) user.setUpdatedBy(request.getUpdatedBy());
 
         return toResponse(userRepository.save(user));
     }
@@ -72,6 +73,13 @@ public class UserService {
     public UserResponse updateStatus(Long id, boolean isActive) {
         User user = getUserEntity(id);
         user.setIsActive(isActive);
+        return toResponse(userRepository.save(user));
+    }
+
+    public UserResponse updateStatus(Long id, boolean isActive, String updatedBy) {
+        User user = getUserEntity(id);
+        user.setIsActive(isActive);
+        if (updatedBy != null) user.setUpdatedBy(updatedBy);
         return toResponse(userRepository.save(user));
     }
 

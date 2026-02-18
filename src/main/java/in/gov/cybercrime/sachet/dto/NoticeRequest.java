@@ -13,4 +13,5 @@ public class NoticeRequest {
     private String issuedTo;
     private LocalDate issuedDate;
     private String status;
+    private String updatedBy;
 }

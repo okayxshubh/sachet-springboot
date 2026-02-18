@@ -34,14 +34,14 @@ CREATE TABLE cases (
     district TEXT NOT NULL,                           -- District
     sections TEXT,                                    -- IPC sections
     summary TEXT NOT NULL,                            -- Case summary
-    created_by BIGINT NOT NULL,                       -- Creator user ID
-    assigned_to BIGINT NOT NULL,                      -- Assigned IO user ID
+    created_by_user BIGINT NOT NULL,                  -- Creator user ID
+    assigned_to_user BIGINT NOT NULL,                 -- Assigned IO user ID
     is_active BOOLEAN DEFAULT TRUE,                   -- Soft delete flag
     created_at TIMESTAMPTZ DEFAULT NOW(),             -- Creation timestamp
     CONSTRAINT fk_cases_created_by
-        FOREIGN KEY(created_by) REFERENCES users(id) ON DELETE RESTRICT,
+        FOREIGN KEY(created_by_user) REFERENCES users(id) ON DELETE RESTRICT,
     CONSTRAINT fk_cases_assigned_to
-        FOREIGN KEY(assigned_to) REFERENCES users(id) ON DELETE RESTRICT,
+        FOREIGN KEY(assigned_to_user) REFERENCES users(id) ON DELETE RESTRICT,
     CONSTRAINT uq_cases_fir UNIQUE(fir_no, fir_year, ps_name)
 );
 ```

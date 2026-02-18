@@ -17,18 +17,19 @@ public class CaseDiaryController {
         this.caseDiaryService = caseDiaryService;
     }
 
-    @GetMapping("/api/v1/cases/{caseId}/diaries")
+    @GetMapping("/api/cases/{caseId}/diaries")
     public GenericResponse<List<CaseDiary>> list(@PathVariable Long caseId) {
         return GenericResponse.ok(caseDiaryService.listByCase(caseId));
     }
 
-    @PostMapping("/api/v1/cases/{caseId}/diaries")
+    @PostMapping("/api/cases/{caseId}/diaries")
     public GenericResponse<CaseDiary> create(@PathVariable Long caseId, @RequestBody CaseDiaryRequest request) {
         return GenericResponse.ok(caseDiaryService.create(caseId, request));
     }
 
-    @PutMapping("/api/v1/diaries/{id}")
+    @PutMapping("/api/diaries/{id}")
     public GenericResponse<CaseDiary> update(@PathVariable Long id, @RequestBody CaseDiaryRequest request) {
         return GenericResponse.ok(caseDiaryService.update(id, request));
     }
 }
+

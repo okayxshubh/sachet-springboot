@@ -43,6 +43,7 @@ public class NoticeService {
         if (request.getIssuedTo() != null) notice.setIssuedTo(request.getIssuedTo());
         if (request.getIssuedDate() != null) notice.setIssuedDate(request.getIssuedDate());
         if (request.getStatus() != null) notice.setStatus(request.getStatus());
+        if (request.getUpdatedBy() != null) notice.setUpdatedBy(request.getUpdatedBy());
         return noticeRepository.save(notice);
     }
 

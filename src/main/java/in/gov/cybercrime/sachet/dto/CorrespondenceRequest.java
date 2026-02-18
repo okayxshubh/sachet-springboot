@@ -12,4 +12,5 @@ public class CorrespondenceRequest {
     private String subject;
     private LocalDate dateSent;
     private String replySummary;
+    private String updatedBy;
 }

@@ -14,4 +14,5 @@ public class CaseUpdateRequest {
     private String summary;
     private Long createdById;
     private Long assignedToId;
+    private String updatedBy;
 }

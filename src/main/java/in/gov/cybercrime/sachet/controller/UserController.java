@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -43,6 +43,11 @@ public class UserController {
 
     @PatchMapping("/{id}/status")
     public GenericResponse<UserResponse> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
-        return GenericResponse.ok(userService.updateStatus(id, Boolean.TRUE.equals(request.getIsActive())));
+        return GenericResponse.ok(userService.updateStatus(
+                id,
+                Boolean.TRUE.equals(request.getIsActive()),
+                request.getUpdatedBy()
+        ));
     }
 }
+

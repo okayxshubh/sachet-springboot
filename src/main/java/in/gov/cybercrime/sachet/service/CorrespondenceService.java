@@ -42,6 +42,7 @@ public class CorrespondenceService {
         if (request.getSubject() != null) correspondence.setSubject(request.getSubject());
         if (request.getDateSent() != null) correspondence.setDateSent(request.getDateSent());
         if (request.getReplySummary() != null) correspondence.setReplySummary(request.getReplySummary());
+        if (request.getUpdatedBy() != null) correspondence.setUpdatedBy(request.getUpdatedBy());
         return correspondenceRepository.save(correspondence);
     }
 

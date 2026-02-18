@@ -27,7 +27,7 @@ public class CaseService {
         return caseFileRepository.findByIsActiveTrue().stream()
                 .filter(c -> firNo.map(v -> v.equals(c.getFirNo())).orElse(true))
                 .filter(c -> firYear.map(v -> v.equals(c.getFirYear())).orElse(true))
-                .filter(c -> assignedToId.map(v -> v.equals(c.getAssignedTo().getId())).orElse(true))
+                .filter(c -> assignedToId.map(v -> v.equals(c.getAssignedToUser().getId())).orElse(true))
                 .toList();
     }
 
@@ -39,8 +39,8 @@ public class CaseService {
         caseFile.setDistrict(request.getDistrict());
         caseFile.setSections(request.getSections());
         caseFile.setSummary(request.getSummary());
-        caseFile.setCreatedBy(getUser(request.getCreatedById()));
-        caseFile.setAssignedTo(getUser(request.getAssignedToId()));
+        caseFile.setCreatedByUser(getUser(request.getCreatedById()));
+        caseFile.setAssignedToUser(getUser(request.getAssignedToId()));
         return caseFileRepository.save(caseFile);
     }
 
@@ -56,14 +56,16 @@ public class CaseService {
         if (request.getDistrict() != null) caseFile.setDistrict(request.getDistrict());
         if (request.getSections() != null) caseFile.setSections(request.getSections());
         if (request.getSummary() != null) caseFile.setSummary(request.getSummary());
-        if (request.getCreatedById() != null) caseFile.setCreatedBy(getUser(request.getCreatedById()));
-        if (request.getAssignedToId() != null) caseFile.setAssignedTo(getUser(request.getAssignedToId()));
+        if (request.getCreatedById() != null) caseFile.setCreatedByUser(getUser(request.getCreatedById()));
+        if (request.getAssignedToId() != null) caseFile.setAssignedToUser(getUser(request.getAssignedToId()));
+        if (request.getUpdatedBy() != null) caseFile.setUpdatedBy(request.getUpdatedBy());
         return caseFileRepository.save(caseFile);
     }
 
     public CaseFile assignCase(Long id, AssignCaseRequest request) {
         CaseFile caseFile = getCaseEntity(id);
-        caseFile.setAssignedTo(getUser(request.getAssignedToId()));
+        caseFile.setAssignedToUser(getUser(request.getAssignedToId()));
+        if (request.getUpdatedBy() != null) caseFile.setUpdatedBy(request.getUpdatedBy());
         return caseFileRepository.save(caseFile);
     }
 

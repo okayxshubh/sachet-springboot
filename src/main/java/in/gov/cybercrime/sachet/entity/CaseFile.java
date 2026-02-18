@@ -34,10 +34,10 @@ public class CaseFile extends BaseEntity {
     private String summary;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+    @JoinColumn(name = "created_by_user", nullable = false)
+    private User createdByUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_to", nullable = false)
-    private User assignedTo;
+    @JoinColumn(name = "assigned_to_user", nullable = false)
+    private User assignedToUser;
 }

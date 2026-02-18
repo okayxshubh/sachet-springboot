@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/audit-logs")
+@RequestMapping("/api/audit-logs")
 public class AuditLogController {
 
     private final AuditLogService auditLogService;
@@ -23,3 +23,4 @@ public class AuditLogController {
         return GenericResponse.ok(auditLogService.listLogs(includeInactive));
     }
 }
+

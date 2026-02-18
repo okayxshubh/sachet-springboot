@@ -3,6 +3,7 @@ package in.gov.cybercrime.sachet.controller;
 import in.gov.cybercrime.sachet.dto.AuthResponse;
 import in.gov.cybercrime.sachet.dto.GenericResponse;
 import in.gov.cybercrime.sachet.dto.LoginRequest;
+import in.gov.cybercrime.sachet.dto.RefreshTokenRequest;
 import in.gov.cybercrime.sachet.dto.RegisterRequest;
 import in.gov.cybercrime.sachet.dto.UserResponse;
 import in.gov.cybercrime.sachet.entity.User;
@@ -12,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -31,6 +32,11 @@ public class AuthController {
     @PostMapping("/login")
     public GenericResponse<AuthResponse> login(@RequestBody LoginRequest request) {
         return GenericResponse.ok("Login success", authService.login(request));
+    }
+
+    @PostMapping("/refresh")
+    public GenericResponse<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        return GenericResponse.ok("Token refreshed", authService.refreshToken(request.getRefreshToken()));
     }
 
     @PostMapping("/logout")
@@ -60,3 +66,4 @@ public class AuthController {
         return GenericResponse.ok(response);
     }
 }
+

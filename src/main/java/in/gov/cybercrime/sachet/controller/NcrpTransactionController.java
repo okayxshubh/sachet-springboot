@@ -17,20 +17,21 @@ public class NcrpTransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping("/api/v1/cases/{caseId}/transactions")
+    @GetMapping("/api/cases/{caseId}/transactions")
     public GenericResponse<List<NcrpTransaction>> list(@PathVariable Long caseId) {
         return GenericResponse.ok(transactionService.listByCase(caseId));
     }
 
-    @PostMapping("/api/v1/cases/{caseId}/transactions")
+    @PostMapping("/api/cases/{caseId}/transactions")
     public GenericResponse<NcrpTransaction> create(@PathVariable Long caseId,
                                                    @RequestBody NcrpTransactionRequest request) {
         return GenericResponse.ok(transactionService.create(caseId, request));
     }
 
-    @PutMapping("/api/v1/transactions/{id}")
+    @PutMapping("/api/transactions/{id}")
     public GenericResponse<NcrpTransaction> update(@PathVariable Long id,
                                                    @RequestBody NcrpTransactionRequest request) {
         return GenericResponse.ok(transactionService.update(id, request));
     }
 }
+

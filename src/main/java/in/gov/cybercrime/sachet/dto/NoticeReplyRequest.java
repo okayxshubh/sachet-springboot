@@ -11,4 +11,5 @@ public class NoticeReplyRequest {
     private LocalDate replyDate;
     private String summary;
     private String status;
+    private String updatedBy;
 }

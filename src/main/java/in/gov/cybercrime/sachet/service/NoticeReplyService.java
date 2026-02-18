@@ -39,6 +39,7 @@ public class NoticeReplyService {
         if (request.getReplyDate() != null) reply.setReplyDate(request.getReplyDate());
         if (request.getSummary() != null) reply.setSummary(request.getSummary());
         if (request.getStatus() != null) reply.setStatus(request.getStatus());
+        if (request.getUpdatedBy() != null) reply.setUpdatedBy(request.getUpdatedBy());
         return noticeReplyRepository.save(reply);
     }
 

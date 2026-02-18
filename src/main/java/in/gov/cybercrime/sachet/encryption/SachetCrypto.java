@@ -8,8 +8,8 @@ import java.util.Base64;
 public class SachetCrypto {
 
     private static final String ALGO = "AES/CBC/PKCS5Padding";
-    private static final byte[] KEY = "S@CH3T!K3Y*26#".getBytes(); // 16 bytes
-    private static final byte[] IV  = "A3S!V3CT0R@26#".getBytes(); // 16 bytes
+    private static final byte[] KEY = "S@CH3T!K3Y*26#01".getBytes(); // 16 bytes
+    private static final byte[] IV  = "A3S!V3CT0R@26#01".getBytes(); // 16 bytes
 
     public static String encrypt(String data) {
         try {

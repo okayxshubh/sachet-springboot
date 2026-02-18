@@ -13,4 +13,5 @@ public class UserUpdateRequest {
     private String phone;
     private String role;
     private String password;
+    private String updatedBy;
 }

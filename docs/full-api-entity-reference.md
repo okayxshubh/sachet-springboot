@@ -2,7 +2,7 @@
 
 ## Project Structure (Current)
 - `src/main/java/in/gov/cybercrime/sachet/config` - Security, JWT filter, CORS, web config
-- `src/main/java/in/gov/cybercrime/sachet/controller` - REST controllers (all `/api/v1` endpoints)
+- `src/main/java/in/gov/cybercrime/sachet/controller` - REST controllers (all `/api` endpoints)
 - `src/main/java/in/gov/cybercrime/sachet/dto` - Request/response models
 - `src/main/java/in/gov/cybercrime/sachet/entity` - JPA entities (BaseEntity + domain entities)
 - `src/main/java/in/gov/cybercrime/sachet/repository` - Spring Data repositories
@@ -17,8 +17,10 @@ Comment: This document matches the current code layout in the backend project.
 - `id: Long`
 - `createdAt: Instant`
 - `updatedAt: Instant`
+- `createdBy: String`
+- `updatedBy: String`
 - `isActive: Boolean`
-Comment: `isActive` is the soft-delete flag; list endpoints return active records by default.
+Comment: `createdBy` and `updatedBy` are stored as `created_by` and `updated_by` in the database.
 
 ## Entities and Fields
 
@@ -43,8 +45,8 @@ Comment: `isActive` is the soft-delete flag; list endpoints return active record
 - `district: String`
 - `sections: String`
 - `summary: String`
-- `createdBy: User`
-- `assignedTo: User`
+- `createdByUser: User` (column: `created_by_user`)
+- `assignedToUser: User` (column: `assigned_to_user`)
 - `createdAt: Instant`
 - `updatedAt: Instant`
 - `isActive: Boolean`
@@ -135,13 +137,18 @@ Comment: `isActive` is the soft-delete flag; list endpoints return active record
 - `isActive: Boolean`
 
 ## API Endpoints (What Each Does)
-Base path: `/api/v1`
+Base path: `/api`
 
 ### Auth
 - `POST /auth/register` - Register a user (name, rank, psName, district, phone, role, password).
-- `POST /auth/login` - Login with phone + password, returns JWT + user name + role.
+- `POST /auth/login` - Login with phone + password, returns access token + refresh token.
+- `POST /auth/refresh` - Use refresh token to rotate and return a new access token (and new refresh token).
 - `POST /auth/logout` - Client-side logout acknowledgement.
 - `GET /auth/me` - Returns the currently authenticated user's profile.
+
+### Crypto Helpers (Plaintext)
+- `POST /crypto/encrypt` - Encrypt any JSON or text and return raw encrypted text (`text/plain`).
+- `POST /crypto/decrypt` - Decrypt `{ payload }` or raw encrypted text and return JSON or string.
 
 ### Users
 - `GET /users` - List users (active by default). Query: `includeInactive=true` to include soft-deleted users.
@@ -197,5 +204,9 @@ Base path: `/api/v1`
 - `GET /audit-logs` - List audit logs (active by default). Query: `includeInactive=true`.
 
 ## Notes
+- All `/api/**` requests and responses are encrypted with `payload` (AES/CBC/PKCS5Padding), except `/api/crypto/**` which is plaintext for tooling.
 - Downloads for notices/chargesheets are client-side in React, no file download endpoints.
 - All list endpoints filter by `isActive = true` unless specified.
+- Automatic token refreshing is done by calling `/api/auth/refresh` before access expiry.
+- Update endpoints accept `updatedBy` in the request body to explicitly set the modifier.
+
