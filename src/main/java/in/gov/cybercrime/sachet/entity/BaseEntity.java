@@ -11,6 +11,7 @@ import java.time.Instant;
 @MappedSuperclass
 @Getter @Setter
 public abstract class BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +31,8 @@ public abstract class BaseEntity {
     @Column(nullable = false)
     private Boolean isActive = true;
 
+
+    // Auto takes care of the timestamps
     @PrePersist
     public void prePersist() {
         Instant now = Instant.now();
@@ -41,12 +44,14 @@ public abstract class BaseEntity {
         if (this.updatedBy == null) this.updatedBy = actor;
     }
 
+    // User Interacting with data
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = Instant.now();
         if (this.updatedBy == null) this.updatedBy = getCurrentActor();
     }
 
+    // User Interacting with data
     private String getCurrentActor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {

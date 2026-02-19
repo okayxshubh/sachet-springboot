@@ -6,11 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterRequest {
+
     private String name;
-    private String rank;
-    private String psName;
-    private String district;
     private String phone;
-    private String role;
     private String password;
+
+    private Long rankId;
+    private Long psId;
+    private Long roleId;
 }

@@ -7,6 +7,31 @@
 - Downloads: Notice, chargesheet, and related files are generated client-side in React (no download endpoints).
 Comment: Update endpoints accept `updatedBy` in the request body; if omitted, the authenticated user is used.
 
+
+## Masters (District, PoliceStations, Ranks, Roles)
+- `GET /api/masters/districts`        -- List all districts (active by default)
+- `GET /api/masters/police-stations`  -- List all police stations (active by default)
+- `GET /api/masters/ranks`            -- List all ranks (active by default)
+- `GET /api/masters/roles`            -- List all roles (active by default)
+
+Comment: These are lookup APIs used for dropdowns and validations in user/case forms.
+
+
+<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+</div>
+
+<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+</div>
+
+
+
+
 ## Auth
 - `POST /api/auth/login`  -- Login with phone/password, returns access + refresh tokens
 - `POST /api/auth/refresh` -- Exchange refresh token for a new access token (refresh rotation)

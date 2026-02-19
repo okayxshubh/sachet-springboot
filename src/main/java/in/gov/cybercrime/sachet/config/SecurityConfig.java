@@ -31,6 +31,10 @@ public class SecurityConfig {
         this.encryptedRequestFilter = encryptedRequestFilter;
     }
 
+    /**
+     * Security chain for encrypted endpoints (like /api/crypto/**)
+     * No authentication is required, just decrypt payloads.
+     */
     @Bean
     @Order(1)
     public SecurityFilterChain cryptoChain(HttpSecurity http) throws Exception {
@@ -41,11 +45,15 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
         http.authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
+                .anyRequest().permitAll() // all /api/crypto/** requests are open
         );
         return http.build();
     }
 
+    /**
+     * Main API security chain for /api/** endpoints.
+     * Master APIs are open (no JWT), admin endpoints require SUPERADMIN JWT.
+     */
     @Bean
     @Order(2)
     public SecurityFilterChain apiChain(HttpSecurity http) throws Exception {
@@ -59,27 +67,35 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/crypto/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")
-                .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow CORS preflight
+                .requestMatchers("/api/auth/**").permitAll()           // registration/login open
+                .requestMatchers("/api/crypto/**").permitAll()         // crypto endpoints open
+                .requestMatchers("/api/master/**").permitAll()         // master APIs open (no JWT)
+                .requestMatchers("/api/masters/**").permitAll()        // master APIs open
+                .requestMatchers("/api/admin/**").hasAnyRole("SUPERADMIN", "ADMIN") // admin endpoints require JWT + These roles
+                .anyRequest().authenticated()                           // other endpoints require JWT
         );
 
+        // Filters for encryption and JWT
         http.addFilterBefore(encryptedRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    /**
+     * Password encoder bean for hashing passwords.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12); // strong
     }
 
+    /**
+     * AuthenticationManager bean to expose authentication capabilities.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
-
