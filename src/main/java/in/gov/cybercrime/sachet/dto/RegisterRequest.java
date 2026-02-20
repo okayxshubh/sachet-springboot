@@ -13,5 +13,6 @@ public class RegisterRequest {
 
     private Long rankId;
     private Long psId;
+    private Long districtId;
     private Long roleId;
 }

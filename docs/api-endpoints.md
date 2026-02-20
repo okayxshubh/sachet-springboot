@@ -7,6 +7,10 @@
 - Downloads: Notice, chargesheet, and related files are generated client-side in React (no download endpoints).
 Comment: Update endpoints accept `updatedBy` in the request body; if omitted, the authenticated user is used.
 
+  
+## Crypto Helpers
+- `POST /api/crypto/encrypt` -- Encrypt any JSON or text and return raw encrypted text (plain response)
+- `POST /api/crypto/decrypt` -- Decrypt `{ payload }` or raw encrypted text and return the JSON or string
 
 ## Masters (District, PoliceStations, Ranks, Roles)
 - `GET /api/masters/districts`        -- List all districts (active by default)
@@ -17,31 +21,29 @@ Comment: Update endpoints accept `updatedBy` in the request body; if omitted, th
 Comment: These are lookup APIs used for dropdowns and validations in user/case forms.
 
 
-<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-</div>
-
-<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-</div>
-
-
-
-
 ## Auth
-- `POST /api/auth/login`  -- Login with phone/password, returns access + refresh tokens
-- `POST /api/auth/refresh` -- Exchange refresh token for a new access token (refresh rotation)
-- `GET /api/auth/me`      -- Get current user profile
-Comment: Access token is short-lived; refresh token enables automatic session renewal.
+- `POST /api/auth/register`          -- Register a new user (encrypted request/response)
+- `POST /api/auth/login`             -- Login with phone/password, returns access + refresh tokens
+- `POST /api/auth/refresh`           -- Exchange refresh token for a new access token (refresh rotation)
+- `GET /api/auth/me`                 -- Get current user profile (requires JWT)
+- `POST /api/auth/get-user-token`    -- Login to fetch user-specific encrypted token
+- `POST /api/auth/global-token`      -- Stateless global token endpoint (works for all clients, no user required)
+- Comment: Global token is stateless, can be used on multiple devices simultaneously, no session conflicts.
 
-## Crypto Helpers
-- `POST /api/crypto/encrypt` -- Encrypt any JSON or text and return raw encrypted text (plain response)
-- `POST /api/crypto/decrypt` -- Decrypt `{ payload }` or raw encrypted text and return the JSON or string
-Comment: These endpoints are plaintext for tooling/testing. Encrypt returns `text/plain` (no wrapper).
+
+
+<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+</div>
+
+<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+</div>
+
 
 ## Users
 - `GET /api/users`               -- List users (active by default)

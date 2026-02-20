@@ -10,8 +10,9 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    private static final String SECRET = "S@ch3tJWTKey#2026!"; // 16+ chars (better 32+)
-    private static final long EXPIRY_MS = 1000 * 60 * 60 * 24; // 24 hours
+    // Strong key with special characters, 32+ chars
+    private static final String SECRET = "S@ch3t#UIT_StUd3nts$JWT2026Key!!";
+    private static final long EXPIRY_MS = 1000L * 60 * 60 * 24; // 24 hours
 
     private static Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
@@ -22,9 +23,9 @@ public class JwtUtil {
         Date expiry = new Date(now.getTime() + EXPIRY_MS);
 
         return Jwts.builder()
-                .subject(username)
-                .issuedAt(now)
-                .expiration(expiry)
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -42,6 +43,7 @@ public class JwtUtil {
         }
     }
 
+    // Keeps your preferred syntax with verifyWith
     private static Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith((javax.crypto.SecretKey) getSigningKey())

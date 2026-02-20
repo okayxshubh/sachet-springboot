@@ -1,9 +1,13 @@
 package in.gov.cybercrime.sachet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import in.gov.cybercrime.sachet.config.JwtUtil;
 import in.gov.cybercrime.sachet.dto.*;
 import in.gov.cybercrime.sachet.encryption.SachetCrypto;
 import in.gov.cybercrime.sachet.entity.User;
+import in.gov.cybercrime.sachet.masters.PoliceStationMaster;
+import in.gov.cybercrime.sachet.masters.RankMaster;
+import in.gov.cybercrime.sachet.masters.RoleMaster;
 import in.gov.cybercrime.sachet.repository.UserRepository;
 import in.gov.cybercrime.sachet.service.AuthService;
 import org.springframework.security.core.Authentication;
@@ -26,11 +30,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public GenericResponse<String> register(@RequestBody EncryptedRequest request) {
+    public GenericResponse<String> register(@RequestBody String encrypted) {
         try {
-            String decryptedJson = SachetCrypto.decrypt(request.getPayload());
+            // decrypt the raw JSON string
+            String decryptedJson = SachetCrypto.decrypt(encrypted);
+
+            // convert decrypted JSON to DTO
             RegisterRequest registerRequest = objectMapper.readValue(decryptedJson, RegisterRequest.class);
+
+            // call AuthService to handle full registration
             String result = authService.register(registerRequest);
+
+            // encrypt the result message
             String encryptedData = SachetCrypto.encrypt(result);
 
             return GenericResponse.<String>builder()
@@ -52,12 +63,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public GenericResponse<String> login(@RequestBody EncryptedRequest request) {
+    public GenericResponse<String> login(@RequestBody String encrypted) {
         try {
-            String decryptedJson = SachetCrypto.decrypt(request.getPayload());
+            // decrypt the raw string directly
+            String decryptedJson = SachetCrypto.decrypt(encrypted);
+
+            // parse into LoginRequest
             LoginRequest loginRequest = objectMapper.readValue(decryptedJson, LoginRequest.class);
+
             AuthResponse authResponse = authService.login(loginRequest);
 
+            // encrypt the response
             String encryptedData = SachetCrypto.encrypt(objectMapper.writeValueAsString(authResponse));
 
             return GenericResponse.<String>builder()
@@ -79,22 +95,31 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public GenericResponse<String> refresh(@RequestBody EncryptedRequest request) {
+    public GenericResponse<String> refresh(@RequestBody String refreshToken) {
         try {
-            String decryptedJson = SachetCrypto.decrypt(request.getPayload());
-            RefreshTokenRequest refreshRequest = objectMapper.readValue(decryptedJson, RefreshTokenRequest.class);
-            AuthResponse authResponse = authService.refreshToken(refreshRequest.getRefreshToken());
+            // directly use the raw token
+            AuthResponse authResponse = authService.refreshToken(refreshToken);
 
-            String encryptedData = SachetCrypto.encrypt(objectMapper.writeValueAsString(authResponse));
-
+            // return the new access token in GenericResponse without encryption
             return GenericResponse.<String>builder()
                     .timestamp(LocalDateTime.now())
                     .status("OK")
                     .message("Token refreshed")
-                    .data(encryptedData)
+                    .data(authResponse.getToken())
                     .build();
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            // handle invalid/expired refresh token specifically
+            if (e.getMessage() != null && e.getMessage().toLowerCase().contains("invalid or expired refresh token")) {
+                return GenericResponse.<String>builder()
+                        .timestamp(LocalDateTime.now())
+                        .status("ERROR")
+                        .message("Invalid or expired refresh token")
+                        .data(null)
+                        .build();
+            }
+
+            // fallback for other exceptions
             e.printStackTrace();
             return GenericResponse.<String>builder()
                     .timestamp(LocalDateTime.now())
@@ -105,6 +130,7 @@ public class AuthController {
         }
     }
 
+    // profile info.
     @GetMapping("/me")
     public GenericResponse<String> me(Authentication authentication) {
         try {
@@ -150,9 +176,8 @@ public class AuthController {
         }
     }
 
-
     // NEW: Encrypted request, plain token response
-    @PostMapping("/get-token")
+    @PostMapping("/get-user-token")
     public GenericResponse<String> getToken(@RequestBody String encrypted) {
         try {
             // decrypt the raw string directly
@@ -180,6 +205,31 @@ public class AuthController {
                     .timestamp(LocalDateTime.now())
                     .status("ERROR")
                     .message("Invalid phone or password")
+                    .data(null)
+                    .build();
+        }
+    }
+
+    // NEW: Stateless global token endpoint
+    @PostMapping("/global-token")
+    public GenericResponse<String> globalToken() {
+        try {
+            // generate a JWT for a fixed identifier like "GLOBAL_USER"
+            String token = JwtUtil.generateToken("GLOBAL_USER");
+
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("Global token generated successfully")
+                    .data(token)  // only the raw token
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Error generating global token")
                     .data(null)
                     .build();
         }
