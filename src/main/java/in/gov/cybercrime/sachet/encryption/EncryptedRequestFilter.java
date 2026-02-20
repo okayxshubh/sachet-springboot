@@ -27,12 +27,17 @@ public class EncryptedRequestFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
+
+        // Skip filtering for GET, OPTIONS, /api/crypto/** and /api/auth/get-token
         if (!path.startsWith("/api/")) return true;
         if (path.startsWith("/api/crypto/")) return true;
+        if ("/api/auth/get-token".equals(path)) return true; // skip filter for get token
         if ("GET".equalsIgnoreCase(method)) return true;
         if ("OPTIONS".equalsIgnoreCase(method)) return true;
+
         return false;
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

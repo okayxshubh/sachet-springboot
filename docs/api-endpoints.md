@@ -35,7 +35,6 @@ Comment: These are lookup APIs used for dropdowns and validations in user/case f
 ## Auth
 - `POST /api/auth/login`  -- Login with phone/password, returns access + refresh tokens
 - `POST /api/auth/refresh` -- Exchange refresh token for a new access token (refresh rotation)
-- `POST /api/auth/logout` -- Logout
 - `GET /api/auth/me`      -- Get current user profile
 Comment: Access token is short-lived; refresh token enables automatic session renewal.
 

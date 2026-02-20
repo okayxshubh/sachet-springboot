@@ -9,6 +9,8 @@ import in.gov.cybercrime.sachet.service.AuthService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -18,80 +20,169 @@ public class AuthController {
     private final ObjectMapper objectMapper;
 
     public AuthController(AuthService authService, UserRepository userRepository) {
-        // Inject dependencies
         this.authService = authService;
         this.userRepository = userRepository;
         this.objectMapper = new ObjectMapper();
     }
 
     @PostMapping("/register")
-    public GenericResponse<String> register(@RequestBody RegisterRequest request) {
-        // Register a new user
-        return GenericResponse.ok(authService.register(request));
-    }
-
-    @PostMapping("/login")
-    public GenericResponse<AuthResponse> login(@RequestBody EncryptedRequest request) {
+    public GenericResponse<String> register(@RequestBody EncryptedRequest request) {
         try {
-            // Decrypt payload from client
             String decryptedJson = SachetCrypto.decrypt(request.getPayload());
+            RegisterRequest registerRequest = objectMapper.readValue(decryptedJson, RegisterRequest.class);
+            String result = authService.register(registerRequest);
+            String encryptedData = SachetCrypto.encrypt(result);
 
-            // Convert decrypted JSON into LoginRequest
-            LoginRequest loginRequest = objectMapper.readValue(decryptedJson, LoginRequest.class);
-
-            // Authenticate user and generate JWT
-            AuthResponse authResponse = authService.login(loginRequest);
-
-            return GenericResponse.ok("Login success", authResponse);
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("User registered successfully")
+                    .data(encryptedData)
+                    .build();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return GenericResponse.fail("Server error");
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Server error during registration")
+                    .data(null)
+                    .build();
+        }
+    }
+
+    @PostMapping("/login")
+    public GenericResponse<String> login(@RequestBody EncryptedRequest request) {
+        try {
+            String decryptedJson = SachetCrypto.decrypt(request.getPayload());
+            LoginRequest loginRequest = objectMapper.readValue(decryptedJson, LoginRequest.class);
+            AuthResponse authResponse = authService.login(loginRequest);
+
+            String encryptedData = SachetCrypto.encrypt(objectMapper.writeValueAsString(authResponse));
+
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("Login success")
+                    .data(encryptedData)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Server error during login")
+                    .data(null)
+                    .build();
         }
     }
 
     @PostMapping("/refresh")
-    public GenericResponse<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
-        // Refresh access token using refresh token
-        return GenericResponse.ok("Token refreshed", authService.refreshToken(request.getRefreshToken()));
-    }
+    public GenericResponse<String> refresh(@RequestBody EncryptedRequest request) {
+        try {
+            String decryptedJson = SachetCrypto.decrypt(request.getPayload());
+            RefreshTokenRequest refreshRequest = objectMapper.readValue(decryptedJson, RefreshTokenRequest.class);
+            AuthResponse authResponse = authService.refreshToken(refreshRequest.getRefreshToken());
 
-    @PostMapping("/logout")
-    public GenericResponse<String> logout() {
-        // Logout (frontend deletes token, backend may blacklist if implemented)
-        return GenericResponse.ok("Logout success", "OK");
+            String encryptedData = SachetCrypto.encrypt(objectMapper.writeValueAsString(authResponse));
+
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("Token refreshed")
+                    .data(encryptedData)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Server error during token refresh")
+                    .data(null)
+                    .build();
+        }
     }
 
     @GetMapping("/me")
-    public GenericResponse<UserResponse> me(Authentication authentication) {
+    public GenericResponse<String> me(Authentication authentication) {
+        try {
+            String phone = authentication.getName();
+            User user = userRepository.findByPhone(phone)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Get logged-in phone from JWT
-        String phone = authentication.getName();
+            String roleName = user.getRole() != null ? user.getRole().getRoleName() : null;
+            String psName = user.getPs() != null ? user.getPs().getPsName() : null;
+            String districtName = (user.getPs() != null && user.getPs().getDistrict() != null)
+                    ? user.getPs().getDistrict().getDistrictName()
+                    : null;
+            String rankName = user.getRank() != null ? user.getRank().getRankName() : null;
 
-        // Fetch user from DB
-        User user = userRepository.findByPhone(phone)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            UserResponse userDto = new UserResponse(
+                    user.getId(),
+                    user.getName(),
+                    rankName,
+                    psName,
+                    districtName,
+                    user.getPhone(),
+                    roleName,
+                    user.getIsActive()
+            );
 
-        // Flatten nested DTOs into primitive values for UserResponse
-        String roleName = user.getRole() != null ? user.getRole().getRoleName() : null;
-        String psName = user.getPs() != null ? user.getPs().getPsName() : null;
-        String districtName = (user.getPs() != null && user.getPs().getDistrict() != null)
-                ? user.getPs().getDistrict().getDistrictName()
-                : null;
-        String rankName = user.getRank() != null ? user.getRank().getRankName() : null;
+            String encryptedData = SachetCrypto.encrypt(objectMapper.writeValueAsString(userDto));
 
-        // Map User entity into UserResponse DTO (flat)
-        UserResponse userDto = new UserResponse(
-                user.getId(),
-                user.getName(),
-                rankName,
-                psName,
-                districtName,
-                user.getPhone(),
-                roleName,
-                user.getIsActive()
-        );
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("User details fetched successfully")
+                    .data(encryptedData)
+                    .build();
 
-        return GenericResponse.ok("User details", userDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Server error fetching user details")
+                    .data(null)
+                    .build();
+        }
     }
+
+
+    // NEW: Encrypted request, plain token response
+    @PostMapping("/get-token")
+    public GenericResponse<String> getToken(@RequestBody String encrypted) {
+        try {
+            // decrypt the raw string directly
+            String decryptedJson = SachetCrypto.decrypt(encrypted);
+
+            // clean up newlines or extra spaces
+            decryptedJson = decryptedJson.trim().replaceAll("\\r?\\n", "");
+
+            LoginRequest loginRequest = objectMapper.readValue(decryptedJson, LoginRequest.class);
+            AuthResponse authResponse = authService.login(loginRequest);
+
+            // encrypt the full AuthResponse object
+            String encryptedData = SachetCrypto.encrypt(objectMapper.writeValueAsString(authResponse));
+
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("Token Fetched Successfully")
+                    .data(encryptedData)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Invalid phone or password")
+                    .data(null)
+                    .build();
+        }
+    }
+
 }

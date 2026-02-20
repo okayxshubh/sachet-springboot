@@ -69,6 +69,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow CORS preflight
                 .requestMatchers("/api/auth/**").permitAll()           // registration/login open
+                .requestMatchers("/api/auth/get-token").permitAll()    // get token externally
                 .requestMatchers("/api/crypto/**").permitAll()         // crypto endpoints open
                 .requestMatchers("/api/master/**").permitAll()         // master APIs open (no JWT)
                 .requestMatchers("/api/masters/**").permitAll()        // master APIs open
