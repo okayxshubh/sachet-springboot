@@ -8,37 +8,54 @@ import in.gov.cybercrime.sachet.encryption.SachetCrypto;
 import in.gov.cybercrime.sachet.service.master_service.PoliceStationService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/master")
+@RequestMapping("/api/masters/police-stations")
 public class PoliceStationMasterController {
 
     private final PoliceStationService policeStationService;
+    private final ObjectMapper objectMapper;
 
-    public PoliceStationMasterController(PoliceStationService policeStationService) {
+    public PoliceStationMasterController(PoliceStationService policeStationService, ObjectMapper objectMapper) {
         this.policeStationService = policeStationService;
+        this.objectMapper = objectMapper;
     }
 
-    // Purpose: Fetch police stations using districtId (encrypted raw body)
-    @PostMapping("/police-stations/by-district")
-    public GenericResponse<List<PSResponse>> getPoliceStationsByDistrict(@RequestBody String encryptedBody) {
+    // Fetch police stations by district (encrypted request)
+    @PostMapping("/by-district")
+    public GenericResponse<String> getPoliceStationsByDistrict(@RequestBody String encryptedBody) {
         try {
-            // Purpose: Decrypt raw encrypted request body
+            // Decrypt incoming JSON
             String decryptedJson = SachetCrypto.decrypt(encryptedBody);
 
-            // Purpose: Convert decrypted JSON into DistrictIdRequest
-            ObjectMapper mapper = new ObjectMapper();
-            DistrictIdRequest request = mapper.readValue(decryptedJson, DistrictIdRequest.class);
+            // Map decrypted JSON to DistrictIdRequest
+            DistrictIdRequest request = objectMapper.readValue(decryptedJson, DistrictIdRequest.class);
 
-            // Purpose: Fetch PS list using districtId
-            List<PSResponse> response = policeStationService.getPoliceStationsByDistrict(request.getDistrictId());
+            // Fetch police stations for the district
+            List<PSResponse> psList = policeStationService.getPoliceStationsByDistrict(request.getDistrictId());
 
-            return GenericResponse.ok("Police stations fetched", response);
+            // Serialize and encrypt the list only
+            String jsonList = objectMapper.writeValueAsString(psList);
+            String encryptedData = SachetCrypto.encrypt(jsonList);
+
+            // Return outer GenericResponse with encrypted array in data
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("OK")
+                    .message("Police stations fetched successfully")
+                    .data(encryptedData)
+                    .build();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return GenericResponse.fail("Server error");
+            return GenericResponse.<String>builder()
+                    .timestamp(LocalDateTime.now())
+                    .status("ERROR")
+                    .message("Server error fetching police stations")
+                    .data(null)
+                    .build();
         }
     }
 }
