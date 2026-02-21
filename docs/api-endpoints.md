@@ -31,6 +31,9 @@ Comment: These are lookup APIs used for dropdowns and validations in user/case f
 - Comment: Global token is stateless, can be used on multiple devices simultaneously, no session conflicts.
 
 
+## Users
+- `GET api/users/by-rank-active` -- List users (along with activity status + acc to rank)
+
 
 <div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
   <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
@@ -43,10 +46,10 @@ Comment: These are lookup APIs used for dropdowns and validations in user/case f
   <span style="padding: 0 20px;">APIs Above this Are Verified</span>
   <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
 </div>
+
 
 
 ## Users
-- `GET /api/users`               -- List users (active by default)
 - `POST /api/users`              -- Create user
 - `GET /api/users/{id}`          -- Get user by ID
 - `PUT /api/users/{id}`          -- Update user (supports `updatedBy`)

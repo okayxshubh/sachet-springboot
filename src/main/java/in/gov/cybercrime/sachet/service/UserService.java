@@ -40,14 +40,19 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Purpose: Fetch all users
-    public List<UserResponse> getUsers(boolean includeInactive) {
-        List<User> users = includeInactive
-                ? userRepository.findAll()
-                : userRepository.findByIsActiveTrue();
 
-        return users.stream().map(this::toResponse).toList();
+    // Find Users by rank and is active
+    public List<UserResponse> getActiveUsersByRank(Long rankId) {
+
+        List<User> users =
+                userRepository.findByRank_IdAndIsActiveTrue(rankId);
+
+        return users.stream()
+                .map(this::toResponse)
+                .toList();
     }
+
+
 
     // Purpose: Fetch single user
     public UserResponse getUser(Long id) {
@@ -78,7 +83,6 @@ public class UserService {
         user.setRole(role);
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setIsActive(true);
-        user.setEnabled(true);
 
         return toResponse(userRepository.save(user));
     }
@@ -123,10 +127,6 @@ public class UserService {
 
         if (request.getIsActive() != null) {
             user.setIsActive(request.getIsActive());
-        }
-
-        if (request.getEnabled() != null) {
-            user.setEnabled(request.getEnabled());
         }
 
         if (request.getUpdatedBy() != null) {

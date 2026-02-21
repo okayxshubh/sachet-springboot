@@ -50,11 +50,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User inactive: " + username);
         }
 
-        // Block login if user is disabled
-        if (Boolean.FALSE.equals(user.getEnabled())) {
-            throw new UsernameNotFoundException("User disabled: " + username);
-        }
-
         // If role is missing, authentication must fail (prevents NullPointerException)
         if (user.getRole() == null || user.getRole().getRoleName() == null) {
             throw new UsernameNotFoundException("User role missing: " + username);

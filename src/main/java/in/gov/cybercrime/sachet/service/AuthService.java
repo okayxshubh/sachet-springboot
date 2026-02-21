@@ -72,9 +72,6 @@ public class AuthService {
         // Purpose: Hash password before saving
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
-        // Purpose: Enable user by default
-        user.setEnabled(true);
-
         // Purpose: Save user in DB
         userRepository.save(user);
 
@@ -91,11 +88,6 @@ public class AuthService {
         // Purpose: Block inactive user
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new RuntimeException("User inactive");
-        }
-
-        // Purpose: Block disabled user
-        if (Boolean.FALSE.equals(user.getEnabled())) {
-            throw new RuntimeException("User disabled");
         }
 
         // Purpose: Validate password using BCrypt
@@ -146,11 +138,6 @@ public class AuthService {
         // Purpose: Block inactive user
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new RuntimeException("User inactive");
-        }
-
-        // Purpose: Block disabled user
-        if (Boolean.FALSE.equals(user.getEnabled())) {
-            throw new RuntimeException("User disabled");
         }
 
         // Purpose: Ensure role exists

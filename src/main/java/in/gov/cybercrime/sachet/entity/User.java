@@ -37,6 +37,4 @@ public class User extends BaseEntity {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
-    @Column(name = "is_enabled", nullable = false)
-    private Boolean enabled = true;
 }
