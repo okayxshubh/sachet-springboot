@@ -65,13 +65,15 @@ ON CONFLICT (phone) DO NOTHING;
 -- ==============================
 -- Cases
 -- ==============================
-INSERT INTO cases (id, fir_no, fir_year, ps_name, district, sections, summary, created_by_user, assigned_to_user, is_active, created_by, updated_by, created_at, updated_at)
+INSERT INTO cases
+(fir_no,fir_year,ps_name,district,sections,summary,case_owner,assigned_to_user,is_active,created_by,updated_by,created_at,updated_at)
 VALUES
-  (1, '12', 2026, 'Sadar PS', 'Shimla', '420, 406', 'Online fraud case', 1, 2, TRUE, 'system', 'system', '2026-02-18 10:10:00', '2026-02-18 10:10:00'),
-  (2, '15', 2026, 'Lakkar Bazar PS', 'Shimla', '66D, 43', 'Identity theft case', 1, 3, TRUE, 'system', 'system', '2026-02-18 10:12:00', '2026-02-18 10:12:00'),
-  (3, '18', 2026, 'Boileauganj PS', 'Shimla', '420, 120B', 'Loan app scam', 2, 4, TRUE, 'system', 'system', '2026-02-18 10:14:00', '2026-02-18 10:14:00'),
-  (4, '21', 2026, 'Dhalli PS', 'Shimla', '406, 467', 'Bank transfer fraud', 2, 1, TRUE, 'system', 'system', '2026-02-18 10:16:00', '2026-02-18 10:16:00')
-ON CONFLICT (id) DO NOTHING;
+('12',2026,'Sadar PS','Shimla','420, 406','Online fraud case',1,2,TRUE,'system','system','2026-02-18 10:10:00','2026-02-18 10:10:00'),
+('15',2026,'Lakkar Bazar PS','Shimla','66D, 43','Identity theft case',1,3,TRUE,'system','system','2026-02-18 10:12:00','2026-02-18 10:12:00'),
+('18',2026,'Boileauganj PS','Shimla','420, 120B','Loan app scam',2,4,TRUE,'system','system','2026-02-18 10:14:00','2026-02-18 10:14:00'),
+('21',2026,'Dhalli PS','Shimla','406, 467','Bank transfer fraud',2,1,TRUE,'system','system','2026-02-18 10:16:00','2026-02-18 10:16:00')
+ON CONFLICT (fir_no) DO NOTHING;
+
 
 -- ==============================
 -- Accused

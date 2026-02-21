@@ -1,6 +1,7 @@
 package in.gov.cybercrime.sachet.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import in.gov.cybercrime.sachet.masters.PoliceStationMaster;
 import in.gov.cybercrime.sachet.masters.RankMaster;
 import in.gov.cybercrime.sachet.masters.RoleMaster;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends BaseEntity {
 
     @Column(name = "name", nullable = false)
@@ -32,9 +34,7 @@ public class User extends BaseEntity {
     @JoinColumn(name = "role_id", nullable = false)
     private RoleMaster role;
 
-    // BCrypt hashed password
     @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
-
 }

@@ -14,12 +14,13 @@ import in.gov.cybercrime.sachet.repository.master_repos.RankMasterRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.RoleMasterRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -40,8 +41,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     // Find Users by rank and is active
+    @Transactional(readOnly = true)
     public List<UserResponse> getActiveUsersByRank(Long rankId) {
 
         List<User> users =
@@ -52,9 +53,8 @@ public class UserService {
                 .toList();
     }
 
-
-
-    // Purpose: Fetch single user
+    // Purpose: Fetch single user (works for active and inactive)
+    @Transactional(readOnly = true)
     public UserResponse getUser(Long id) {
         return toResponse(getUserEntity(id));
     }
@@ -140,9 +140,14 @@ public class UserService {
     }
 
     // Purpose: Soft delete user
-    public void deleteUser(Long id) {
-        User user = getUserEntity(id);
+    public void deleteUser(Long id, String updatedBy) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         user.setIsActive(false);
+        user.setUpdatedBy(updatedBy);
+        user.setUpdatedAt(Instant.now());
+
         userRepository.save(user);
     }
 
@@ -155,13 +160,13 @@ public class UserService {
     }
 
     // Purpose: Fetch user entity
+    @Transactional(readOnly = true)
     private User getUserEntity(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    // Purpose: Convert entity to response DTO
-
+    // Convert entity to response DTO
     private UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getId(),
@@ -176,5 +181,4 @@ public class UserService {
                 user.getIsActive()
         );
     }
-
 }

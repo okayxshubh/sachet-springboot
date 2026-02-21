@@ -1,5 +1,6 @@
 package in.gov.cybercrime.sachet.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,15 +17,19 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @Column(nullable = true, updatable = false)
     private Instant createdAt;
 
+    @JsonIgnore
     @Column(nullable = true)
     private Instant updatedAt;
 
+    @JsonIgnore
     @Column(name = "created_by", nullable = true, updatable = false)
     private String createdBy;
 
+    @JsonIgnore
     @Column(name = "updated_by", nullable = true)
     private String updatedBy;
 

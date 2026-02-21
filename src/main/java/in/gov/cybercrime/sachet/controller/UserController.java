@@ -117,7 +117,7 @@ public class UserController {
     }
 
     // Purpose: Update user (encrypted body)
-    @PostMapping("/update")
+    @PutMapping("/update")
     public GenericResponse<String> updateUser(@RequestBody String encryptedBody) {
 
         try {
@@ -163,9 +163,10 @@ public class UserController {
         try {
             String json = SachetCrypto.decrypt(encryptedBody);
 
-            IdRequest request = objectMapper.readValue(json, IdRequest.class);
+            DeleteUserRequest request =
+                    objectMapper.readValue(json, DeleteUserRequest.class);
 
-            userService.deleteUser(request.getId());
+            userService.deleteUser(request.getId(), request.getUpdatedBy());
 
             String encryptedData =
                     SachetCrypto.encrypt("User deactivated successfully");
@@ -181,7 +182,6 @@ public class UserController {
             return GenericResponse.fail("Server error");
         }
     }
-
 
     // Wrapper class for update request with id
     public static class UserUpdateWrapper {

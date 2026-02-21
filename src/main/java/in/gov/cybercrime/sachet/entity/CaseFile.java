@@ -1,11 +1,7 @@
 package in.gov.cybercrime.sachet.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +9,10 @@ import lombok.Setter;
 @Table(name = "cases")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CaseFile extends BaseEntity {
 
-    @Column(name = "fir_no", nullable = false)
+    @Column(name = "fir_no", nullable = false, unique = true)
     private String firNo;
 
     @Column(name = "fir_year", nullable = false)
@@ -34,8 +31,8 @@ public class CaseFile extends BaseEntity {
     private String summary;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user", nullable = false)
-    private User createdByUser;
+    @JoinColumn(name = "case_owner", nullable = false)
+    private User caseOwner;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to_user", nullable = false)
