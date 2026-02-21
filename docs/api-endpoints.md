@@ -33,28 +33,31 @@ Comment: These are lookup APIs used for dropdowns and validations in user/case f
 
 ## Users
 - `GET api/users/by-rank-active` -- List users (along with activity status + acc to rank)
-
-
-<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-</div>
-
-<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
-  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
-</div>
-
+- `POST /api/users`              -- Create a user
+- `GET /api/users/get`          -- Get user by ID + pass id json enc
+- 
 
 
 ## Users
-- `POST /api/users`              -- Create user
-- `GET /api/users/{id}`          -- Get user by ID
 - `PUT /api/users/{id}`          -- Update user (supports `updatedBy`)
 - `PATCH /api/users/{id}/status` -- Enable/disable user (supports `updatedBy`)
-Comment: Status change should flip `is_active` only, not hard-delete.
+  Comment: Status change should flip `is_active` only, not hard-delete.
+
+
+
+<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+</div>
+
+<div style="display: flex; align-items: center; text-align: center; margin-top: 50px; font-weight: bold; font-size: 1.5em;">
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+  <span style="padding: 0 20px;">APIs Above this Are Verified</span>
+  <div style="flex: 1; border-bottom: 3px solid #FFF;"></div>
+</div>
+
+
 
 ## Cases
 - `GET /api/cases`              -- List/search cases

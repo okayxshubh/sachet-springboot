@@ -56,7 +56,6 @@ public class UserController {
         }
     }
 
-
     // Purpose: Get user by id (encrypted body)
     @PostMapping("/get")
     public GenericResponse<String> getUser(@RequestBody String encryptedBody) {
@@ -83,15 +82,13 @@ public class UserController {
         }
     }
 
-
     // Purpose: Create user (encrypted body)
     @PostMapping("/create")
     public GenericResponse<String> createUser(@RequestBody String encryptedBody) {
         try {
             String json = SachetCrypto.decrypt(encryptedBody);
 
-            UserCreateRequest request =
-                    objectMapper.readValue(json, UserCreateRequest.class);
+            UserCreateRequest request = objectMapper.readValue(json, UserCreateRequest.class);
 
             UserResponse user = userService.createUser(request);
 
@@ -111,33 +108,53 @@ public class UserController {
         }
     }
 
+
+
+
+
+
+
     // Purpose: Update user (encrypted body)
     @PostMapping("/update")
     public GenericResponse<String> updateUser(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
 
+        try {
+
+            if (encryptedBody == null || encryptedBody.isBlank()) {
+                return GenericResponse.fail("Encrypted body is required");
+            }
+
+            // 1. Decrypt
+            String json = SachetCrypto.decrypt(encryptedBody.trim());
+
+            if (json == null || json.isBlank()) {
+                return GenericResponse.fail("Decryption failed");
+            }
+
+            // 2. Convert to wrapper
             UserUpdateWrapper wrapper =
                     objectMapper.readValue(json, UserUpdateWrapper.class);
 
+            if (wrapper.getId() == null || wrapper.getRequest() == null) {
+                return GenericResponse.fail("Invalid request structure");
+            }
+
+            // 3. Update
             UserResponse updated =
                     userService.updateUser(wrapper.getId(), wrapper.getRequest());
 
+            // 4. Encrypt response
             String jsonResponse = objectMapper.writeValueAsString(updated);
-
             String encryptedData = SachetCrypto.encrypt(jsonResponse);
 
-            return GenericResponse.<String>builder()
-                    .status("OK")
-                    .message("User updated successfully")
-                    .data(encryptedData)
-                    .timestamp(java.time.LocalDateTime.now())
-                    .build();
+            return GenericResponse.ok("User updated successfully", encryptedData);
 
         } catch (Exception e) {
-            return GenericResponse.fail("Server error");
+            e.printStackTrace(); // remove in production
+            return GenericResponse.fail(e.getMessage());
         }
     }
+
 
     // Purpose: Soft delete user (encrypted body)
     @PostMapping("/delete")

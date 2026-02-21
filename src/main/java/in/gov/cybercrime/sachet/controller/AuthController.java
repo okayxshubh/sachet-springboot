@@ -210,29 +210,4 @@ public class AuthController {
         }
     }
 
-    // NEW: Stateless global token endpoint
-    @PostMapping("/global-token")
-    public GenericResponse<String> globalToken() {
-        try {
-            // generate a JWT for a fixed identifier like "GLOBAL_USER"
-            String token = JwtUtil.generateToken("GLOBAL_USER");
-
-            return GenericResponse.<String>builder()
-                    .timestamp(LocalDateTime.now())
-                    .status("OK")
-                    .message("Global token generated successfully")
-                    .data(token)  // only the raw token
-                    .build();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return GenericResponse.<String>builder()
-                    .timestamp(LocalDateTime.now())
-                    .status("ERROR")
-                    .message("Error generating global token")
-                    .data(null)
-                    .build();
-        }
-    }
-
 }
