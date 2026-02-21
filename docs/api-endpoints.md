@@ -32,14 +32,14 @@ Comment: These are lookup APIs used for dropdowns and validations in user/case f
 
 
 ## Users
-- `GET api/users/by-rank-active` -- List users (along with activity status + acc to rank)
+- `POST api/users/by-rank-active` -- List users (along with activity status + acc to rank)
 - `POST /api/users`              -- Create a user
-- `GET /api/users/get`          -- Get user by ID + pass id json enc
+- `POST /api/users/get`          -- Get user by ID + pass id json enc
+- `POST /api/users/update`             -- Update user (supports `updatedBy`)
 - 
 
 
 ## Users
-- `PUT /api/users/{id}`          -- Update user (supports `updatedBy`)
 - `PATCH /api/users/{id}/status` -- Enable/disable user (supports `updatedBy`)
   Comment: Status change should flip `is_active` only, not hard-delete.
 

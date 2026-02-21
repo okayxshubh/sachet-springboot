@@ -63,17 +63,20 @@ public class UserService {
     public UserResponse createUser(UserCreateRequest request) {
 
         if (userRepository.existsByPhone(request.getPhone())) {
-            throw new IllegalArgumentException("Phone already exists");
+            throw new IllegalArgumentException("Mobile number already registered");
         }
 
         RankMaster rank = rankRepository.findById(request.getRankId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid Rank"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Rank not found"));
 
         PoliceStationMaster ps = psRepository.findById(request.getPsId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid Police Station"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Police station not found"));
 
         RoleMaster role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid Role"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Role not found"));
 
         User user = new User();
         user.setName(request.getName());

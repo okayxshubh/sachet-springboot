@@ -3,6 +3,7 @@ package in.gov.cybercrime.sachet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.gov.cybercrime.sachet.dto.*;
 import in.gov.cybercrime.sachet.encryption.SachetCrypto;
+import in.gov.cybercrime.sachet.exceptions.ResourceNotFoundException;
 import in.gov.cybercrime.sachet.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,7 +89,8 @@ public class UserController {
         try {
             String json = SachetCrypto.decrypt(encryptedBody);
 
-            UserCreateRequest request = objectMapper.readValue(json, UserCreateRequest.class);
+            UserCreateRequest request =
+                    objectMapper.readValue(json, UserCreateRequest.class);
 
             UserResponse user = userService.createUser(request);
 
@@ -103,16 +105,16 @@ public class UserController {
                     .timestamp(java.time.LocalDateTime.now())
                     .build();
 
+        } catch (IllegalArgumentException e) {
+            return GenericResponse.fail(e.getMessage());
+
+        } catch (ResourceNotFoundException e) {
+            return GenericResponse.fail(e.getMessage());
+
         } catch (Exception e) {
-            return GenericResponse.fail("Server error");
+            return GenericResponse.fail("Unable to create user");
         }
     }
-
-
-
-
-
-
 
     // Purpose: Update user (encrypted body)
     @PostMapping("/update")
@@ -154,7 +156,6 @@ public class UserController {
             return GenericResponse.fail(e.getMessage());
         }
     }
-
 
     // Purpose: Soft delete user (encrypted body)
     @PostMapping("/delete")
