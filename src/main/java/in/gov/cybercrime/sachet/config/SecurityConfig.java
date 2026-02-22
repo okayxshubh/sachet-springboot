@@ -71,6 +71,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()           // registration/login open
                 .requestMatchers("/api/auth/me").authenticated()  // Requires JWT For Profile Info
                 .requestMatchers("/api/auth/get-token").permitAll()    // get token externally
+                .requestMatchers("/api/auth/**").permitAll() // For token Check
                 .requestMatchers("/api/crypto/**").permitAll()         // crypto endpoints open
                 .requestMatchers("/api/master/**").permitAll()         // master APIs open (no JWT)
                 .requestMatchers("/api/masters/**").permitAll()        // master APIs open

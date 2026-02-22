@@ -1,15 +1,13 @@
 package in.gov.cybercrime.sachet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import in.gov.cybercrime.sachet.config.JwtUtil;
 import in.gov.cybercrime.sachet.dto.*;
 import in.gov.cybercrime.sachet.encryption.SachetCrypto;
 import in.gov.cybercrime.sachet.entity.User;
-import in.gov.cybercrime.sachet.masters.PoliceStationMaster;
-import in.gov.cybercrime.sachet.masters.RankMaster;
-import in.gov.cybercrime.sachet.masters.RoleMaster;
 import in.gov.cybercrime.sachet.repository.UserRepository;
 import in.gov.cybercrime.sachet.service.AuthService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -207,6 +205,22 @@ public class AuthController {
                     .message("Invalid phone or password")
                     .data(null)
                     .build();
+        }
+    }
+
+    @GetMapping("/check-token")
+    public ResponseEntity<String> checkToken(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token");
+        }
+
+        String token = authHeader.substring(7);
+
+        boolean valid = authService.isTokenValid(token);
+        if (valid) {
+            return ResponseEntity.ok("Token is valid");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired or invalid");
         }
     }
 

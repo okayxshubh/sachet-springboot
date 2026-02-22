@@ -12,8 +12,12 @@ import in.gov.cybercrime.sachet.repository.UserRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.PoliceStationMasterRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.RankMasterRepository;
 import in.gov.cybercrime.sachet.utils.JwtUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Service
 public class AuthService {
@@ -32,7 +36,6 @@ public class AuthService {
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil) {
 
-        // Purpose: Inject dependencies
         this.userRepository = userRepository;
         this.rankRepository = rankRepository;
         this.policeStationRepository = policeStationRepository;
@@ -41,75 +44,55 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    // Purpose: Register new user
     public String register(RegisterRequest request) {
-
-        // Purpose: Prevent duplicate phone registration
         if (userRepository.existsByPhone(request.getPhone())) {
             throw new RuntimeException("Phone already exists");
         }
 
-        // Purpose: Fetch rank master using rankId
         RankMaster rank = rankRepository.findById(request.getRankId())
                 .orElseThrow(() -> new RuntimeException("Invalid rankId"));
-
-        // Purpose: Fetch police station master using psId
         PoliceStationMaster ps = policeStationRepository.findById(request.getPsId())
                 .orElseThrow(() -> new RuntimeException("Invalid psId"));
-
-        // Purpose: Fetch role master using roleId
         RoleMaster role = roleRepository.findById(request.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Invalid roleId"));
 
-        // Purpose: Create user object and map all master entities
         User user = new User();
         user.setName(request.getName());
         user.setRank(rank);
         user.setPs(ps);
         user.setPhone(request.getPhone());
         user.setRole(role);
-
-        // Purpose: Hash password before saving
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
-        // Purpose: Save user in DB
         userRepository.save(user);
-
         return "User registered successfully";
     }
 
-    // Purpose: Login and return JWT + profile details
     public AuthResponse login(LoginRequest request) {
-
-        // Purpose: Find user by phone number
         User user = userRepository.findByPhone(request.getPhone())
                 .orElseThrow(() -> new RuntimeException("Invalid phone or password"));
 
-        // Purpose: Block inactive user
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new RuntimeException("User inactive");
         }
 
-        // Purpose: Validate password using BCrypt
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid phone or password");
         }
 
-        // Purpose: Ensure role exists for JWT and security
         if (user.getRole() == null || user.getRole().getRoleName() == null) {
             throw new RuntimeException("User role missing");
         }
 
-        // Purpose: Convert role name into JWT standard format
         String roleName = user.getRole().getRoleName().trim().toUpperCase();
 
-        // Purpose: Generate access token
+        // Updated to match new JwtUtil signature
         String token = jwtUtil.generateToken(user.getPhone(), roleName);
-
-        // Purpose: Generate refresh token
         String refreshToken = jwtUtil.generateRefreshToken(user.getPhone(), roleName);
 
-        // Purpose: Return full response as per AuthResponse DTO
+        // Optional: enforce single-token for refresh
+        jwtUtil.validateRefreshToken(refreshToken);
+
         return new AuthResponse(
                 user.getName(),
                 user.getRole(),
@@ -120,41 +103,28 @@ public class AuthService {
         );
     }
 
-    // Purpose: Refresh JWT using refresh token
     public AuthResponse refreshToken(String refreshToken) {
-
-        // Purpose: Validate refresh token
         if (!jwtUtil.validateRefreshToken(refreshToken)) {
             throw new RuntimeException("Invalid or expired refresh token");
         }
 
-        // Purpose: Extract phone from refresh token
         String phone = jwtUtil.extractUsername(refreshToken);
-
-        // Purpose: Fetch user again from DB
         User user = userRepository.findByPhone(phone)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Purpose: Block inactive user
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new RuntimeException("User inactive");
         }
 
-        // Purpose: Ensure role exists
         if (user.getRole() == null || user.getRole().getRoleName() == null) {
             throw new RuntimeException("User role missing");
         }
 
-        // Purpose: Convert role name into JWT standard format
         String roleName = user.getRole().getRoleName().trim().toUpperCase();
 
-        // Purpose: Generate new access token
         String newAccessToken = jwtUtil.generateToken(user.getPhone(), roleName);
-
-        // Purpose: Generate new refresh token
         String newRefreshToken = jwtUtil.generateRefreshToken(user.getPhone(), roleName);
 
-        // Purpose: Return refreshed response as per AuthResponse DTO
         return new AuthResponse(
                 user.getName(),
                 user.getRole(),
@@ -163,5 +133,11 @@ public class AuthService {
                 newAccessToken,
                 newRefreshToken
         );
+    }
+
+    // Helper
+    // Check if access token is valid or expired
+    public boolean isTokenValid(String token) {
+        return jwtUtil.validateToken(token);
     }
 }

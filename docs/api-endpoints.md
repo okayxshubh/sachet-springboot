@@ -35,6 +35,7 @@
 - `POST /api/auth/login`          -- Login with phone/password, returns access + refresh tokens
 - `POST /api/auth/refresh`        -- Exchange refresh token for a new access token (refresh rotation)
 - `GET /api/auth/me`              -- Get current user profile (requires JWT)
+- `GET /api/check-token`          -- Check Token validity (requires JWT)
 - `POST /api/auth/get-user-token` -- Login to fetch user-specific encrypted token
 - `POST /api/auth/global-token`   -- Stateless global token endpoint (works for all clients, no user required)
 
