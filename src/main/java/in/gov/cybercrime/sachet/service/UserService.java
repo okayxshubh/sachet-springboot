@@ -41,7 +41,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Find Users by rank and is active
     @Transactional(readOnly = true)
     public List<UserResponse> getActiveUsersByRank(Long rankId) {
 
@@ -53,13 +52,11 @@ public class UserService {
                 .toList();
     }
 
-    // Purpose: Fetch single user (works for active and inactive)
     @Transactional(readOnly = true)
     public UserResponse getUser(Long id) {
         return toResponse(getUserEntity(id));
     }
 
-    // Purpose: Create new user
     public UserResponse createUser(UserCreateRequest request) {
 
         if (userRepository.existsByPhone(request.getPhone())) {
@@ -90,7 +87,6 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
-    // Purpose: Update user
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
 
         User user = getUserEntity(id);
@@ -139,10 +135,9 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
-    // Purpose: Soft delete user
     public void deleteUser(Long id, String updatedBy) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         user.setIsActive(false);
         user.setUpdatedBy(updatedBy);
@@ -151,22 +146,12 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // Purpose: Hard delete user
-    public void hardDeleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found");
-        }
-        userRepository.deleteById(id);
-    }
-
-    // Purpose: Fetch user entity
     @Transactional(readOnly = true)
     private User getUserEntity(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    // Convert entity to response DTO
     private UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getId(),

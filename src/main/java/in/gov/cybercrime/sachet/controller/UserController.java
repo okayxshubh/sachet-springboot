@@ -3,7 +3,6 @@ package in.gov.cybercrime.sachet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.gov.cybercrime.sachet.dto.*;
 import in.gov.cybercrime.sachet.encryption.SachetCrypto;
-import in.gov.cybercrime.sachet.exceptions.ResourceNotFoundException;
 import in.gov.cybercrime.sachet.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,168 +21,118 @@ public class UserController {
     }
 
     @PostMapping("/by-rank-active")
-    public GenericResponse<String> getActiveUsersByRank(
-            @RequestBody String encryptedBody) {
+    public GenericResponse<String> getActiveUsersByRank(@RequestBody String encryptedBody) throws Exception {
 
-        try {
-            // 1. Decrypt incoming body
-            String json = SachetCrypto.decrypt(encryptedBody);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            // 2. Convert to DTO
-            RankIdRequest request =
-                    objectMapper.readValue(json, RankIdRequest.class);
+        RankIdRequest request =
+                objectMapper.readValue(json, RankIdRequest.class);
 
-            // 3. Fetch data
-            List<UserResponse> users =
-                    userService.getActiveUsersByRank(request.getRankId());
+        List<UserResponse> users =
+                userService.getActiveUsersByRank(request.getRankId());
 
-            // 4. Serialize only the list
-            String jsonList = objectMapper.writeValueAsString(users);
+        String jsonList = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonList);
 
-            // 5. Encrypt serialized list
-            String encryptedData = SachetCrypto.encrypt(jsonList);
-
-            // 6. Return encrypted list in data key
-            return GenericResponse.<String>builder()
-                    .status("OK")
-                    .message("Users fetched successfully")
-                    .data(encryptedData)
-                    .timestamp(java.time.LocalDateTime.now())
-                    .build();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return GenericResponse.fail("Server error");
-        }
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Users fetched successfully")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
     }
 
-    // Purpose: Get user by id (encrypted body)
     @PostMapping("/get")
-    public GenericResponse<String> getUser(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> getUser(@RequestBody String encryptedBody) throws Exception {
 
-            IdRequest request = objectMapper.readValue(json, IdRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            UserResponse user = userService.getUser(request.getId());
+        IdRequest request = objectMapper.readValue(json, IdRequest.class);
 
-            String jsonResponse = objectMapper.writeValueAsString(user);
+        UserResponse user = userService.getUser(request.getId());
 
-            String encryptedData = SachetCrypto.encrypt(jsonResponse);
+        String jsonResponse = objectMapper.writeValueAsString(user);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
 
-            return GenericResponse.<String>builder()
-                    .status("OK")
-                    .message("User fetched successfully")
-                    .data(encryptedData)
-                    .timestamp(java.time.LocalDateTime.now())
-                    .build();
-
-        } catch (Exception e) {
-            return GenericResponse.fail("Server error");
-        }
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("User fetched successfully")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
     }
 
-    // Purpose: Create user (encrypted body)
     @PostMapping("/create")
-    public GenericResponse<String> createUser(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> createUser(@RequestBody String encryptedBody) throws Exception {
 
-            UserCreateRequest request =
-                    objectMapper.readValue(json, UserCreateRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            UserResponse user = userService.createUser(request);
+        UserCreateRequest request =
+                objectMapper.readValue(json, UserCreateRequest.class);
 
-            String jsonResponse = objectMapper.writeValueAsString(user);
+        UserResponse user = userService.createUser(request);
 
-            String encryptedData = SachetCrypto.encrypt(jsonResponse);
+        String jsonResponse = objectMapper.writeValueAsString(user);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
 
-            return GenericResponse.<String>builder()
-                    .status("OK")
-                    .message("User created successfully")
-                    .data(encryptedData)
-                    .timestamp(java.time.LocalDateTime.now())
-                    .build();
-
-        } catch (IllegalArgumentException e) {
-            return GenericResponse.fail(e.getMessage());
-
-        } catch (ResourceNotFoundException e) {
-            return GenericResponse.fail(e.getMessage());
-
-        } catch (Exception e) {
-            return GenericResponse.fail("Unable to create user");
-        }
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("User created successfully")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
     }
 
-    // Purpose: Update user (encrypted body)
     @PutMapping("/update")
-    public GenericResponse<String> updateUser(@RequestBody String encryptedBody) {
+    public GenericResponse<String> updateUser(@RequestBody String encryptedBody) throws Exception {
 
-        try {
-
-            if (encryptedBody == null || encryptedBody.isBlank()) {
-                return GenericResponse.fail("Encrypted body is required");
-            }
-
-            // 1. Decrypt
-            String json = SachetCrypto.decrypt(encryptedBody.trim());
-
-            if (json == null || json.isBlank()) {
-                return GenericResponse.fail("Decryption failed");
-            }
-
-            // 2. Convert to wrapper
-            UserUpdateWrapper wrapper =
-                    objectMapper.readValue(json, UserUpdateWrapper.class);
-
-            if (wrapper.getId() == null || wrapper.getRequest() == null) {
-                return GenericResponse.fail("Invalid request structure");
-            }
-
-            // 3. Update
-            UserResponse updated =
-                    userService.updateUser(wrapper.getId(), wrapper.getRequest());
-
-            // 4. Encrypt response
-            String jsonResponse = objectMapper.writeValueAsString(updated);
-            String encryptedData = SachetCrypto.encrypt(jsonResponse);
-
-            return GenericResponse.ok("User updated successfully", encryptedData);
-
-        } catch (Exception e) {
-            e.printStackTrace(); // remove in production
-            return GenericResponse.fail(e.getMessage());
+        if (encryptedBody == null || encryptedBody.isBlank()) {
+            throw new IllegalArgumentException("Encrypted body is required");
         }
+
+        String json = SachetCrypto.decrypt(encryptedBody.trim());
+
+        if (json == null || json.isBlank()) {
+            throw new IllegalArgumentException("Decryption failed");
+        }
+
+        UserUpdateWrapper wrapper =
+                objectMapper.readValue(json, UserUpdateWrapper.class);
+
+        if (wrapper.getId() == null || wrapper.getRequest() == null) {
+            throw new IllegalArgumentException("Invalid request structure");
+        }
+
+        UserResponse updated =
+                userService.updateUser(wrapper.getId(), wrapper.getRequest());
+
+        String jsonResponse = objectMapper.writeValueAsString(updated);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
+
+        return GenericResponse.ok("User updated successfully", encryptedData);
     }
 
-    // Purpose: Soft delete user (encrypted body)
     @PostMapping("/delete")
-    public GenericResponse<String> deleteUser(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> deleteUser(@RequestBody String encryptedBody) throws Exception {
 
-            DeleteUserRequest request =
-                    objectMapper.readValue(json, DeleteUserRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            userService.deleteUser(request.getId(), request.getUpdatedBy());
+        DeleteUserRequest request =
+                objectMapper.readValue(json, DeleteUserRequest.class);
 
-            String encryptedData =
-                    SachetCrypto.encrypt("User deactivated successfully");
+        userService.deleteUser(request.getId(), request.getUpdatedBy());
 
-            return GenericResponse.<String>builder()
-                    .status("OK")
-                    .message("Success")
-                    .data(encryptedData)
-                    .timestamp(java.time.LocalDateTime.now())
-                    .build();
+        String encryptedData =
+                SachetCrypto.encrypt("User deactivated successfully");
 
-        } catch (Exception e) {
-            return GenericResponse.fail("Server error");
-        }
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Success")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
     }
 
-    // Wrapper class for update request with id
     public static class UserUpdateWrapper {
         private Long id;
         private UserUpdateRequest request;

@@ -4,6 +4,8 @@ import in.gov.cybercrime.sachet.dto.AuthResponse;
 import in.gov.cybercrime.sachet.dto.LoginRequest;
 import in.gov.cybercrime.sachet.dto.RegisterRequest;
 import in.gov.cybercrime.sachet.entity.User;
+import in.gov.cybercrime.sachet.exceptions.InvalidCredentialsException;
+import in.gov.cybercrime.sachet.exceptions.ResourceNotFoundException;
 import in.gov.cybercrime.sachet.masters.PoliceStationMaster;
 import in.gov.cybercrime.sachet.masters.RankMaster;
 import in.gov.cybercrime.sachet.masters.RoleMaster;
@@ -12,12 +14,8 @@ import in.gov.cybercrime.sachet.repository.UserRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.PoliceStationMasterRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.RankMasterRepository;
 import in.gov.cybercrime.sachet.utils.JwtUtil;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @Service
 public class AuthService {
@@ -46,15 +44,17 @@ public class AuthService {
 
     public String register(RegisterRequest request) {
         if (userRepository.existsByPhone(request.getPhone())) {
-            throw new RuntimeException("Phone already exists");
+            throw new IllegalArgumentException("Phone already exists");
         }
 
         RankMaster rank = rankRepository.findById(request.getRankId())
-                .orElseThrow(() -> new RuntimeException("Invalid rankId"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid rankId"));
+
         PoliceStationMaster ps = policeStationRepository.findById(request.getPsId())
-                .orElseThrow(() -> new RuntimeException("Invalid psId"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid psId"));
+
         RoleMaster role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new RuntimeException("Invalid roleId"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid roleId"));
 
         User user = new User();
         user.setName(request.getName());
@@ -70,27 +70,25 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByPhone(request.getPhone())
-                .orElseThrow(() -> new RuntimeException("Invalid phone or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid phone or password"));
 
         if (Boolean.FALSE.equals(user.getIsActive())) {
-            throw new RuntimeException("User inactive");
+            throw new InvalidCredentialsException("User inactive");
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid phone or password");
+            throw new InvalidCredentialsException("Invalid phone or password");
         }
 
         if (user.getRole() == null || user.getRole().getRoleName() == null) {
-            throw new RuntimeException("User role missing");
+            throw new IllegalArgumentException("User role missing");
         }
 
         String roleName = user.getRole().getRoleName().trim().toUpperCase();
 
-        // Updated to match new JwtUtil signature
         String token = jwtUtil.generateToken(user.getPhone(), roleName);
         String refreshToken = jwtUtil.generateRefreshToken(user.getPhone(), roleName);
 
-        // Optional: enforce single-token for refresh
         jwtUtil.validateRefreshToken(refreshToken);
 
         return new AuthResponse(
@@ -105,19 +103,20 @@ public class AuthService {
 
     public AuthResponse refreshToken(String refreshToken) {
         if (!jwtUtil.validateRefreshToken(refreshToken)) {
-            throw new RuntimeException("Invalid or expired refresh token");
+            throw new InvalidCredentialsException("Invalid or expired refresh token");
         }
 
         String phone = jwtUtil.extractUsername(refreshToken);
+
         User user = userRepository.findByPhone(phone)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (Boolean.FALSE.equals(user.getIsActive())) {
-            throw new RuntimeException("User inactive");
+            throw new InvalidCredentialsException("User inactive");
         }
 
         if (user.getRole() == null || user.getRole().getRoleName() == null) {
-            throw new RuntimeException("User role missing");
+            throw new IllegalArgumentException("User role missing");
         }
 
         String roleName = user.getRole().getRoleName().trim().toUpperCase();
@@ -135,8 +134,6 @@ public class AuthService {
         );
     }
 
-    // Helper
-    // Check if access token is valid or expired
     public boolean isTokenValid(String token) {
         return jwtUtil.validateToken(token);
     }

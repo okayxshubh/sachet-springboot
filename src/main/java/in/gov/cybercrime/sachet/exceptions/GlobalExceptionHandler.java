@@ -2,94 +2,116 @@ package in.gov.cybercrime.sachet.exceptions;
 
 import in.gov.cybercrime.sachet.dto.GenericResponse;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Purpose: Handle custom not found exceptions
+    private ResponseEntity<GenericResponse<Object>> build(HttpStatus status, String message) {
+        return ResponseEntity
+                .status(status)
+                .body(GenericResponse.fail(message));
+    }
+
+    // ================= CUSTOM EXCEPTIONS =================
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<GenericResponse<Object>> handleNotFound(ResourceNotFoundException ex) {
-        return new ResponseEntity<>(
-                GenericResponse.fail(ex.getMessage()),
-                HttpStatus.NOT_FOUND
-        );
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    // Purpose: Handle bad request exceptions
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<GenericResponse<Object>> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<GenericResponse<Object>> handleBadRequest(IllegalArgumentException ex) {
-        return new ResponseEntity<>(
-                GenericResponse.fail(ex.getMessage()),
-                HttpStatus.BAD_REQUEST
-        );
+    public ResponseEntity<GenericResponse<Object>> handleIllegalArgument(IllegalArgumentException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // Purpose: Handle validation errors (@Valid)
+    // ================= VALIDATION =================
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<GenericResponse<Object>> handleValidation(MethodArgumentNotValidException ex) {
 
         String message = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(err -> err.getField() + " : " + err.getDefaultMessage())
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
-        return new ResponseEntity<>(
-                GenericResponse.fail(message),
-                HttpStatus.BAD_REQUEST
-        );
+        return build(HttpStatus.BAD_REQUEST, message);
     }
 
-    // Purpose: Handle constraint violations
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<GenericResponse<Object>> handleConstraintViolation(ConstraintViolationException ex) {
-
-        String message = ex.getConstraintViolations()
-                .stream()
-                .map(v -> v.getPropertyPath() + " : " + v.getMessage())
-                .collect(Collectors.joining(", "));
-
-        return new ResponseEntity<>(
-                GenericResponse.fail(message),
-                HttpStatus.BAD_REQUEST
-        );
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // Purpose: Handle database integrity violations
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<GenericResponse<Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
-        return new ResponseEntity<>(
-                GenericResponse.fail("Database constraint violation"),
-                HttpStatus.BAD_REQUEST
-        );
+    @ExceptionHandler({
+            HttpMessageNotReadableException.class,
+            MethodArgumentTypeMismatchException.class,
+            MissingServletRequestParameterException.class
+    })
+    public ResponseEntity<GenericResponse<Object>> handleBadRequest(Exception ex) {
+        return build(HttpStatus.BAD_REQUEST, "Invalid request");
     }
 
-    // Purpose: Handle access denied
+    // ================= SECURITY =================
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<GenericResponse<Object>> handleAuthentication(AuthenticationException ex) {
+        return build(HttpStatus.UNAUTHORIZED, "Unauthorized");
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<GenericResponse<Object>> handleAccessDenied(AccessDeniedException ex) {
-        return new ResponseEntity<>(
-                GenericResponse.fail("Access denied"),
-                HttpStatus.FORBIDDEN
-        );
+        return build(HttpStatus.FORBIDDEN, "Forbidden");
     }
 
-    // Purpose: Handle unexpected errors
+    // ================= HTTP =================
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<GenericResponse<Object>> handleMediaType(HttpMediaTypeNotSupportedException ex) {
+        return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported media type");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<GenericResponse<Object>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        return build(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed");
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<GenericResponse<Object>> handleNoHandler(NoHandlerFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, "Endpoint not found");
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<GenericResponse<Object>> handleResponseStatus(ResponseStatusException ex) {
+        return build((HttpStatus) ex.getStatusCode(),
+                ex.getReason() != null ? ex.getReason() : "Request failed");
+    }
+
+    // ================= FALLBACK =================
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<GenericResponse<Object>> handleGlobal(Exception ex) {
-
-        ex.printStackTrace();
-
-        return new ResponseEntity<>(
-                GenericResponse.fail("Internal server error"),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+    public ResponseEntity<GenericResponse<Object>> handleGeneric(Exception ex) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
     }
 }

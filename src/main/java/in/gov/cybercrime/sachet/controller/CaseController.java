@@ -35,117 +35,86 @@ public class CaseController {
                 .build();
     }
 
-    private GenericResponse<String> error(Exception e) {
-        e.printStackTrace();
-        return GenericResponse.fail(e.getMessage());
-    }
-
     @PostMapping
-    public GenericResponse<String> createCase(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> createCase(@RequestBody String encryptedBody) throws Exception {
 
-            CaseCreateRequest request =
-                    objectMapper.readValue(json, CaseCreateRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            CaseFile created = caseService.createCase(request);
+        CaseCreateRequest request =
+                objectMapper.readValue(json, CaseCreateRequest.class);
 
-            return success(created, "Case created successfully");
+        CaseFile created = caseService.createCase(request);
 
-        } catch (Exception e) {
-            return error(e);
-        }
+        return success(created, "Case created successfully");
     }
 
-    // Get Cases List By Params
     @PostMapping("/list")
-    public GenericResponse<String> listCases(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> listCases(@RequestBody String encryptedBody) throws Exception {
 
-            CaseListRequest request =
-                    objectMapper.readValue(json, CaseListRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            List<CaseFile> cases = caseService.getCases(
-                    Optional.ofNullable(request.getFirNo()),
-                    Optional.ofNullable(request.getFirYear()),
-                    Optional.ofNullable(request.getAssignedToId())
-            );
+        CaseListRequest request =
+                objectMapper.readValue(json, CaseListRequest.class);
 
-            return success(cases, "Success");
+        List<CaseFile> cases = caseService.getCases(
+                Optional.ofNullable(request.getFirNo()),
+                Optional.ofNullable(request.getFirYear()),
+                Optional.ofNullable(request.getAssignedToId())
+        );
 
-        } catch (Exception e) {
-            return error(e);
-        }
+        return success(cases, "Success");
     }
 
-    // Get Case By ID
     @PostMapping("/get")
-    public GenericResponse<String> getCase(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> getCase(@RequestBody String encryptedBody) throws Exception {
 
-            IdRequest request = objectMapper.readValue(json, IdRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            CaseFile caseFile = caseService.getCase(request.getId());
+        IdRequest request = objectMapper.readValue(json, IdRequest.class);
 
-            return success(caseFile, "Success");
+        CaseFile caseFile = caseService.getCase(request.getId());
 
-        } catch (Exception e) {
-            return error(e);
-        }
+        return success(caseFile, "Success");
     }
 
     @PutMapping("/update")
-    public GenericResponse<String> updateCase(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> updateCase(@RequestBody String encryptedBody) throws Exception {
 
-            CaseUpdateRequest request =
-                    objectMapper.readValue(json, CaseUpdateRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            CaseFile updated =
-                    caseService.updateCase(request.getId(), request);
+        CaseUpdateRequest request =
+                objectMapper.readValue(json, CaseUpdateRequest.class);
 
-            return success(updated, "Case updated successfully");
+        CaseFile updated =
+                caseService.updateCase(request.getId(), request);
 
-        } catch (Exception e) {
-            return error(e);
-        }
+        return success(updated, "Case updated successfully");
     }
 
     @PatchMapping("/assign")
-    public GenericResponse<String> assignCase(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> assignCase(@RequestBody String encryptedBody) throws Exception {
 
-            AssignCaseRequest request =
-                    objectMapper.readValue(json, AssignCaseRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            CaseFile updated =
-                    caseService.assignCase(request.getCaseId(), request);
+        AssignCaseRequest request =
+                objectMapper.readValue(json, AssignCaseRequest.class);
 
-            return success(updated, "Case assigned successfully");
+        CaseFile updated =
+                caseService.assignCase(request.getCaseId(), request);
 
-        } catch (Exception e) {
-            return error(e);
-        }
+        return success(updated, "Case assigned successfully");
     }
 
     @PatchMapping("/delete")
-    public GenericResponse<String> deleteCase(@RequestBody String encryptedBody) {
-        try {
-            String json = SachetCrypto.decrypt(encryptedBody);
+    public GenericResponse<String> deleteCase(@RequestBody String encryptedBody) throws Exception {
 
-            DeleteCaseRequest request =
-                    objectMapper.readValue(json, DeleteCaseRequest.class);
+        String json = SachetCrypto.decrypt(encryptedBody);
 
-            caseService.deleteCase(request.getId(), request.getUpdatedBy());
+        DeleteCaseRequest request =
+                objectMapper.readValue(json, DeleteCaseRequest.class);
 
-            return success("Case deleted successfully", "Success");
+        caseService.deleteCase(request.getId(), request.getUpdatedBy());
 
-        } catch (Exception e) {
-            return error(e);
-        }
+        return success("Case deleted successfully", "Success");
     }
 }

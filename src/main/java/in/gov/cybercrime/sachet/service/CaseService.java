@@ -5,6 +5,7 @@ import in.gov.cybercrime.sachet.dto.CaseCreateRequest;
 import in.gov.cybercrime.sachet.dto.CaseUpdateRequest;
 import in.gov.cybercrime.sachet.entity.CaseFile;
 import in.gov.cybercrime.sachet.entity.User;
+import in.gov.cybercrime.sachet.exceptions.ResourceNotFoundException;
 import in.gov.cybercrime.sachet.repository.CaseFileRepository;
 import in.gov.cybercrime.sachet.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,12 +42,10 @@ public class CaseService {
             return caseFileRepository.save(caseFile);
 
         } catch (DataIntegrityViolationException ex) {
-            throw new RuntimeException("FIR already exists for this year");
+            throw new IllegalArgumentException("FIR already exists for this year");
         }
     }
 
-
-    // Get Case by Filters
     public List<CaseFile> getCases(Optional<String> firNo,
                                    Optional<Integer> firYear,
                                    Optional<Long> assignedToId) {
@@ -61,7 +60,6 @@ public class CaseService {
                 .toList();
     }
 
-    // Get Case by ID
     public CaseFile getCase(Long id) {
         return getCaseEntity(id);
     }
@@ -100,12 +98,12 @@ public class CaseService {
 
     private CaseFile getCaseEntity(Long id) {
         return caseFileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Case not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
     }
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     public void deleteCase(Long id, String updatedBy) {
