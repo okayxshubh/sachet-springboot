@@ -105,8 +105,8 @@ public class UserService {
 
         User user = getUserEntity(id);
 
-        if (request.getName() != null) {
-            user.setName(request.getName());
+        if (request.getName() != null && !request.getName().isBlank()) {
+            user.setName(request.getName().trim());
         }
 
         if (request.getRankId() != null) {
@@ -127,11 +127,14 @@ public class UserService {
             user.setRole(role);
         }
 
-        if (request.getPhone() != null && !request.getPhone().equals(user.getPhone())) {
+        if (request.getPhone() != null
+                && !request.getPhone().isBlank()
+                && !request.getPhone().equals(user.getPhone())) {
+
             if (userRepository.existsByPhone(request.getPhone())) {
                 throw new IllegalArgumentException("Phone already exists");
             }
-            user.setPhone(request.getPhone());
+            user.setPhone(request.getPhone().trim());
         }
 
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
@@ -142,8 +145,8 @@ public class UserService {
             user.setIsActive(request.getIsActive());
         }
 
-        if (request.getUpdatedBy() != null) {
-            user.setUpdatedBy(request.getUpdatedBy());
+        if (request.getUpdatedBy() != null && !request.getUpdatedBy().isBlank()) {
+            user.setUpdatedBy(request.getUpdatedBy().trim());
         }
 
         return toResponse(userRepository.save(user));

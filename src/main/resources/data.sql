@@ -1,4 +1,20 @@
 -- ==============================
+-- Schema guardrails (safe on reset/re-run)
+-- ==============================
+ALTER TABLE IF EXISTS users
+    ADD COLUMN IF NOT EXISTS is_approved BOOLEAN;
+
+UPDATE users
+SET is_approved = FALSE
+WHERE is_approved IS NULL;
+
+ALTER TABLE IF EXISTS users
+    ALTER COLUMN is_approved SET DEFAULT FALSE;
+
+ALTER TABLE IF EXISTS users
+    ALTER COLUMN is_approved SET NOT NULL;
+
+-- ==============================
 -- Districts
 -- ==============================
 INSERT INTO mst_district (id, district_name)
@@ -7,6 +23,9 @@ VALUES
     (2, 'Kullu'),
     (3, 'Mandi')
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval(pg_get_serial_sequence('mst_district', 'id'), COALESCE(MAX(id), 1), TRUE)
+FROM mst_district;
 
 -- ==============================
 -- Roles
@@ -18,6 +37,9 @@ VALUES
     (3, 'Staff')
 ON CONFLICT (id) DO NOTHING;
 
+SELECT setval(pg_get_serial_sequence('mst_role', 'id'), COALESCE(MAX(id), 1), TRUE)
+FROM mst_role;
+
 -- ==============================
 -- Ranks
 -- ==============================
@@ -28,6 +50,9 @@ VALUES
     (3, 'Other')
 ON CONFLICT (id) DO NOTHING;
 
+SELECT setval(pg_get_serial_sequence('mst_rank', 'id'), COALESCE(MAX(id), 1), TRUE)
+FROM mst_rank;
+
 -- ==============================
 -- Police Stations
 -- ==============================
@@ -37,6 +62,9 @@ VALUES
     (2, 'Kullu PS', 2),
     (3, 'Mandi PS', 3)
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval(pg_get_serial_sequence('mst_police_station', 'id'), COALESCE(MAX(id), 1), TRUE)
+FROM mst_police_station;
 
 -- ==============================
 -- Users
@@ -58,6 +86,18 @@ VALUES
     ('Shubh', 2, 3, '7018437924', 1,
      '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE,
      '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
+
+    ('Pending User 1', 3, 1, '9000000001', 3,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE,
+     '2026-02-19 10:05:00+05:30'::timestamptz, '2026-02-19 10:05:00+05:30'::timestamptz),
+
+    ('Pending User 2', 3, 2, '9000000002', 3,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE,
+     '2026-02-19 10:06:00+05:30'::timestamptz, '2026-02-19 10:06:00+05:30'::timestamptz),
+
+    ('Pending User 3', 3, 3, '9000000003', 3,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE,
+     '2026-02-19 10:07:00+05:30'::timestamptz, '2026-02-19 10:07:00+05:30'::timestamptz),
 
     ('GLOBAL SYSTEM USER', 2, 1, 'GLOBAL_USER', 1,
      '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
@@ -126,6 +166,8 @@ VALUES
    '2026-02-18 10:23:00+05:30'::timestamptz,'2026-02-18 10:23:00+05:30'::timestamptz)
 ON CONFLICT (id) DO NOTHING;
 
+SELECT setval(pg_get_serial_sequence('accused', 'id'), COALESCE(MAX(id), 1), TRUE)
+FROM accused;
 
 
 -- ==============================
@@ -171,3 +213,6 @@ VALUES
    '2026-02-18 11:02:00+05:30'::timestamptz)
 
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval(pg_get_serial_sequence('audit_logs', 'id'), COALESCE(MAX(id), 1), TRUE)
+FROM audit_logs;
