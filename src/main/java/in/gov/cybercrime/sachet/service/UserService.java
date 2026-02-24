@@ -78,9 +78,20 @@ public class UserService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Police station not found"));
 
-        RoleMaster role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Role not found"));
+        RoleMaster role;
+
+        if (request.getRoleId() != null) {
+
+            role = roleRepository.findById(request.getRoleId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Role not found"));
+
+        } else {
+
+            role = roleRepository.findTopByOrderByIdDesc()
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("No roles configured in system"));
+        }
 
         User user = new User();
         user.setName(request.getName());
@@ -90,7 +101,7 @@ public class UserService {
         user.setRole(role);
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setIsActive(true);
-        user.setIsApproved(false);
+        user.setIsApproved(true); // Approved by default when creating user
 
         return toResponse(userRepository.save(user));
     }
