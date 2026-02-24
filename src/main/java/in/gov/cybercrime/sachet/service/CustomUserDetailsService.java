@@ -49,6 +49,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new UsernameNotFoundException("User inactive: " + username);
         }
+        if (Boolean.FALSE.equals(user.getIsApproved())) {
+            throw new UsernameNotFoundException("User not approved: " + username);
+        }
 
         // If role is missing, authentication must fail (prevents NullPointerException)
         if (user.getRole() == null || user.getRole().getRoleName() == null) {

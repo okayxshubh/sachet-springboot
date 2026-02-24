@@ -66,6 +66,57 @@ public class AuthController {
                 .build();
     }
 
+    @PostMapping("/send-otp")
+    public GenericResponse<String> sendOtp(@RequestBody String encrypted) throws Exception {
+
+        String decryptedJson = SachetCrypto.decrypt(encrypted);
+        SendOtpRequest request = objectMapper.readValue(decryptedJson, SendOtpRequest.class);
+
+        String result = authService.sendOtp(request);
+        String encryptedData = SachetCrypto.encrypt(result);
+
+        return GenericResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
+                .status("OK")
+                .message("OTP sent")
+                .data(encryptedData)
+                .build();
+    }
+
+    @PostMapping("/verify-otp")
+    public GenericResponse<String> verifyOtp(@RequestBody String encrypted) throws Exception {
+
+        String decryptedJson = SachetCrypto.decrypt(encrypted);
+        VerifyOtpRequest request = objectMapper.readValue(decryptedJson, VerifyOtpRequest.class);
+
+        String result = authService.verifyOtp(request);
+        String encryptedData = SachetCrypto.encrypt(result);
+
+        return GenericResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
+                .status("OK")
+                .message("OTP verified")
+                .data(encryptedData)
+                .build();
+    }
+
+    @PostMapping("/change-password")
+    public GenericResponse<String> changePassword(@RequestBody String encrypted) throws Exception {
+
+        String decryptedJson = SachetCrypto.decrypt(encrypted);
+        ChangePasswordRequest request = objectMapper.readValue(decryptedJson, ChangePasswordRequest.class);
+
+        String result = authService.changePassword(request);
+        String encryptedData = SachetCrypto.encrypt(result);
+
+        return GenericResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
+                .status("OK")
+                .message("Password changed")
+                .data(encryptedData)
+                .build();
+    }
+
     @PostMapping("/refresh")
     public GenericResponse<String> refresh(@RequestBody String refreshToken) {
 
@@ -102,7 +153,8 @@ public class AuthController {
                 districtName,
                 user.getPhone(),
                 roleName,
-                user.getIsActive()
+                user.getIsActive(),
+                user.getIsApproved()
         );
 
         String encryptedData =

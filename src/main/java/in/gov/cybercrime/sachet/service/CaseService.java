@@ -11,6 +11,8 @@ import in.gov.cybercrime.sachet.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,15 +50,33 @@ public class CaseService {
 
     public List<CaseFile> getCases(Optional<String> firNo,
                                    Optional<Integer> firYear,
-                                   Optional<Long> assignedToId) {
+                                   Optional<Long> assignedToId,
+                                   Optional<Boolean> isActive,
+                                   Optional<String> monthYear) {
 
-        return caseFileRepository.findByIsActiveTrue().stream()
+        DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MM-yyyy");
+        String validatedMonthYear = monthYear.map(v -> {
+            try {
+                monthYearFormatter.parse(v);
+                return v;
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("monthYear must be in MM-yyyy format");
+            }
+        }).orElse(null);
+
+        return caseFileRepository.findAll().stream()
                 .filter(c -> firNo.map(v -> v.equals(c.getFirNo())).orElse(true))
                 .filter(c -> firYear.map(v -> v.equals(c.getFirYear())).orElse(true))
                 .filter(c -> assignedToId
                         .map(v -> c.getAssignedToUser() != null &&
                                 v.equals(c.getAssignedToUser().getId()))
                         .orElse(true))
+                .filter(c -> isActive.map(v -> v.equals(c.getIsActive())).orElse(true))
+                .filter(c -> validatedMonthYear == null
+                        || (c.getCreatedAt() != null
+                        && validatedMonthYear.equals(
+                        monthYearFormatter.format(c.getCreatedAt().atZone(ZoneId.of("Asia/Kolkata")))
+                )))
                 .toList();
     }
 

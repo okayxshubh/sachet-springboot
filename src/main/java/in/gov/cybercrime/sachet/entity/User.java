@@ -37,4 +37,7 @@ public class User extends BaseEntity {
     @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
+
+    @Column(name = "is_approved", nullable = false)
+    private Boolean isApproved = false;
 }

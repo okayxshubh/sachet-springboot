@@ -19,4 +19,5 @@ public class UserResponse {
     private String phone;
     private String roleName;
     private Boolean isActive;
+    private Boolean isApproved;
 }

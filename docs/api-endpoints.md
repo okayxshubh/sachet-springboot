@@ -1,153 +1,640 @@
-# API ENDPOINTS (Spring Boot, React.js Integration)
+# Sachet Backend API Guide
 
-## Conventions
+This document reflects the current code in `src/main/java` and explains exactly:
+- which endpoint to call,
+- what body format to send,
+- whether request/response is encrypted,
+- and what response shape is returned.
 
-- Base path: `/api`
-- Encryption: All `/api/**` requests and responses are encrypted with `payload` (AES/CBC/PKCS5Padding). Helper endpoints under `/api/crypto/**` are plaintext.
-- Soft delete: `is_active` is handled via BaseEntity; list endpoints should default to active records only.
-- Downloads: Notice, chargesheet, and related files are generated client-side in React (no download endpoints).
+## 1) Common Rules
 
-**Note:** Update endpoints accept `updatedBy` in the request body; if omitted, the authenticated user is used.
+- Base URL: `http://<host>:8080`
+- API prefix: `/api`
+- Auth header (for protected APIs):
+  - `Authorization: Bearer <access_token>`
+- Success envelope (most APIs):
+  - `GenericResponse`
+  - Shape:
+    ```json
+    {
+      "timestamp": "dd-MM-yyyy HH:mm:ss",
+      "status": "OK",
+      "message": "...",
+      "data": "... or object/array"
+    }
+    ```
+- Error envelope (GlobalExceptionHandler):
+  ```json
+  {
+    "timestamp": "dd-MM-yyyy HH:mm:ss",
+    "status": "ERROR",
+    "message": "...",
+    "data": null
+  }
+  ```
 
----
+## 2) Encryption Behavior (Important)
 
-## Crypto Helpers
+This project currently uses **two request styles**:
 
-- `POST /api/crypto/encrypt` -- Encrypt any JSON or text and return raw encrypted text (plain response)
-- `POST /api/crypto/decrypt` -- Decrypt `{ payload }` or raw encrypted text and return the JSON or string
+1. **Raw encrypted string in body** (controller manually decrypts using `SachetCrypto.decrypt(...)`)
+   - Send `Content-Type: text/plain`
+   - Body is encrypted text only
 
----
+2. **JSON payload wrapper** (handled by `EncryptedRequestFilter` for JSON requests)
+   - Send `Content-Type: application/json`
+   - Body:
+     ```json
+     {
+       "payload": "<encrypted_string>"
+     }
+     ```
+   - Filter decrypts payload before controller mapping.
 
-## Masters (District, PoliceStations, Ranks, Roles)
+Response is also mixed:
+- Some APIs return `data` as encrypted string.
+- Some APIs return plain object/array in `data`.
 
-- `GET /api/masters/districts`        -- List all districts (active by default)
-- `GET /api/masters/police-stations`  -- List all police stations (active by default)
-- `GET /api/masters/ranks`            -- List all ranks (active by default)
-- `GET /api/masters/roles`            -- List all roles (active by default)
+## 3) Public APIs (No JWT Required)
 
-**Note:** These are lookup APIs used for dropdowns and validations in user/case forms.
+## 3.1 Crypto Helpers
 
----
+### POST `/api/crypto/encrypt`
+- Auth: No
+- Request:
+  - `text/plain`: raw text/json string
+  - OR `application/json`: any JSON object
+- Encryption in request: No (this endpoint does encryption)
+- Response: Plain `text/plain` encrypted string
 
-## Auth
+### POST `/api/crypto/decrypt`
+- Auth: No
+- Request:
+  - `text/plain`: encrypted string
+  - OR `application/json`: `{ "payload": "<encrypted>" }`
+- Response (`GenericResponse`):
+  - `data`: decrypted JSON/object if parseable, else decrypted text
 
-- `POST /api/auth/register`       -- Register a new user (encrypted request/response)
-- `POST /api/auth/login`          -- Login with phone/password, returns access + refresh tokens
-- `POST /api/auth/refresh`        -- Exchange refresh token for a new access token (refresh rotation)
-- `GET /api/auth/me`              -- Get current user profile (requires JWT)
-- `GET /api/check-token`          -- Check Token validity (requires JWT)
-- `POST /api/auth/get-user-token` -- Login to fetch user-specific encrypted token
-- `POST /api/auth/global-token`   -- Stateless global token endpoint (works for all clients, no user required)
+## 3.2 Auth
 
-**Note:** Global token is stateless, can be used on multiple devices simultaneously, no session conflicts.
+### POST `/api/auth/register`
+- Auth: No
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "name": "...",
+    "phone": "...",
+    "password": "...",
+    "rankId": 1,
+    "psId": 1,
+    "districtId": 1,
+    "roleId": 2
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted string message (`"User registered successfully"`)
+  - New users are saved with `isApproved=false` (approval pool)
 
----
+### POST `/api/auth/login`
+- Auth: No
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "phone": "...",
+    "password": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `AuthResponse`
+- `AuthResponse` fields: `name`, `role`, `rank`, `ps`, `token`, `refreshToken`
+- Note: login allowed only when `isActive=true` and `isApproved=true`
 
-## Users
+### POST `/api/auth/send-otp`
+- Auth: No
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "phone": "7018437924"
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted string message (`"OTP sent successfully"`)
+- Note: current implementation generates OTP and logs it on server side. Integrate an SMS gateway to actually deliver OTP to the mobile.
 
-- `POST /api/users/by-rank-active` -- List users (along with activity status + according to rank)
-- `POST /api/users`                -- Create a user
-- `POST /api/users/get`            -- Get user by ID (pass encrypted ID JSON)
-- `PUT /api/users/update`          -- Update user (supports `updatedBy`)
-- `POST /api/users/delete`         -- Soft Delete
+### POST `/api/auth/verify-otp`
+- Auth: No
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "phone": "7018437924",
+    "otp": "123456"
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted string message (`"OTP verified successfully"`)
 
-**Note:** Status change should flip `is_active` only, not hard-delete.
+### POST `/api/auth/change-password`
+- Auth: No
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "phone": "7018437924",
+    "newPassword": "NewStrongPassword@123"
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted string message (`"Password changed successfully"`)
+- Note: this works only after successful OTP verification.
 
+### POST `/api/auth/get-user-token`
+- Auth: No
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "phone": "...",
+    "password": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `AuthResponse`
 
-## Cases
-- `POST /api/cases`              -- Create case
-- `POST /api/cases/list`         -- List cases by Fir no / Year / Owner
-- `POST /api/cases/get`          -- Case details by id in json
-- `PUT /api/cases`        -- Update case (supports `updatedBy`)
-- `PATCH /api/cases/assign` -- Assign case (supports `updatedBy`)
-  **Note:** Search supports FIR filters and assigned officer filters.
+### POST `/api/auth/refresh`
+- Auth: No
+- Request type: plain **refresh token string** body (`text/plain`)
+- Response: `GenericResponse`
+  - `data`: new access token string (not encrypted)
 
+### GET `/api/auth/check-token`
+- Auth: Send bearer token in header
+- Request body: none
+- Response: plain text
+  - `200`: `VALID`
+  - `401`: `EXPIRED`
 
+## 4) Protected APIs (JWT Required)
 
+All endpoints below require `Authorization: Bearer <token>`.
 
+## 4.1 Auth Profile
 
----
+### GET `/api/auth/me`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: encrypted `UserResponse`
+  - `UserResponse`: `id,name,rankName,psName,districtName,phone,roleName,isActive,isApproved`
 
-## --------- APIs Above This Are Verified ---------
+## 4.2 Masters
 
----
+### GET `/api/masters/districts`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: encrypted array of districts
 
+### POST `/api/masters/police-stations/by-district`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "districtId": 1
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted array of police stations
 
+### GET `/api/masters/ranks`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: encrypted array of ranks
 
----
+### GET `/api/masters/roles`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: encrypted array of roles
 
-## Accused
+## 4.3 Users
 
-- `GET /api/cases/{caseId}/accused`   -- List accused
-- `POST /api/cases/{caseId}/accused`  -- Add accused
-- `PUT /api/accused/{id}`             -- Update accused (supports `updatedBy`)
-- `PATCH /api/accused/{id}/arrested`  -- Update arrest status (supports `updatedBy`)
+### POST `/api/users/by-rank-active`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "rankId": 2,
+    "isActive": true
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `UserResponse[]`
+- Note:
+  - Returns only approved users (`isApproved=true`)
+  - `rankId` and `isActive` are optional filters
+  - If a field is not sent, it is ignored
+  - Set `"isActive": false` to fetch inactive approved users
 
-**Note:** Arrest status update should not edit identity fields.
+### GET `/api/users/approval-pool`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: encrypted `UserResponse[]`
+- Note: contains `isActive=true` and `isApproved=false`
 
----
+### POST `/api/users/get`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "id": 1
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `UserResponse`
 
-## NCRP Transactions
+### POST `/api/users/approve`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "id": 1
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted approved `UserResponse`
 
-- `GET /api/cases/{caseId}/transactions`   -- List transactions
-- `POST /api/cases/{caseId}/transactions`  -- Add transaction
-- `PUT /api/transactions/{id}`             -- Update transaction (supports `updatedBy`)
+### POST `/api/users/create`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "name": "...",
+    "rankId": 2,
+    "psId": 1,
+    "roleId": 3,
+    "phone": "...",
+    "password": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted created `UserResponse`
+- Note: created user enters approval pool (`isApproved=false`)
 
-**Note:** Transactions should be immutable after finalization (soft rule).
+### PUT `/api/users/update`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "id": 1,
+    "request": {
+      "name": "...",
+      "rankId": 2,
+      "psId": 1,
+      "roleId": 3,
+      "phone": "...",
+      "password": "...",
+      "isActive": true,
+      "updatedBy": "..."
+    }
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted updated `UserResponse`
 
----
+### POST `/api/users/delete`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "id": 1,
+    "updatedBy": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted string (`"User deactivated successfully"`)
 
-## Notices
+## 4.4 Cases
 
-- `GET /api/cases/{caseId}/notices`  -- List notices
-- `POST /api/cases/{caseId}/notices` -- Create notice
-- `PUT /api/notices/{id}`            -- Update notice status/info (supports `updatedBy`)
+### POST `/api/cases`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "firNo": "12",
+    "firYear": 2026,
+    "psName": "Shimla PS",
+    "district": "Shimla",
+    "sections": "420",
+    "summary": "...",
+    "createdById": 1,
+    "assignedToId": 2
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted created `CaseFile`
 
-**Note:** Notice generation logic lives in backend service layer.
+### POST `/api/cases/list`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "firNo": "12",
+    "firYear": 2026,
+    "assignedToId": 2,
+    "isActive": true,
+    "monthYear": "02-2026"
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `CaseFile[]`
+- Note:
+  - `isActive` and `monthYear` are optional filters
+  - `monthYear` format must be `MM-yyyy`
+  - If a field is not sent, it is ignored
 
----
+### POST `/api/cases/get`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "id": 1
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `CaseFile`
 
-## Notice-Transaction Mapping
+### PUT `/api/cases/update`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption: `CaseUpdateRequest`
+  ```json
+  {
+    "id": 1,
+    "firNo": "12",
+    "firYear": 2026,
+    "psName": "...",
+    "district": "...",
+    "sections": "...",
+    "summary": "...",
+    "createdById": 1,
+    "assignedToId": 2,
+    "updatedBy": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted updated `CaseFile`
 
-- `POST /api/notices/{noticeId}/transactions`                     -- Map transaction to notice
-- `DELETE /api/notices/{noticeId}/transactions/{transactionId}`   -- Remove map
+### PATCH `/api/cases/assign`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "caseId": 1,
+    "assignedToId": 2,
+    "updatedBy": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted updated `CaseFile`
 
-**Note:** Mapping endpoints handle relational link tables only.
+### PATCH `/api/cases/delete`
+- Request type: **Raw encrypted string** (`text/plain`)
+- Plain JSON before encryption:
+  ```json
+  {
+    "id": 1,
+    "updatedBy": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted success text
 
----
+## 4.5 Accused
 
-## Notice Replies
+### POST `/api/accused/list`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt:
+  ```json
+  {
+    "caseId": 1
+  }
+  ```
+- Send:
+  ```json
+  {
+    "payload": "<encrypted_plain_json_above>"
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: plain `Accused[]` (not encrypted)
 
-- `GET /api/notices/{noticeId}/replies`  -- List replies
-- `POST /api/notices/{noticeId}/replies` -- Add reply
-- `PUT /api/replies/{id}`                -- Update reply (supports `updatedBy`)
+### POST `/api/accused/create`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `AccusedRequest`
+- Response: `GenericResponse`
+  - `data`: plain `Accused`
 
-**Note:** Reply status should be validated against allowed values.
+### PUT `/api/accused/update`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `AccusedRequest`
+- Response: `GenericResponse`
+  - `data`: plain `Accused`
 
----
+### PATCH `/api/accused/arrested`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt:
+  ```json
+  {
+    "id": 1,
+    "arrested": true,
+    "updatedBy": "..."
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: plain `Accused`
 
-## Correspondence
+## 4.6 Transactions (NCRP)
 
-- `GET /api/cases/{caseId}/correspondence`  -- List correspondence
-- `POST /api/cases/{caseId}/correspondence` -- Add correspondence
-- `PUT /api/correspondence/{id}`            -- Update correspondence (supports `updatedBy`)
+### POST `/api/transactions/list`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `{ "caseId": 1 }`
+- Response: `GenericResponse`
+  - `data`: plain `NcrpTransaction[]`
 
-**Note:** Incoming/outgoing correspondence can share the same table.
+### POST `/api/transactions/create`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `NcrpTransactionRequest`
+- Response: `GenericResponse`
+  - `data`: plain `NcrpTransaction`
 
----
+### PUT `/api/transactions/update`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `NcrpTransactionRequest`
+- Response: `GenericResponse`
+  - `data`: plain `NcrpTransaction`
 
-## Case Diaries
+## 4.7 Notices
 
-- `GET /api/cases/{caseId}/diaries`  -- List diaries
-- `POST /api/cases/{caseId}/diaries` -- Add diary
-- `PUT /api/diaries/{id}`            -- Update diary (supports `updatedBy`)
+### POST `/api/notices/list`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `{ "caseId": 1 }`
+- Response: `GenericResponse`
+  - `data`: plain `Notice[]`
 
-**Note:** Update should increment version rather than overwrite content (optional rule).
+### POST `/api/notices/create`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `NoticeRequest`
+- Response: `GenericResponse`
+  - `data`: plain `Notice`
 
----
+### PUT `/api/notices/update`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `NoticeRequest`
+- Response: `GenericResponse`
+  - `data`: plain `Notice`
 
-## Audit Logs
+## 4.8 Notice Replies
 
-- `GET /api/audit-logs` -- List audit logs (admin only)
+### POST `/api/replies/list`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `{ "noticeId": 1 }`
+- Response: `GenericResponse`
+  - `data`: plain `NoticeReply[]`
 
-**Note:** Audit logs should be read-only after creation.
+### POST `/api/replies/create`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `NoticeReplyRequest`
+- Response: `GenericResponse`
+  - `data`: plain `NoticeReply`
+
+### PUT `/api/replies/update`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `NoticeReplyRequest`
+- Response: `GenericResponse`
+  - `data`: plain `NoticeReply`
+
+## 4.9 Notice-Transaction Mapping
+
+### GET `/api/notices/{noticeId}/transactions`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: plain `NoticeTransaction[]`
+
+### POST `/api/notices/{noticeId}/transactions`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt:
+  ```json
+  {
+    "noticeId": 1,
+    "transactionId": 10
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: plain `NoticeTransaction`
+
+### DELETE `/api/notices/{noticeId}/transactions/{transactionId}`
+- Request body: none
+- Response: `GenericResponse`
+  - `status`: `OK`
+  - `message`: `Mapping removed`
+  - `data`: `OK`
+
+## 4.10 Correspondence
+
+### GET `/api/cases/{caseId}/correspondence`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: plain `Correspondence[]`
+
+### POST `/api/cases/{caseId}/correspondence`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `CorrespondenceRequest`
+- Response: `GenericResponse`
+  - `data`: plain `Correspondence`
+
+### PUT `/api/correspondence/{id}`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `CorrespondenceRequest`
+- Response: `GenericResponse`
+  - `data`: plain `Correspondence`
+
+## 4.11 Case Diaries
+
+### GET `/api/cases/{caseId}/diaries`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: plain `CaseDiary[]`
+
+### POST `/api/cases/{caseId}/diaries`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `CaseDiaryRequest`
+- Response: `GenericResponse`
+  - `data`: plain `CaseDiary`
+
+### PUT `/api/diaries/{id}`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt: `CaseDiaryRequest`
+- Response: `GenericResponse`
+  - `data`: plain `CaseDiary`
+
+## 4.12 Audit Logs
+
+### GET `/api/audit-logs?includeInactive=false`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: plain `AuditLog[]`
+
+## 5) Quick Calling Patterns
+
+## 5.1 For raw-encrypted endpoints (mostly Auth/User/Case + one master POST)
+
+1. Prepare plain JSON.
+2. Encrypt via `POST /api/crypto/encrypt`.
+3. Call target API with `Content-Type: text/plain` and body = encrypted string.
+4. If response `data` is encrypted, decrypt using `POST /api/crypto/decrypt`.
+
+## 5.2 For DTO endpoints behind filter (Accused/Notice/etc.)
+
+1. Prepare plain JSON.
+2. Encrypt via `POST /api/crypto/encrypt`.
+3. Call target API with `Content-Type: application/json` and:
+   ```json
+   { "payload": "<encrypted>" }
+   ```
+4. Response `data` is usually plain object/array.
+
+## 6) Important Notes
+
+- `GET`/`DELETE` endpoints are not filtered by `EncryptedRequestFilter`.
+- If you send `application/json` to filtered POST/PUT/PATCH endpoints without `payload`, server returns `400 Missing encrypted payload`.
+- Login/refresh will fail for users where `isApproved=false`.
+- Users created via register/create enter approval pool and must be approved via `/api/users/approve`.
+- OTP flow:
+  - `/api/auth/send-otp` -> `/api/auth/verify-otp` -> `/api/auth/change-password`
+  - OTP is currently logged by backend. Connect an SMS provider for real mobile delivery.
+
+## 7) Make OTP Sending
+
+Use this production checklist for India telecom routing:
+
+1. Register a business account with an India SMS provider (for example MSG91, Gupshup, Exotel, Kaleyra, etc.).
+2. Complete DLT registration on your operator/aggregator portal (required in India):
+   - Principal Entity (PE) registration
+   - Header/Sender ID approval
+   - OTP template approval (content template)
+3. Keep these values ready in backend config:
+   - API key / auth token
+   - Sender ID
+   - DLT template ID
+   - DLT entity/PE ID (if provider requires)
+4. Replace `dispatchOtp(...)` in `AuthService` with provider API call.
+5. OTP message should use approved template text exactly (DLT compliance).
+6. Test with real Indian numbers in Shimla (`+91XXXXXXXXXX`) and verify delivery latency/failures.
+7. Add operational controls:
+   - rate limit by phone/IP
+   - retry/backoff
+   - OTP attempt limit
+   - audit logs and masking in logs
+
+Current code location for integration:
+- `src/main/java/in/gov/cybercrime/sachet/service/AuthService.java` -> method `dispatchOtp(String phone, String otp)`.

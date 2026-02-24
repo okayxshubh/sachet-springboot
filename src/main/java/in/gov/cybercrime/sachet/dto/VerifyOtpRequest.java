@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RankIdRequest {
-    private Long rankId;
-    private Boolean isActive;
+public class VerifyOtpRequest {
+    private String phone;
+    private String otp;
 }

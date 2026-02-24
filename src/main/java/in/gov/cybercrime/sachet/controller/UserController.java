@@ -29,7 +29,7 @@ public class UserController {
                 objectMapper.readValue(json, RankIdRequest.class);
 
         List<UserResponse> users =
-                userService.getActiveUsersByRank(request.getRankId());
+                userService.getUsersByFilters(request.getRankId(), request.getIsActive());
 
         String jsonList = objectMapper.writeValueAsString(users);
         String encryptedData = SachetCrypto.encrypt(jsonList);
@@ -57,6 +57,42 @@ public class UserController {
         return GenericResponse.<String>builder()
                 .status("OK")
                 .message("User fetched successfully")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
+    }
+
+    @GetMapping("/approval-pool")
+    public GenericResponse<String> getApprovalPoolUsers() throws Exception {
+
+        List<UserResponse> users = userService.getApprovalPoolUsers();
+
+        String jsonList = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonList);
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Approval pool users fetched successfully")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
+    }
+
+    @PostMapping("/approve")
+    public GenericResponse<String> approveUser(@RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        IdRequest request = objectMapper.readValue(json, IdRequest.class);
+
+        UserResponse user = userService.approveUser(request.getId());
+
+        String jsonResponse = objectMapper.writeValueAsString(user);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("User approved successfully")
                 .data(encryptedData)
                 .timestamp(java.time.LocalDateTime.now())
                 .build();
@@ -96,8 +132,7 @@ public class UserController {
             throw new IllegalArgumentException("Decryption failed");
         }
 
-        UserUpdateWrapper wrapper =
-                objectMapper.readValue(json, UserUpdateWrapper.class);
+        UserUpdateWrapper wrapper = objectMapper.readValue(json, UserUpdateWrapper.class);
 
         if (wrapper.getId() == null || wrapper.getRequest() == null) {
             throw new IllegalArgumentException("Invalid request structure");

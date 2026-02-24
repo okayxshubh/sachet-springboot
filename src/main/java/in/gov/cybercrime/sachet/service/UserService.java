@@ -42,12 +42,19 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> getActiveUsersByRank(Long rankId) {
+    public List<UserResponse> getUsersByFilters(Long rankId, Boolean isActive) {
+        return userRepository.findByIsApprovedTrue().stream()
+                .filter(user -> rankId == null
+                        || (user.getRank() != null && rankId.equals(user.getRank().getId())))
+                .filter(user -> isActive == null || isActive.equals(user.getIsActive()))
+                .map(this::toResponse)
+                .toList();
+    }
 
-        List<User> users =
-                userRepository.findByRank_IdAndIsActiveTrue(rankId);
-
-        return users.stream()
+    @Transactional(readOnly = true)
+    public List<UserResponse> getApprovalPoolUsers() {
+        return userRepository.findByIsActiveTrueAndIsApprovedFalse()
+                .stream()
                 .map(this::toResponse)
                 .toList();
     }
@@ -83,7 +90,14 @@ public class UserService {
         user.setRole(role);
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setIsActive(true);
+        user.setIsApproved(false);
 
+        return toResponse(userRepository.save(user));
+    }
+
+    public UserResponse approveUser(Long id) {
+        User user = getUserEntity(id);
+        user.setIsApproved(true);
         return toResponse(userRepository.save(user));
     }
 
@@ -163,7 +177,8 @@ public class UserService {
                         : null,
                 user.getPhone(),
                 user.getRole() != null ? user.getRole().getRoleName() : null,
-                user.getIsActive()
+                user.getIsActive(),
+                user.getIsApproved()
         );
     }
 }

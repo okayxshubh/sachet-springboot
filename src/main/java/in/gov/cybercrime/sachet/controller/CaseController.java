@@ -59,7 +59,9 @@ public class CaseController {
         List<CaseFile> cases = caseService.getCases(
                 Optional.ofNullable(request.getFirNo()),
                 Optional.ofNullable(request.getFirYear()),
-                Optional.ofNullable(request.getAssignedToId())
+                Optional.ofNullable(request.getAssignedToId()),
+                Optional.ofNullable(request.getIsActive()),
+                Optional.ofNullable(request.getMonthYear())
         );
 
         return success(cases, "Success");

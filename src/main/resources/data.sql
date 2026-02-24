@@ -41,26 +41,26 @@ ON CONFLICT (id) DO NOTHING;
 -- ==============================
 -- Users
 -- ==============================
-INSERT INTO users (name, rank_id, ps_id, phone, role_id, password_hash, is_active, created_at, updated_at)
+INSERT INTO users (name, rank_id, ps_id, phone, role_id, password_hash, is_active, is_approved, created_at, updated_at)
 VALUES
     ('Rohit Malpani', 2, 1, '9816662225', 2,
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
      '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
 
     ('Anshita', 2, 1, '7580034077', 1,
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
      '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
 
     ('Prikshit', 2, 2, '6230775084', 1,
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
      '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
 
     ('Shubh', 2, 3, '7018437924', 1,
-     '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE,
+     '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE,
      '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
 
     ('GLOBAL SYSTEM USER', 2, 1, 'GLOBAL_USER', 1,
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE,
+     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
      NOW(), NOW())
 
 ON CONFLICT (phone) DO NOTHING;
