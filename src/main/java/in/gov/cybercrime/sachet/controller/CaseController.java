@@ -48,15 +48,15 @@ public class CaseController {
         return success(created, "Case created successfully");
     }
 
-    @PostMapping("/list")
-    public GenericResponse<String> listCases(@RequestBody String encryptedBody) throws Exception {
+
+    // Get Filtered Cases
+    @PostMapping("/get-filtered-cases")
+    public GenericResponse<String> getFilteredCases(@RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
 
-        CaseListRequest request =
-                objectMapper.readValue(json, CaseListRequest.class);
-
-        List<CaseFile> cases = caseService.getCases(
+        CaseListRequest request = objectMapper.readValue(json, CaseListRequest.class);
+        List<CaseFile> cases = caseService.getFilteredCases(
                 Optional.ofNullable(request.getFirNo()),
                 Optional.ofNullable(request.getFirYear()),
                 Optional.ofNullable(request.getAssignedToId()),
@@ -67,6 +67,8 @@ public class CaseController {
         return success(cases, "Success");
     }
 
+
+    // Get Specific Case By ID
     @PostMapping("/get")
     public GenericResponse<String> getCase(@RequestBody String encryptedBody) throws Exception {
 
@@ -84,11 +86,8 @@ public class CaseController {
 
         String json = SachetCrypto.decrypt(encryptedBody);
 
-        CaseUpdateRequest request =
-                objectMapper.readValue(json, CaseUpdateRequest.class);
-
-        CaseFile updated =
-                caseService.updateCase(request.getId(), request);
+        CaseUpdateRequest request = objectMapper.readValue(json, CaseUpdateRequest.class);
+        CaseFile updated = caseService.updateCase(request.getId(), request);
 
         return success(updated, "Case updated successfully");
     }

@@ -48,7 +48,8 @@ public class CaseService {
         }
     }
 
-    public List<CaseFile> getCases(Optional<String> firNo,
+    // Get Filtered Cases by ID, Year etc
+    public List<CaseFile> getFilteredCases(Optional<String> firNo,
                                    Optional<Integer> firYear,
                                    Optional<Long> assignedToId,
                                    Optional<Boolean> isActive,
