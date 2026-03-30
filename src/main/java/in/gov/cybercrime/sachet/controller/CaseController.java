@@ -67,7 +67,6 @@ public class CaseController {
         return success(cases, "Success");
     }
 
-    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
 
 
     // Get Specific Case By ID
