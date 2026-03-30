@@ -40,8 +40,7 @@ public class CaseController {
 
         String json = SachetCrypto.decrypt(encryptedBody);
 
-        CaseCreateRequest request =
-                objectMapper.readValue(json, CaseCreateRequest.class);
+        CaseCreateRequest request = objectMapper.readValue(json, CaseCreateRequest.class);
 
         CaseFile created = caseService.createCase(request);
 
@@ -66,8 +65,6 @@ public class CaseController {
 
         return success(cases, "Success");
     }
-
-
 
     // Get Specific Case By ID
     @PostMapping("/get-case-by-id")
