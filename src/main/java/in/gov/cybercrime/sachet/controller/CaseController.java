@@ -69,7 +69,7 @@ public class CaseController {
 
 
     // Get Specific Case By ID
-    @PostMapping("/get")
+    @PostMapping("/get-case-by-id")
     public GenericResponse<String> getCase(@RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
