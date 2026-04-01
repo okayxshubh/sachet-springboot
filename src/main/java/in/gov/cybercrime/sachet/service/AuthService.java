@@ -58,33 +58,6 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    public String register(RegisterRequest request) {
-        if (userRepository.existsByPhone(request.getPhone())) {
-            throw new IllegalArgumentException("Phone already exists");
-        }
-
-        RankMaster rank = rankRepository.findById(request.getRankId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid rankId"));
-
-        PoliceStationMaster ps = policeStationRepository.findById(request.getPsId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid psId"));
-
-        RoleMaster role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid roleId"));
-
-        User user = new User();
-        user.setName(request.getName());
-        user.setRank(rank);
-        user.setPs(ps);
-        user.setPhone(request.getPhone());
-        user.setRole(role);
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setIsActive(true);
-        user.setIsApproved(false);
-
-        userRepository.save(user);
-        return "User registered successfully";
-    }
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByPhone(request.getPhone())
@@ -120,6 +93,11 @@ public class AuthService {
                 token,
                 refreshToken
         );
+    }
+
+    // Boolean Reply
+    public boolean isTokenValid(String token) {
+        return jwtUtil.validateToken(token);
     }
 
     public AuthResponse refreshToken(String refreshToken) {
@@ -158,10 +136,49 @@ public class AuthService {
         );
     }
 
-    public boolean isTokenValid(String token) {
-        return jwtUtil.validateToken(token);
+    public String changePassword(ChangePasswordRequest request) {
+        String phone = normalizePhone(request.getPhone());
+        String newPassword = request.getNewPassword() != null ? request.getNewPassword().trim() : "";
+
+        if (newPassword.isBlank()) {
+            throw new IllegalArgumentException("New password is required");
+        }
+
+        Long verifiedUntil = verifiedOtpStore.get(phone);
+        if (verifiedUntil == null || System.currentTimeMillis() > verifiedUntil) {
+            verifiedOtpStore.remove(phone);
+            throw new InvalidCredentialsException("OTP verification required");
+        }
+
+        User user = ensureUserExists(phone);
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        verifiedOtpStore.remove(phone);
+        otpStore.remove(phone);
+        return "Password changed successfully";
     }
 
+
+    /*
+    * HELPER METHODS in Service
+    * */
+    private User ensureUserExists(String phone) {
+        return userRepository.findByPhone(phone)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    private String normalizePhone(String phone) {
+        if (phone == null || phone.trim().isBlank()) {
+            throw new IllegalArgumentException("Phone is required");
+        }
+        return phone.trim();
+    }
+
+
+    /*
+    * OTP Services
+    * */
     public String sendOtp(SendOtpRequest request) {
         String phone = normalizePhone(request.getPhone());
         ensureUserExists(phone);
@@ -193,41 +210,6 @@ public class AuthService {
         otpStore.remove(phone);
         verifiedOtpStore.put(phone, System.currentTimeMillis() + VERIFIED_TTL_MILLIS);
         return "OTP verified successfully";
-    }
-
-    public String changePassword(ChangePasswordRequest request) {
-        String phone = normalizePhone(request.getPhone());
-        String newPassword = request.getNewPassword() != null ? request.getNewPassword().trim() : "";
-
-        if (newPassword.isBlank()) {
-            throw new IllegalArgumentException("New password is required");
-        }
-
-        Long verifiedUntil = verifiedOtpStore.get(phone);
-        if (verifiedUntil == null || System.currentTimeMillis() > verifiedUntil) {
-            verifiedOtpStore.remove(phone);
-            throw new InvalidCredentialsException("OTP verification required");
-        }
-
-        User user = ensureUserExists(phone);
-        user.setPasswordHash(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-
-        verifiedOtpStore.remove(phone);
-        otpStore.remove(phone);
-        return "Password changed successfully";
-    }
-
-    private User ensureUserExists(String phone) {
-        return userRepository.findByPhone(phone)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
-    private String normalizePhone(String phone) {
-        if (phone == null || phone.trim().isBlank()) {
-            throw new IllegalArgumentException("Phone is required");
-        }
-        return phone.trim();
     }
 
     private void dispatchOtp(String phone, String otp) {

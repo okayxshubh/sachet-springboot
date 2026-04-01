@@ -6,6 +6,7 @@ import in.gov.cybercrime.sachet.encryption.SachetCrypto;
 import in.gov.cybercrime.sachet.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,28 +21,46 @@ public class UserController {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping("/by-rank-active")
-    public GenericResponse<String> getActiveUsersByRank(@RequestBody String encryptedBody) throws Exception {
+    // Step 1: register
+    @PostMapping("/register")
+    public GenericResponse<String> register(@RequestBody String encrypted) throws Exception {
+
+        String decryptedJson = SachetCrypto.decrypt(encrypted);
+        RegisterRequest registerRequest =
+                objectMapper.readValue(decryptedJson, RegisterRequest.class);
+
+        String result = userService.register(registerRequest);
+        String encryptedData = SachetCrypto.encrypt(result);
+
+        return GenericResponse.<String>builder()
+                .timestamp(LocalDateTime.now())
+                .status("OK")
+                .message("User registered successfully")
+                .data(encryptedData)
+                .build();
+    }
+
+    // Step 2: Approval by Nodal Officer
+    @PostMapping("/approve")
+    public GenericResponse<String> approveUser(@RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
 
-        RankIdRequest request =
-                objectMapper.readValue(json, RankIdRequest.class);
+        ApproveUserRequest request = objectMapper.readValue(json, ApproveUserRequest.class);
+        UserResponse user = userService.approveUser(request);
 
-        List<UserResponse> users =
-                userService.getUsersByFilters(request.getRankId(), request.getIsActive());
-
-        String jsonList = objectMapper.writeValueAsString(users);
-        String encryptedData = SachetCrypto.encrypt(jsonList);
+        String jsonResponse = objectMapper.writeValueAsString(user);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
 
         return GenericResponse.<String>builder()
                 .status("OK")
-                .message("Users fetched successfully")
+                .message("User approved successfully")
                 .data(encryptedData)
                 .timestamp(java.time.LocalDateTime.now())
                 .build();
     }
 
+    // Get Any Specific User Details By ID
     @PostMapping("/get")
     public GenericResponse<String> getUser(@RequestBody String encryptedBody) throws Exception {
 
@@ -62,6 +81,7 @@ public class UserController {
                 .build();
     }
 
+    // Get all Non-Approved (Newly registered Users)
     @GetMapping("/approval-pool")
     public GenericResponse<String> getApprovalPoolUsers() throws Exception {
 
@@ -78,47 +98,10 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/approve")
-    public GenericResponse<String> approveUser(@RequestBody String encryptedBody) throws Exception {
 
-        String json = SachetCrypto.decrypt(encryptedBody);
-
-        IdRequest request = objectMapper.readValue(json, IdRequest.class);
-
-        UserResponse user = userService.approveUser(request.getId());
-
-        String jsonResponse = objectMapper.writeValueAsString(user);
-        String encryptedData = SachetCrypto.encrypt(jsonResponse);
-
-        return GenericResponse.<String>builder()
-                .status("OK")
-                .message("User approved successfully")
-                .data(encryptedData)
-                .timestamp(java.time.LocalDateTime.now())
-                .build();
-    }
-
-    @PostMapping("/create")
-    public GenericResponse<String> createUser(@RequestBody String encryptedBody) throws Exception {
-
-        String json = SachetCrypto.decrypt(encryptedBody);
-
-        UserCreateRequest request =
-                objectMapper.readValue(json, UserCreateRequest.class);
-
-        UserResponse user = userService.createUser(request);
-
-        String jsonResponse = objectMapper.writeValueAsString(user);
-        String encryptedData = SachetCrypto.encrypt(jsonResponse);
-
-        return GenericResponse.<String>builder()
-                .status("OK")
-                .message("User created successfully")
-                .data(encryptedData)
-                .timestamp(java.time.LocalDateTime.now())
-                .build();
-    }
-
+    /*
+    * After Approval.. Powers for High users
+    * */
     @PutMapping("/update")
     public GenericResponse<String> updateUser(@RequestBody String encryptedBody) throws Exception {
 
@@ -163,6 +146,26 @@ public class UserController {
         return GenericResponse.<String>builder()
                 .status("OK")
                 .message("Success")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
+    }
+
+    @PostMapping("/by-rank-active")
+    public GenericResponse<String> getActiveUsersByRank(@RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        RankIdRequest request = objectMapper.readValue(json, RankIdRequest.class);
+
+        List<UserResponse> users = userService.getUsersByFilters(request.getRankId(), request.getIsActive());
+
+        String jsonList = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonList);
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Users fetched successfully")
                 .data(encryptedData)
                 .timestamp(java.time.LocalDateTime.now())
                 .build();

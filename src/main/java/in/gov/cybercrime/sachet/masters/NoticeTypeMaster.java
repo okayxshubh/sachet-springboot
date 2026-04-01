@@ -22,6 +22,6 @@ public class NoticeTypeMaster implements Serializable {
     private Long id;
 
     @Column(name = "notice_type_name")
-    private String noticeTypeName;
+    private String name;
 
 }

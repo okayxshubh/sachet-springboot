@@ -1,8 +1,6 @@
 package in.gov.cybercrime.sachet.service;
 
-import in.gov.cybercrime.sachet.dto.UserCreateRequest;
-import in.gov.cybercrime.sachet.dto.UserResponse;
-import in.gov.cybercrime.sachet.dto.UserUpdateRequest;
+import in.gov.cybercrime.sachet.dto.*;
 import in.gov.cybercrime.sachet.entity.User;
 import in.gov.cybercrime.sachet.exceptions.ResourceNotFoundException;
 import in.gov.cybercrime.sachet.masters.PoliceStationMaster;
@@ -25,73 +23,37 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RankMasterRepository rankRepository;
-    private final PoliceStationMasterRepository psRepository;
+    private final PoliceStationMasterRepository policeStationRepository;
     private final RoleMasterRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
                        RankMasterRepository rankRepository,
-                       PoliceStationMasterRepository psRepository,
+                       PoliceStationMasterRepository policeStationRepository,
                        RoleMasterRepository roleRepository,
                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.rankRepository = rankRepository;
-        this.psRepository = psRepository;
+        this.policeStationRepository = policeStationRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional(readOnly = true)
-    public List<UserResponse> getUsersByFilters(Long rankId, Boolean isActive) {
-        return userRepository.findByIsApprovedTrue().stream()
-                .filter(user -> rankId == null
-                        || (user.getRank() != null && rankId.equals(user.getRank().getId())))
-                .filter(user -> isActive == null || isActive.equals(user.getIsActive()))
-                .map(this::toResponse)
-                .toList();
-    }
 
-    @Transactional(readOnly = true)
-    public List<UserResponse> getApprovalPoolUsers() {
-        return userRepository.findByIsActiveTrueAndIsApprovedFalse()
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public UserResponse getUser(Long id) {
-        return toResponse(getUserEntity(id));
-    }
-
-    public UserResponse createUser(UserCreateRequest request) {
-
+    // Register but Approval Pending
+    public String register(RegisterRequest request) {
         if (userRepository.existsByPhone(request.getPhone())) {
-            throw new IllegalArgumentException("Mobile number already registered");
+            throw new IllegalArgumentException("Phone already exists");
         }
 
         RankMaster rank = rankRepository.findById(request.getRankId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Rank not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid rankId"));
 
-        PoliceStationMaster ps = psRepository.findById(request.getPsId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Police station not found"));
+        PoliceStationMaster ps = policeStationRepository.findById(request.getPsId())
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid psId"));
 
-        RoleMaster role;
-
-        if (request.getRoleId() != null) {
-
-            role = roleRepository.findById(request.getRoleId())
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("Role not found"));
-
-        } else {
-
-            role = roleRepository.findTopByOrderByIdDesc()
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("No roles configured in system"));
-        }
+        RoleMaster role = roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid roleId"));
 
         User user = new User();
         user.setName(request.getName());
@@ -101,17 +63,88 @@ public class UserService {
         user.setRole(role);
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setIsActive(true);
-        user.setIsApproved(true); // Approved by default when creating user
+        user.setIsApproved(false);
 
-        return toResponse(userRepository.save(user));
+        userRepository.save(user);
+        return "User registered successfully";
     }
 
-    public UserResponse approveUser(Long id) {
-        User user = getUserEntity(id);
+    // Approve User: Nodal officer can set any details while approving
+    public UserResponse approveUser(ApproveUserRequest request) {
+
+        User user = getUserEntity(request.getId());
+
+        if (request.getName() != null && !request.getName().isBlank()) {
+            user.setName(request.getName().trim());
+        }
+
+        if (request.getRankId() != null) {
+            RankMaster rank = rankRepository.findById(request.getRankId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Invalid Rank"));
+            user.setRank(rank);
+        }
+
+        if (request.getPsId() != null) {
+            PoliceStationMaster ps = policeStationRepository.findById(request.getPsId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Invalid Police Station"));
+            user.setPs(ps);
+        }
+
+        if (request.getRoleId() != null) {
+            RoleMaster role = roleRepository.findById(request.getRoleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Invalid Role"));
+            user.setRole(role);
+        }
+
+        if (request.getPhone() != null &&
+                !request.getPhone().isBlank() &&
+                !request.getPhone().equals(user.getPhone())) {
+
+            if (userRepository.existsByPhone(request.getPhone())) {
+                throw new IllegalArgumentException("Phone already exists");
+            }
+            user.setPhone(request.getPhone().trim());
+        }
+
+        if (request.getIsActive() != null) {
+            user.setIsActive(request.getIsActive());
+        }
+
+        if (request.getUpdatedBy() != null) {
+            user.setUpdatedBy(request.getUpdatedBy());
+        }
+
+        // enforce required fields before approval
+        if (user.getRole() == null ||
+                user.getRank() == null ||
+                user.getPs() == null) {
+
+            throw new IllegalArgumentException("Complete user details before approval");
+        }
+
         user.setIsApproved(true);
+
         return toResponse(userRepository.save(user));
     }
 
+
+
+    /*
+    * AFTER User is Approved and shown in list of users
+    * */
+
+    // Soft Deletion of User By Higher Authorities
+    public void deleteUser(Long id, String updatedBy) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        user.setIsActive(false);
+        user.setUpdatedBy(updatedBy);
+        user.setUpdatedAt(Instant.now());
+
+        userRepository.save(user);
+    }
+
+    // Update User Request Only to Super Admin or Higher Officers
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
 
         User user = getUserEntity(id);
@@ -127,7 +160,7 @@ public class UserService {
         }
 
         if (request.getPsId() != null) {
-            PoliceStationMaster ps = psRepository.findById(request.getPsId())
+            PoliceStationMaster ps = policeStationRepository.findById(request.getPsId())
                     .orElseThrow(() -> new ResourceNotFoundException("Invalid Police Station"));
             user.setPs(ps);
         }
@@ -163,16 +196,11 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
-    public void deleteUser(Long id, String updatedBy) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        user.setIsActive(false);
-        user.setUpdatedBy(updatedBy);
-        user.setUpdatedAt(Instant.now());
 
-        userRepository.save(user);
-    }
+    /*
+    * HELPER METHODS BELOW
+    * */
 
     @Transactional(readOnly = true)
     private User getUserEntity(Long id) {
@@ -195,4 +223,28 @@ public class UserService {
                 user.getIsApproved()
         );
     }
+
+    @Transactional(readOnly = true)
+    public List<UserResponse> getUsersByFilters(Long rankId, Boolean isActive) {
+        return userRepository.findByIsApprovedTrue().stream()
+                .filter(user -> rankId == null
+                        || (user.getRank() != null && rankId.equals(user.getRank().getId())))
+                .filter(user -> isActive == null || isActive.equals(user.getIsActive()))
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserResponse> getApprovalPoolUsers() {
+        return userRepository.findByIsApprovedFalse()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse getUser(Long id) {
+        return toResponse(getUserEntity(id));
+    }
+
 }

@@ -67,16 +67,87 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow CORS preflight
-                .requestMatchers("/api/auth/**").permitAll()           // registration/login open
-                .requestMatchers("/api/auth/me").authenticated()  // Requires JWT For Profile Info
-                .requestMatchers("/api/auth/get-token").permitAll()    // get token externally
-                .requestMatchers("/api/auth/**").permitAll() // For token Check
-                .requestMatchers("/api/crypto/**").permitAll()         // crypto endpoints open
-                .requestMatchers("/api/master/**").permitAll()         // master APIs open (no JWT)
-                .requestMatchers("/api/masters/**").permitAll()        // master APIs open
-                .requestMatchers("/api/admin/**").hasAnyRole("SUPERADMIN", "ADMIN") // admin endpoints require JWT + These roles
-                .anyRequest().authenticated()                           // other endpoints require JWT
+
+                // =========================
+                // 1. CORS / PRE-FLIGHT
+                // =========================
+                // Required for browser-based clients (OPTIONS calls before actual request)
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+
+                // =========================
+                // 2. PUBLIC AUTH ENDPOINTS
+                // =========================
+                // These endpoints DO NOT require JWT
+
+                // Login
+                .requestMatchers("/api/auth/login").permitAll()
+
+                // Token generation (duplicate login-style endpoint)
+                .requestMatchers("/api/auth/get-user-token").permitAll()
+
+                // Token validation (used by frontend to check expiry)
+                .requestMatchers("/api/auth/check-token").permitAll()
+
+                // Refresh token
+                .requestMatchers("/api/auth/refresh").permitAll()
+
+                // OTP flow (no login required initially)
+                .requestMatchers("/api/auth/send-otp").permitAll()
+                .requestMatchers("/api/auth/verify-otp").permitAll()
+
+
+                // =========================
+                // 3. PROTECTED AUTH ENDPOINTS  // These REQUIRE valid JWT
+                // =========================
+
+                // Get logged-in user details
+                .requestMatchers("/api/auth/me").authenticated()
+
+                // Change password (must be logged in)
+                .requestMatchers("/api/auth/change-password").authenticated()
+
+
+                // =========================
+                // 4. USER MODULE
+                // =========================
+                // Public registration
+                .requestMatchers("/api/users/register").permitAll()
+
+                // Admin / Nodal actions → require elevated roles
+                .requestMatchers("/api/users/approve").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/users/approval-pool").hasAnyRole("ADMIN", "SUPERADMIN")
+
+                // User management → restricted
+                .requestMatchers("/api/users/update").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/users/delete").hasAnyRole("ADMIN", "SUPERADMIN")
+
+                // Fetch specific user → authenticated users only
+                .requestMatchers("/api/users/get").authenticated()
+                .requestMatchers("/api/users/by-rank-active").authenticated()
+
+
+                // =========================
+                // 5. OPEN UTILITY / MASTER APIs  // No authentication required
+                // =========================
+                .requestMatchers("/api/crypto/**").permitAll()
+                .requestMatchers("/api/master/**").permitAll()
+                .requestMatchers("/api/masters/**").permitAll()
+
+
+                // =========================
+                // 6. ADMIN MODULE (GENERIC)
+                // =========================
+                // Any other admin APIs
+                .requestMatchers("/api/admin/**")
+                .hasAnyRole("SUPERADMIN", "ADMIN")
+
+
+                // =========================
+                // 7. FALLBACK SECURITY
+                // =========================
+                // Everything else MUST be authenticated
+                .anyRequest().authenticated()
         );
 
         // Filters for encryption and JWT

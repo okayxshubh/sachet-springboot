@@ -289,3 +289,15 @@ WHERE NOT EXISTS (
 
 SELECT setval(pg_get_serial_sequence('audit_logs', 'id'), COALESCE(MAX(id), 1), TRUE)
 FROM audit_logs;
+
+
+
+
+-- #### Notice Types to be generated ####
+--INSERT INTO templates (id, title) VALUES
+--  ('791-meta', '791 Act for Meta'),
+--  ('64-bnss-meta', '64 BNSS for Meta Platform'),
+--  ('35-summon', '35 (3) Summon for Appearance by Police'),
+--  ('94-106-bank', '94 & 106 BNSS for Bank'),
+--  ('95-cdr', '95 BNSS for CDR/CAF/IPDR'),
+--  ('94-cctv', '94 BNSS CCTV/ATM Footage');
