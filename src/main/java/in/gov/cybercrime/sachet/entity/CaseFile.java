@@ -1,9 +1,15 @@
 package in.gov.cybercrime.sachet.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import in.gov.cybercrime.sachet.masters.CaseStatusMaster;
+import in.gov.cybercrime.sachet.masters.DistrictMaster;
+import in.gov.cybercrime.sachet.masters.PoliceStationMaster;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "cases")
@@ -18,11 +24,13 @@ public class CaseFile extends BaseEntity {
     @Column(name = "fir_year", nullable = false)
     private Integer firYear;
 
-    @Column(name = "ps_name", nullable = false)
-    private String psName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ps_id", nullable = false)
+    private PoliceStationMaster policeStation;
 
-    @Column(name = "district", nullable = false)
-    private String district;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "district_id", nullable = false)
+    private DistrictMaster district;
 
     @Column(name = "sections")
     private String sections;
@@ -30,11 +38,19 @@ public class CaseFile extends BaseEntity {
     @Column(name = "summary", nullable = false)
     private String summary;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_status", nullable = false)
+    private CaseStatusMaster caseStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_owner", nullable = false)
     private User caseOwner;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_to_user", nullable = false)
-    private User assignedToUser;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "case_assigned_users",
+            joinColumns = @JoinColumn(name = "case_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> assignedToUsers = new HashSet<>();
 }

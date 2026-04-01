@@ -51,15 +51,19 @@ public class CaseController {
     @PostMapping("/get-filtered-cases")
     public GenericResponse<String> getFilteredCases(@RequestBody String encryptedBody) throws Exception {
 
+        // Decrypt request body
         String json = SachetCrypto.decrypt(encryptedBody);
 
+        // Deserialize into request DTO
         CaseListRequest request = objectMapper.readValue(json, CaseListRequest.class);
+
+        // Call service with nullable parameters directly
         List<CaseFile> cases = caseService.getFilteredCases(
-                Optional.ofNullable(request.getFirNo()),
-                Optional.ofNullable(request.getFirYear()),
-                Optional.ofNullable(request.getAssignedToId()),
-                Optional.ofNullable(request.getIsActive()),
-                Optional.ofNullable(request.getMonthYear())
+                request.getFirNo(),
+                request.getFirYear(),
+                request.getAssignedToId(),
+                request.getIsActive(),
+                request.getMonthYear()
         );
 
         return success(cases, "Success");
@@ -78,27 +82,25 @@ public class CaseController {
         return success(caseFile, "Success");
     }
 
-    @PutMapping("/update")
-    public GenericResponse<String> updateCase(@RequestBody String encryptedBody) throws Exception {
+    @PutMapping("/update/{id}")
+    public GenericResponse<String> updateCase(@PathVariable Long id,
+                                              @RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
-
         CaseUpdateRequest request = objectMapper.readValue(json, CaseUpdateRequest.class);
-        CaseFile updated = caseService.updateCase(request.getId(), request);
+
+        CaseFile updated = caseService.updateCase(id, request);
 
         return success(updated, "Case updated successfully");
     }
 
-    @PatchMapping("/assign")
-    public GenericResponse<String> assignCase(@RequestBody String encryptedBody) throws Exception {
+    @PatchMapping("/assign/{caseId}")
+    public GenericResponse<String> assignCase(@PathVariable Long caseId, @RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
+        AssignCaseRequest request = objectMapper.readValue(json, AssignCaseRequest.class);
 
-        AssignCaseRequest request =
-                objectMapper.readValue(json, AssignCaseRequest.class);
-
-        CaseFile updated =
-                caseService.assignCase(request.getCaseId(), request);
+        CaseFile updated = caseService.assignCase(caseId, request);
 
         return success(updated, "Case assigned successfully");
     }

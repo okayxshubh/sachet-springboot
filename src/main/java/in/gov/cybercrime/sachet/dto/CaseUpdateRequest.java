@@ -3,17 +3,25 @@ package in.gov.cybercrime.sachet.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class CaseUpdateRequest {
-    private Long id;
+
     private String firNo;
     private Integer firYear;
-    private String psName;
-    private String district;
+
+    // Use IDs instead of names
+    private Long psId;
+    private Long districtId;
+
     private String sections;
     private String summary;
     private Long createdById;
-    private Long assignedToId;
     private String updatedBy;
+
+    // New fields
+    private Long caseStatusId;
+    private List<Long> assignedToIds;
 }
