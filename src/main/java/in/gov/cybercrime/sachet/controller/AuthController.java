@@ -90,6 +90,7 @@ public class AuthController {
                 .build();
     }
 
+
     @PostMapping("/change-password")
     public GenericResponse<String> changePassword(@RequestBody String encrypted) throws Exception {
 
@@ -107,32 +108,9 @@ public class AuthController {
                 .build();
     }
 
-
     /*
     * TOKEN END POINTS
     * */
-    @PostMapping("/get-user-token")
-    public GenericResponse<String> getToken(@RequestBody String encrypted) throws Exception {
-
-        String decryptedJson = SachetCrypto.decrypt(encrypted);
-        decryptedJson = decryptedJson.trim().replaceAll("\\r?\\n", "");
-
-        LoginRequest loginRequest =
-                objectMapper.readValue(decryptedJson, LoginRequest.class);
-
-        AuthResponse authResponse = authService.login(loginRequest);
-
-        String encryptedData =
-                SachetCrypto.encrypt(objectMapper.writeValueAsString(authResponse));
-
-        return GenericResponse.<String>builder()
-                .timestamp(LocalDateTime.now())
-                .status("OK")
-                .message("Token Fetched Successfully")
-                .data(encryptedData)
-                .build();
-    }
-
     @GetMapping("/check-token")
     public ResponseEntity<String> checkToken(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 

@@ -104,8 +104,8 @@ public class SecurityConfig {
                 // Get logged-in user details
                 .requestMatchers("/api/auth/me").authenticated()
 
-                // Change password (must be logged in)
-                .requestMatchers("/api/auth/change-password").authenticated()
+                // Change password (NO JWT)
+                .requestMatchers("/api/auth/change-password").permitAll()
 
 
                 // =========================

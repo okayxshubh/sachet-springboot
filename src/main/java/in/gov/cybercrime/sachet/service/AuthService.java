@@ -137,25 +137,25 @@ public class AuthService {
     }
 
     public String changePassword(ChangePasswordRequest request) {
+
         String phone = normalizePhone(request.getPhone());
-        String newPassword = request.getNewPassword() != null ? request.getNewPassword().trim() : "";
+        String newPassword = request.getNewPassword() != null
+                ? request.getNewPassword().trim()
+                : "";
+
+        if (phone == null || phone.isBlank()) {
+            throw new IllegalArgumentException("Phone is required");
+        }
 
         if (newPassword.isBlank()) {
             throw new IllegalArgumentException("New password is required");
         }
 
-        Long verifiedUntil = verifiedOtpStore.get(phone);
-        if (verifiedUntil == null || System.currentTimeMillis() > verifiedUntil) {
-            verifiedOtpStore.remove(phone);
-            throw new InvalidCredentialsException("OTP verification required");
-        }
-
         User user = ensureUserExists(phone);
+
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
-        verifiedOtpStore.remove(phone);
-        otpStore.remove(phone);
         return "Password changed successfully";
     }
 
