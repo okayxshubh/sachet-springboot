@@ -47,7 +47,6 @@ public class CaseController {
         return success(created, "Case created successfully");
     }
 
-
     // Get Filtered Cases
     @PostMapping("/get-filtered-cases")
     public GenericResponse<String> getFilteredCases(@RequestBody String encryptedBody) throws Exception {
