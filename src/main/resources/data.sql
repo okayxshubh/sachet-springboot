@@ -44,7 +44,7 @@ SET ps_name = EXCLUDED.ps_name,
     district_id = EXCLUDED.district_id;
 
 -- ==============================
--- Users
+-- 30 Dummy Users
 -- ==============================
 INSERT INTO users (name, rank_id, ps_id, phone, role_id, password_hash, is_active, is_approved, created_at, updated_at)
 SELECT
@@ -59,43 +59,82 @@ SELECT
     v.created_at,
     v.updated_at
 FROM (
-    VALUES
-    ('Rohit Malpani', 'IO (Investigating Officer)', 'Shimla PS', '9816662225', 'Admin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
-     '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
-    ('Anshita', 'IO (Investigating Officer)', 'Shimla PS', '7580034077', 'SuperAdmin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
-     '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
-    ('Prikshit', 'IO (Investigating Officer)', 'Kullu PS', '6230775084', 'SuperAdmin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
-     '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
-    ('Shubh', 'IO (Investigating Officer)', 'Mandi PS', '7018437924', 'SuperAdmin',
-     '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE,
-     '2026-02-19 10:00:00+05:30'::timestamptz, '2026-02-19 10:00:00+05:30'::timestamptz),
-    ('Pending User 1', 'Other', 'Shimla PS', '9000000001', 'Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE,
-     '2026-02-19 10:05:00+05:30'::timestamptz, '2026-02-19 10:05:00+05:30'::timestamptz),
-    ('Pending User 2', 'Other', 'Kullu PS', '9000000002', 'Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE,
-     '2026-02-19 10:06:00+05:30'::timestamptz, '2026-02-19 10:06:00+05:30'::timestamptz),
-    ('Pending User 3', 'Other', 'Mandi PS', '9000000003', 'Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE,
-     '2026-02-19 10:07:00+05:30'::timestamptz, '2026-02-19 10:07:00+05:30'::timestamptz),
-    ('GLOBAL SYSTEM USER', 'IO (Investigating Officer)', 'Shimla PS', 'GLOBAL_USER', 'SuperAdmin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW())
-) AS v(name, rank_name, ps_name, phone, role_name, password_hash, is_active, is_approved, created_at, updated_at)
-JOIN mst_rank r ON r.rank_name = v.rank_name
-JOIN mst_police_station ps ON ps.ps_name = v.ps_name
-JOIN mst_role rl ON rl.role_name = v.role_name
-ON CONFLICT (phone) DO UPDATE
-SET name = EXCLUDED.name,
-    rank_id = EXCLUDED.rank_id,
-    ps_id = EXCLUDED.ps_id,
-    role_id = EXCLUDED.role_id,
-    password_hash = EXCLUDED.password_hash,
-    is_active = EXCLUDED.is_active,
-    is_approved = EXCLUDED.is_approved,
-    updated_at = EXCLUDED.updated_at;
+         VALUES
+             -- MAIN USERS (SHO)
+             ('Rohit Malpani', 'SHO', 'Shimla PS', '9816662225', 'Admin',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
+              NOW(), NOW()),
+
+             ('Anshita', 'SHO', 'Shimla PS', '7580034077', 'SuperAdmin',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
+              NOW(), NOW()),
+
+             ('Prikshit', 'SHO', 'Kullu PS', '6230775084', 'SuperAdmin',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE,
+              NOW(), NOW()),
+
+             ('Shubh', 'SHO', 'Mandi PS', '7018437924', 'SuperAdmin',
+              '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE,
+              NOW(), NOW()),
+
+             -- APPROVED IO USERS (MIX)
+             ('IO User 1', 'IO (Investigating Officer)', 'Shimla PS', '9000000101', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 2', 'IO (Investigating Officer)', 'Kullu PS', '9000000102', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 3', 'IO (Investigating Officer)', 'Mandi PS', '9000000103', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 4', 'IO (Investigating Officer)', 'Shimla PS', '9000000104', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 5', 'IO (Investigating Officer)', 'Kullu PS', '9000000105', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 6', 'IO (Investigating Officer)', 'Mandi PS', '9000000106', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 7', 'IO (Investigating Officer)', 'Shimla PS', '9000000107', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 8', 'IO (Investigating Officer)', 'Kullu PS', '9000000108', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 9', 'IO (Investigating Officer)', 'Mandi PS', '9000000109', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+             ('IO User 10', 'IO (Investigating Officer)', 'Shimla PS', '9000000110', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+
+             -- PENDING APPROVAL USERS (10)
+             ('Pending User 1', 'IO (Investigating Officer)', 'Shimla PS', '9000000201', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 2', 'IO (Investigating Officer)', 'Kullu PS', '9000000202', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 3', 'IO (Investigating Officer)', 'Mandi PS', '9000000203', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 4', 'IO (Investigating Officer)', 'Shimla PS', '9000000204', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 5', 'IO (Investigating Officer)', 'Kullu PS', '9000000205', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 6', 'IO (Investigating Officer)', 'Mandi PS', '9000000206', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 7', 'IO (Investigating Officer)', 'Shimla PS', '9000000207', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 8', 'IO (Investigating Officer)', 'Kullu PS', '9000000208', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 9', 'IO (Investigating Officer)', 'Mandi PS', '9000000209', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW()),
+             ('Pending User 10', 'IO (Investigating Officer)', 'Shimla PS', '9000000210', 'Staff',
+              '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, FALSE, NOW(), NOW())
+
+     ) AS v(name, rank_name, ps_name, phone, role_name, password_hash, is_active, is_approved, created_at, updated_at)
+         JOIN mst_rank r ON r.rank_name = v.rank_name
+         JOIN mst_police_station ps ON ps.ps_name = v.ps_name
+         JOIN mst_role rl ON rl.role_name = v.role_name
+    ON CONFLICT (phone) DO UPDATE
+                               SET name = EXCLUDED.name,
+                               rank_id = EXCLUDED.rank_id,
+                               ps_id = EXCLUDED.ps_id,
+                               role_id = EXCLUDED.role_id,
+                               password_hash = EXCLUDED.password_hash,
+                               is_active = EXCLUDED.is_active,
+                               is_approved = EXCLUDED.is_approved,
+                               updated_at = EXCLUDED.updated_at;
+
 
 -- ==============================
 -- Case Status
@@ -160,3 +199,15 @@ VALUES
     (6, '94 BNSS CCTV/ATM Footage')
 ON CONFLICT (id) DO UPDATE
 SET notice_type_name = EXCLUDED.notice_type_name;
+
+-- ==============================
+-- Reset PostgreSQL sequences after explicit IDs
+-- Keeps future inserts working after a fresh DB bootstrap.
+-- ==============================
+SELECT setval(pg_get_serial_sequence('mst_district', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM mst_district;
+SELECT setval(pg_get_serial_sequence('mst_role', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM mst_role;
+SELECT setval(pg_get_serial_sequence('mst_rank', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM mst_rank;
+SELECT setval(pg_get_serial_sequence('mst_police_station', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM mst_police_station;
+SELECT setval(pg_get_serial_sequence('mst_case_status', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM mst_case_status;
+SELECT setval(pg_get_serial_sequence('mst_notice_type', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM mst_notice_type;
+SELECT setval(pg_get_serial_sequence('cases', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM cases;
