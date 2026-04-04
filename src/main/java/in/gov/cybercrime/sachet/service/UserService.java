@@ -127,6 +127,16 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
+    public List<UserResponse> approveUsers(List<ApproveUserRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
+            throw new IllegalArgumentException("User approval list cannot be empty");
+        }
+
+        return requests.stream()
+                .map(this::approveUser)
+                .toList();
+    }
+
 
 
     /*

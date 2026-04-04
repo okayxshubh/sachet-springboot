@@ -60,6 +60,25 @@ public class UserController {
                 .build();
     }
 
+    @PostMapping("/approve-bulk")
+    public GenericResponse<String> approveUsers(@RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        BulkApproveUserRequest request = objectMapper.readValue(json, BulkApproveUserRequest.class);
+        List<UserResponse> users = userService.approveUsers(request.getUsers());
+
+        String jsonResponse = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Users approved successfully")
+                .data(encryptedData)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
+    }
+
     // Get Any Specific User Details By ID
     @PostMapping("/get")
     public GenericResponse<String> getUser(@RequestBody String encryptedBody) throws Exception {
