@@ -40,10 +40,16 @@ public class UserService {
     }
 
 
-    // Register but Approval Pending
     public String register(RegisterRequest request) {
-        if (userRepository.existsByPhone(request.getPhone())) {
-            throw new IllegalArgumentException("Phone already exists");
+
+        if (userRepository.existsByPhoneAndIsApprovedFalse(request.getPhone())) {
+            throw new IllegalStateException(
+                    "Registration already pending. Contact authorities.");
+        }
+
+        if (userRepository.existsByPhoneAndIsApprovedTrue(request.getPhone())) {
+            throw new IllegalStateException(
+                    "User already registered and approved.");
         }
 
         RankMaster rank = rankRepository.findById(request.getRankId())
@@ -67,6 +73,18 @@ public class UserService {
 
         userRepository.save(user);
         return "User registered successfully";
+    }
+
+    // reject
+    public void rejectUser(Long id, String rejectedBy) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (Boolean.TRUE.equals(user.getIsApproved())) {
+            throw new IllegalStateException("Approved users cannot be rejected");
+        }
+
+        userRepository.delete(user); // hard delete
     }
 
     // Approve User: Nodal officer can set any details while approving

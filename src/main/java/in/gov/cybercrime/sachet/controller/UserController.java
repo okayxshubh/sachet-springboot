@@ -79,6 +79,27 @@ public class UserController {
                 .build();
     }
 
+    @PostMapping("/reject")
+    public GenericResponse<String> rejectUser(@RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        DeleteUserRequest request =
+                objectMapper.readValue(json, DeleteUserRequest.class);
+
+        userService.rejectUser(request.getId(), request.getUpdatedBy());
+
+        String encryptedData =
+                SachetCrypto.encrypt("User rejected and removed");
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("User rejected successfully")
+                .data(encryptedData)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
     // Get Any Specific User Details By ID
     @PostMapping("/get")
     public GenericResponse<String> getUser(@RequestBody String encryptedBody) throws Exception {
