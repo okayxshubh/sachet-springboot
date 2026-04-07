@@ -2,6 +2,8 @@ package in.gov.cybercrime.sachet.service;
 
 import in.gov.cybercrime.sachet.entity.User;
 import in.gov.cybercrime.sachet.repository.UserRepository;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -47,10 +49,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // Block login if soft deleted / inactive
         if (Boolean.FALSE.equals(user.getIsActive())) {
-            throw new UsernameNotFoundException("User inactive: " + username);
+            throw new DisabledException("User inactive: " + username);
         }
         if (Boolean.FALSE.equals(user.getIsApproved())) {
-            throw new UsernameNotFoundException("User not approved: " + username);
+            throw new LockedException("User not approved: " + username);
         }
 
         // If role is missing, authentication must fail (prevents NullPointerException)
