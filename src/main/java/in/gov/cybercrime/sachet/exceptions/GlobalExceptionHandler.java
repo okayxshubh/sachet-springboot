@@ -45,6 +45,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<GenericResponse<Object>> handleIllegalState(IllegalStateException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     // ================= VALIDATION =================
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

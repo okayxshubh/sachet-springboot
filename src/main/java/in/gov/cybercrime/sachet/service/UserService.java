@@ -10,6 +10,9 @@ import in.gov.cybercrime.sachet.repository.UserRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.PoliceStationMasterRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.RankMasterRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.RoleMasterRepository;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -161,9 +164,29 @@ public class UserService {
     * AFTER User is Approved and shown in list of users
     * */
 
-    // Soft Deletion of User By Higher Authorities
+    // Soft Deletion of User + No Self Deletion
     public void deleteUser(Long id, String updatedBy) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new AccessDeniedException("Unauthorized action");
+        }
+
+        String currentUser = auth.getName();
+
+        // Prevent self deletion
+        if (user.getPhone() != null && user.getPhone().equals(currentUser)) {
+            throw new IllegalStateException("Cannot delete currently logged-in user");
+        }
+
+        // Prevent redundant delete
+        if (user.getIsActive() == null || !user.getIsActive()) {
+            throw new IllegalStateException("User already inactive");
+        }
 
         user.setIsActive(false);
         user.setUpdatedBy(updatedBy);

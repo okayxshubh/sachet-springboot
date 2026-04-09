@@ -36,44 +36,35 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    /*
-    This method is used by Spring Security internally.
-    "username" is the login input, in your case phone number.
-    */
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // Fetch user using phone number
         User user = userRepository.findByPhone(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Block login if soft deleted / inactive
-        if (Boolean.FALSE.equals(user.getIsActive())) {
+        if (user.getIsActive() == null || !user.getIsActive()) {
             throw new DisabledException("User inactive: " + username);
         }
-        if (Boolean.FALSE.equals(user.getIsApproved())) {
+
+        if (user.getIsApproved() == null || !user.getIsApproved()) {
             throw new LockedException("User not approved: " + username);
         }
 
-        // If role is missing, authentication must fail (prevents NullPointerException)
         if (user.getRole() == null || user.getRole().getRoleName() == null) {
             throw new UsernameNotFoundException("User role missing: " + username);
         }
 
-        // Get role name from RoleMaster table
-        String roleName = user.getRole().getRoleName();
+        String roleName = user.getRole().getRoleName().trim().toUpperCase();
 
-        // Normalize role format for Spring Security
-        // SuperAdmin -> SUPERADMIN
-        // Admin      -> ADMIN
-        // Staff      -> STAFF
-        roleName = roleName.trim().toUpperCase();
-
-        // Return Spring Security UserDetails object
         return new org.springframework.security.core.userdetails.User(
-                user.getPhone(),                         // username
-                user.getPasswordHash(),                  // password
-                List.of(new SimpleGrantedAuthority("ROLE_" + roleName)) // authorities
+                user.getPhone(),
+                user.getPasswordHash(),
+                user.getIsActive(),      // enabled
+                true,
+                true,
+                user.getIsApproved(),    // accountNonLocked
+                List.of(new SimpleGrantedAuthority("ROLE_" + roleName))
         );
     }
 }
