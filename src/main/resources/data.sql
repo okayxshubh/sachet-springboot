@@ -78,6 +78,10 @@ FROM (
              ('Shubh', 'SHO (Station House Officer)', 'Mandi PS', '7018437924', 'SuperAdmin',
               '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE, NOW(), NOW()),
 
+             ('Brijesh', 'SHO (Station House Officer)', 'Shimla PS', '7649928090', 'Staff',
+              '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE, NOW(), NOW()),
+
+
              -- APPROVED IO USERS
              ('Arjun Singh', 'IO (Investigating Officer)', 'Shimla PS', '9000000101', 'Staff',
               '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
