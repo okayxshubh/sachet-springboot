@@ -248,6 +248,24 @@ public class UserService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<UserMiniResponse> getUsersByRanks(List<Long> rankIds) {
+
+        if (rankIds == null || rankIds.isEmpty()) {
+            throw new IllegalArgumentException("Rank ids required");
+        }
+
+        return userRepository
+                .findByRankIdInAndIsApprovedTrueAndIsActiveTrue(rankIds)
+                .stream()
+                .map(user -> new UserMiniResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getPhone()
+                ))
+                .toList();
+    }
+
 
     /*
     * HELPER METHODS BELOW

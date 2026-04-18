@@ -139,6 +139,30 @@ public class UserController {
     }
 
 
+    // Get Users for Dropdown, Mini Response via ranks
+    @PostMapping("/mini-by-ranks")
+    public GenericResponse<String> getUsersByRanks(
+            @RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        RankFilterRequest request =
+                objectMapper.readValue(json, RankFilterRequest.class);
+
+        List<UserMiniResponse> users =
+                userService.getUsersByRanks(request.getRankIds());
+
+        String jsonResponse = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Users fetched successfully")
+                .data(encryptedData)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
     /*
     * After Approval.. Powers for High users
     * */

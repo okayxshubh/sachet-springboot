@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhoneAndIsApprovedFalse(String phone);
     boolean existsByPhoneAndIsApprovedTrue(String phone);
 
+    List<User> findByRankIdInAndIsApprovedTrueAndIsActiveTrue(List<Long> rankIds);
 }
