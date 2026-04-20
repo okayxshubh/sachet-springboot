@@ -151,6 +151,7 @@ VALUES
     (1, 'Under Investigation'),
     (2, 'Cancelled'),
     (3, 'Untraced')
+    (4, 'Resolved')
 ON CONFLICT (id) DO UPDATE
 SET case_status = EXCLUDED.case_status;
 
