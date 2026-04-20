@@ -1,32 +1,30 @@
 package in.gov.cybercrime.sachet.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import in.gov.cybercrime.sachet.dto.DocumentInfo;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "notice_replies")
+@Embeddable
 @Getter
 @Setter
-public class NoticeReply extends BaseEntity {
+public class NoticeReply {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notice_id", nullable = false)
-    private Notice notice;
+    @Column(name = "reply_by")
+    private String replyBy;
 
-    @Column(name = "reply_date", nullable = false)
+    @Column(name = "reply_date")
     private LocalDate replyDate;
 
-    @Column(name = "summary", nullable = false)
-    private String summary;
+    @Column(name = "remarks")
+    private String remarks;
 
-    @Column(name = "status")
-    private String status;
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "fileName", column = @Column(name = "reply_file_name")),
+        @AttributeOverride(name = "filePath", column = @Column(name = "reply_file_path"))
+    })
+    private DocumentInfo document;
 }

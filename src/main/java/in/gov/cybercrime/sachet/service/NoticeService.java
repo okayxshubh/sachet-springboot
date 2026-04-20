@@ -3,57 +3,98 @@ package in.gov.cybercrime.sachet.service;
 import in.gov.cybercrime.sachet.dto.NoticeRequest;
 import in.gov.cybercrime.sachet.entity.CaseFile;
 import in.gov.cybercrime.sachet.entity.Notice;
+import in.gov.cybercrime.sachet.masters.NoticeStatus;
 import in.gov.cybercrime.sachet.repository.CaseFileRepository;
 import in.gov.cybercrime.sachet.repository.NoticeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final CaseFileRepository caseFileRepository;
 
-    public NoticeService(NoticeRepository noticeRepository, CaseFileRepository caseFileRepository) {
-        this.noticeRepository = noticeRepository;
-        this.caseFileRepository = caseFileRepository;
-    }
-
     public List<Notice> listByCase(Long caseId) {
-        return noticeRepository.findByCaseFileIdAndIsActiveTrue(caseId);
+        return noticeRepository.findByCaseFileId(caseId);
     }
 
     public Notice create(Long caseId, NoticeRequest request) {
-        CaseFile caseFile = getCase(caseId);
+
+        CaseFile caseFile = caseFileRepository.findById(caseId)
+                .orElseThrow(() -> new RuntimeException("Case not found"));
+
         Notice notice = new Notice();
+
         notice.setCaseFile(caseFile);
         notice.setNoticeId(request.getNoticeId());
         notice.setNoticeType(request.getNoticeType());
-        notice.setIssuedTo(request.getIssuedTo());
-        notice.setIssuedDate(request.getIssuedDate());
-        if (request.getStatus() != null) notice.setStatus(request.getStatus());
+        notice.setDispatch(request.getDispatch());
+        notice.setReply(request.getReply());
+        notice.setStatus(NoticeStatus.PENDING);
+
         return noticeRepository.save(notice);
     }
 
-    public Notice update(Long id, NoticeRequest request) {
-        Notice notice = getNotice(id);
-        if (request.getNoticeId() != null) notice.setNoticeId(request.getNoticeId());
-        if (request.getNoticeType() != null) notice.setNoticeType(request.getNoticeType());
-        if (request.getIssuedTo() != null) notice.setIssuedTo(request.getIssuedTo());
-        if (request.getIssuedDate() != null) notice.setIssuedDate(request.getIssuedDate());
-        if (request.getStatus() != null) notice.setStatus(request.getStatus());
-        if (request.getUpdatedBy() != null) notice.setUpdatedBy(request.getUpdatedBy());
-        return noticeRepository.save(notice);
-    }
-
-    private Notice getNotice(Long id) {
+    public Notice getById(Long id) {
         return noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notice not found"));
     }
 
-    private CaseFile getCase(Long id) {
-        return caseFileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Case not found"));
+    public Notice getByNoticeId(String noticeId) {
+        return noticeRepository.findByNoticeId(noticeId)
+                .orElseThrow(() -> new RuntimeException("Notice not found"));
+    }
+
+    public List<Notice> getByCaseId(Long caseId) {
+        return noticeRepository.findByCaseFileId(caseId);
+    }
+
+    public Notice update(Long id, NoticeRequest request) {
+
+        Notice notice = getById(id);
+
+        notice.setNoticeId(request.getNoticeId());
+        notice.setNoticeType(request.getNoticeType());
+        notice.setDispatch(request.getDispatch());
+        notice.setReply(request.getReply());
+
+        return noticeRepository.save(notice);
+    }
+
+    public Notice markSent(Long id) {
+
+        Notice notice = getById(id);
+
+        notice.setStatus(NoticeStatus.SENT);
+
+        if (notice.getDispatch() != null) {
+            notice.getDispatch().setIssuedDate(LocalDate.now());
+        }
+
+        return noticeRepository.save(notice);
+    }
+
+    public Notice markReplied(Long id) {
+
+        Notice notice = getById(id);
+
+        notice.setStatus(NoticeStatus.REPLIED);
+
+        if (notice.getReply() != null) {
+            notice.getReply().setReplyDate(LocalDate.now());
+        }
+
+        return noticeRepository.save(notice);
+    }
+
+    public void delete(Long id) {
+
+        Notice notice = getById(id);
+        noticeRepository.delete(notice);
     }
 }

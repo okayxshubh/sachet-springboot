@@ -1,11 +1,7 @@
 package in.gov.cybercrime.sachet.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import in.gov.cybercrime.sachet.masters.NoticeStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,12 +23,12 @@ public class Notice extends BaseEntity {
     @Column(name = "notice_type", nullable = false)
     private String noticeType;
 
-    @Column(name = "issued_to", nullable = false)
-    private String issuedTo;
+    @Embedded
+    private NoticeDispatch dispatch = new NoticeDispatch();
 
-    @Column(name = "issued_date", nullable = false)
-    private LocalDate issuedDate;
+    @Embedded
+    private NoticeReply reply = new NoticeReply();
 
-    @Column(name = "status")
-    private String status = "Pending";
+    @Enumerated(EnumType.STRING)
+    private NoticeStatus status = NoticeStatus.PENDING;
 }

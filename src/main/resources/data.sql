@@ -150,7 +150,7 @@ INSERT INTO mst_case_status (id, case_status)
 VALUES
     (1, 'Under Investigation'),
     (2, 'Cancelled'),
-    (3, 'Untraced')
+    (3, 'Untraced'),
     (4, 'Resolved')
 ON CONFLICT (id) DO UPDATE
 SET case_status = EXCLUDED.case_status;
