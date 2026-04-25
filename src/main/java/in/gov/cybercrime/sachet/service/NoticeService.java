@@ -3,6 +3,7 @@ package in.gov.cybercrime.sachet.service;
 import in.gov.cybercrime.sachet.dto.NoticeRequest;
 import in.gov.cybercrime.sachet.entity.CaseFile;
 import in.gov.cybercrime.sachet.entity.Notice;
+import in.gov.cybercrime.sachet.entity.enums.NoticeLayer;
 import in.gov.cybercrime.sachet.masters.NoticeStatus;
 import in.gov.cybercrime.sachet.repository.CaseFileRepository;
 import in.gov.cybercrime.sachet.repository.NoticeRepository;
@@ -23,6 +24,19 @@ public class NoticeService {
         return noticeRepository.findByCaseFileId(caseId);
     }
 
+    public List<Notice> listByCaseAndLayer(Long caseId, NoticeLayer layer) {
+        return noticeRepository.findByCaseFileIdAndLayer(caseId, layer);
+    }
+
+    public List<Notice> listByCaseWithOptionalLayer(Long caseId, NoticeLayer layer) {
+
+        if (layer == null) {
+            return noticeRepository.findByCaseFileId(caseId);
+        }
+
+        return noticeRepository.findByCaseFileIdAndLayer(caseId, layer);
+    }
+
     public Notice create(Long caseId, NoticeRequest request) {
 
         CaseFile caseFile = caseFileRepository.findById(caseId)
@@ -33,6 +47,11 @@ public class NoticeService {
         notice.setCaseFile(caseFile);
         notice.setNoticeId(request.getNoticeId());
         notice.setNoticeType(request.getNoticeType());
+        notice.setLayer(
+                request.getLayer() != null
+                        ? request.getLayer()
+                        : NoticeLayer.LAYER_1
+        );
         notice.setDispatch(request.getDispatch());
         notice.setReply(request.getReply());
         notice.setStatus(NoticeStatus.PENDING);
@@ -60,6 +79,11 @@ public class NoticeService {
 
         notice.setNoticeId(request.getNoticeId());
         notice.setNoticeType(request.getNoticeType());
+
+        if (request.getLayer() != null) {
+            notice.setLayer(request.getLayer());
+        }
+
         notice.setDispatch(request.getDispatch());
         notice.setReply(request.getReply());
 

@@ -1,14 +1,11 @@
 package in.gov.cybercrime.sachet.controller;
 
-import in.gov.cybercrime.sachet.dto.CaseIdRequest;
 import in.gov.cybercrime.sachet.dto.GenericResponse;
 import in.gov.cybercrime.sachet.dto.NoticeRequest;
 import in.gov.cybercrime.sachet.entity.Notice;
 import in.gov.cybercrime.sachet.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/notices")
@@ -18,11 +15,26 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/list")
-    public GenericResponse<List<Notice>> list(@RequestBody CaseIdRequest request) {
+    public GenericResponse<?> list(@RequestBody NoticeRequest request) {
         try {
-            return GenericResponse.ok(
-                    noticeService.listByCase(request.getCaseId())
-            );
+
+            if (request.getId() != null) {
+                return GenericResponse.ok(
+                        noticeService.getById(request.getId())
+                );
+            }
+
+            if (request.getCaseId() != null) {
+                return GenericResponse.ok(
+                        noticeService.listByCaseWithOptionalLayer(
+                                request.getCaseId(),
+                                request.getLayer()
+                        )
+                );
+            }
+
+            return GenericResponse.fail("caseId is required");
+
         } catch (Exception ex) {
             return GenericResponse.fail(ex.getMessage());
         }

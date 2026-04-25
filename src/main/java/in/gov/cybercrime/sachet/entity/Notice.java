@@ -1,5 +1,6 @@
 package in.gov.cybercrime.sachet.entity;
 
+import in.gov.cybercrime.sachet.entity.enums.NoticeLayer;
 import in.gov.cybercrime.sachet.masters.NoticeStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,9 +24,15 @@ public class Notice extends BaseEntity {
     @Column(name = "notice_type", nullable = false)
     private String noticeType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "layer", nullable = false)
+    private NoticeLayer layer = NoticeLayer.LAYER_1;
+
+    // Sent File Pojo
     @Embedded
     private NoticeDispatch dispatch = new NoticeDispatch();
 
+    // Reply File Pojo
     @Embedded
     private NoticeReply reply = new NoticeReply();
 
