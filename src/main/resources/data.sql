@@ -245,9 +245,13 @@ VALUES
 ON CONFLICT (id) DO UPDATE
 SET notice_type_name = EXCLUDED.notice_type_name;
 
+
 -- ==============================
 -- Notices
+-- Added multiple layers for Case 2 and Case 3
+-- Complete / intact / fixed
 -- ==============================
+
 INSERT INTO notices (
     id,
     case_id,
@@ -271,25 +275,59 @@ INSERT INTO notices (
     is_active
 )
 VALUES
+
+-- ==============================
+-- CASE 1
+-- ==============================
 (1001,1,'NT-1001','1','LAYER_1','Meta Platforms India','2026-04-01','notice_meta_1001.docx','/notices/2026/04/NT-1001.docx',NULL,NULL,'Awaiting account preservation response',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-
 (1002,1,'NT-1002','2','LAYER_1','Instagram Compliance Team','2026-04-02','notice_meta_1002.docx','/notices/2026/04/NT-1002.docx','Meta Legal Team','2026-04-05','Initial acknowledgement received','reply_1002.pdf','/replies/2026/04/reply_1002.pdf','REPLIED',NOW(),NOW(),4,4,TRUE),
-
 (1003,1,'NT-1003','3','LAYER_1','Rahul Sharma','2026-04-03','summon_1003.docx','/notices/2026/04/NT-1003.docx',NULL,NULL,'Appearance pending',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-
 (1004,1,'NT-1004','4','LAYER_1','State Bank of India','2026-04-04','bank_1004.docx','/notices/2026/04/NT-1004.docx',NULL,NULL,'Freeze request sent',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
 
+-- ==============================
+-- CASE 2 (7 Layers)
+-- ==============================
 (1005,2,'NT-1005','5','LAYER_1','Airtel Nodal Office','2026-04-05','cdr_1005.docx','/notices/2026/04/NT-1005.docx',NULL,NULL,'Pending telecom records',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-
 (1006,2,'NT-1006','6','LAYER_1','Punjab National Bank CCTV Cell','2026-04-06','cctv_1006.docx','/notices/2026/04/NT-1006.docx','PNB Surveillance Cell','2026-04-08','Footage shared','reply_1006.pdf','/replies/2026/04/reply_1006.pdf','REPLIED',NOW(),NOW(),4,4,TRUE),
 
 (1007,2,'NT-1007','1','LAYER_2','Facebook LERT','2026-04-07','meta_1007.docx','/notices/2026/04/NT-1007.docx',NULL,NULL,'Served successfully',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
 (1008,2,'NT-1008','2','LAYER_2','Instagram Compliance Team','2026-04-08','meta_1008.docx','/notices/2026/04/NT-1008.docx',NULL,NULL,'Awaiting preservation',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
 
-(1009,3,'NT-1009','3','LAYER_1','Rajeev Sharma','2026-04-09','summon_1009.docx','/notices/2026/04/NT-1009.docx',NULL,NULL,'Appearance pending',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1011,2,'NT-1011','4','LAYER_3','ICICI Bank Nodal Officer','2026-04-09','bank_1011.docx','/notices/2026/04/NT-1011.docx',NULL,NULL,'Debit freeze requested',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+(1012,2,'NT-1012','4','LAYER_3','Axis Bank Fraud Cell','2026-04-09','bank_1012.docx','/notices/2026/04/NT-1012.docx',NULL,NULL,'Account trace initiated',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
 
-(1010,3,'NT-1010','4','LAYER_1','HDFC Bank Nodal Desk','2026-04-10','bank_1010.docx','/notices/2026/04/NT-1010.docx',NULL,NULL,'Freeze request sent',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE)
+(1013,2,'NT-1013','3','LAYER_4','Rohit Verma','2026-04-10','summon_1013.docx','/notices/2026/04/NT-1013.docx',NULL,NULL,'Personal appearance required',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1014,2,'NT-1014','5','LAYER_4','Jio Nodal Office','2026-04-10','cdr_1014.docx','/notices/2026/04/NT-1014.docx',NULL,NULL,'Subscriber details sought',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1015,2,'NT-1015','4','LAYER_5','Paytm Payments Bank','2026-04-11','bank_1015.docx','/notices/2026/04/NT-1015.docx',NULL,NULL,'Wallet freeze requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1016,2,'NT-1016','4','LAYER_5','PhonePe Compliance','2026-04-11','wallet_1016.docx','/notices/2026/04/NT-1016.docx',NULL,NULL,'Merchant details requested',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1017,2,'NT-1017','6','LAYER_6','Punjab National Bank CCTV Cell','2026-04-12','cctv_1017.docx','/notices/2026/04/NT-1017.docx',NULL,NULL,'ATM footage requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1018,2,'NT-1018','1','LAYER_6','Google Legal Support','2026-04-12','google_1018.docx','/notices/2026/04/NT-1018.docx',NULL,NULL,'Gmail preservation requested',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1019,2,'NT-1019','4','LAYER_7','State Bank of India','2026-04-13','bank_1019.docx','/notices/2026/04/NT-1019.docx',NULL,NULL,'Final beneficiary freeze',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1020,2,'NT-1020','3','LAYER_7','Amit Chauhan','2026-04-13','summon_1020.docx','/notices/2026/04/NT-1020.docx',NULL,NULL,'Final suspect summon',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+-- ==============================
+-- CASE 3 (6 Layers)
+-- ==============================
+(1009,3,'NT-1009','3','LAYER_1','Rajeev Sharma','2026-04-09','summon_1009.docx','/notices/2026/04/NT-1009.docx',NULL,NULL,'Appearance pending',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1010,3,'NT-1010','4','LAYER_1','HDFC Bank Nodal Desk','2026-04-10','bank_1010.docx','/notices/2026/04/NT-1010.docx',NULL,NULL,'Freeze request sent',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1021,3,'NT-1021','4','LAYER_2','ICICI Bank Nodal Office','2026-04-11','bank_1021.docx','/notices/2026/04/NT-1021.docx',NULL,NULL,'Trail transfer found',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1022,3,'NT-1022','5','LAYER_2','Vodafone Idea Nodal Team','2026-04-11','cdr_1022.docx','/notices/2026/04/NT-1022.docx',NULL,NULL,'Call records requested',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1023,3,'NT-1023','4','LAYER_3','Axis Bank Fraud Cell','2026-04-12','bank_1023.docx','/notices/2026/04/NT-1023.docx',NULL,NULL,'Suspicious transfer detected',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1024,3,'NT-1024','1','LAYER_3','Telegram Compliance','2026-04-12','telegram_1024.docx','/notices/2026/04/NT-1024.docx',NULL,NULL,'Account preservation request',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1025,3,'NT-1025','3','LAYER_4','Deepak Mehra','2026-04-13','summon_1025.docx','/notices/2026/04/NT-1025.docx',NULL,NULL,'Witness statement needed',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1026,3,'NT-1026','6','LAYER_4','Union Bank CCTV Unit','2026-04-13','cctv_1026.docx','/notices/2026/04/NT-1026.docx',NULL,NULL,'CCTV retrieval pending',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1027,3,'NT-1027','4','LAYER_5','Paytm Payments Bank','2026-04-14','wallet_1027.docx','/notices/2026/04/NT-1027.docx',NULL,NULL,'Wallet beneficiary traced',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1028,3,'NT-1028','4','LAYER_5','PhonePe Legal Cell','2026-04-14','wallet_1028.docx','/notices/2026/04/NT-1028.docx',NULL,NULL,'Merchant KYC requested',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+
+(1029,3,'NT-1029','4','LAYER_6','State Bank of India','2026-04-15','bank_1029.docx','/notices/2026/04/NT-1029.docx',NULL,NULL,'End trail account freeze',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
+(1030,3,'NT-1030','3','LAYER_6','Nikhil Sood','2026-04-15','summon_1030.docx','/notices/2026/04/NT-1030.docx',NULL,NULL,'Final inquiry summon',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE)
 
 ON CONFLICT (id) DO NOTHING;
 
