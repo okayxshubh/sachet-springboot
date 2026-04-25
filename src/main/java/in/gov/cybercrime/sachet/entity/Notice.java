@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "notices")
 @Getter
@@ -28,14 +26,16 @@ public class Notice extends BaseEntity {
     @Column(name = "layer", nullable = false)
     private NoticeLayer layer = NoticeLayer.LAYER_1;
 
-    // Sent File Pojo
+    // Optional
     @Embedded
-    private NoticeDispatch dispatch = new NoticeDispatch();
+    private NoticeDispatch dispatch;
 
-    // Reply File Pojo
+    // Optional
     @Embedded
-    private NoticeReply reply = new NoticeReply();
+    private NoticeReply reply;
 
+    // Optional
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private NoticeStatus status = NoticeStatus.PENDING;
 }
