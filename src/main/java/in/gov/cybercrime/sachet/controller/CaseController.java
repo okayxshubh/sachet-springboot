@@ -47,34 +47,11 @@ public class CaseController {
         return success(created, "Case created successfully");
     }
 
-    // Get Filtered Cases
-    @PostMapping("/get-filtered-cases")
-    public GenericResponse<String> getFilteredCases(@RequestBody String encryptedBody) throws Exception {
-
-        // Decrypt request body
-        String json = SachetCrypto.decrypt(encryptedBody);
-
-        // Deserialize into request DTO
-        CaseListRequest request = objectMapper.readValue(json, CaseListRequest.class);
-
-        // Call service with nullable parameters directly
-        List<CaseFile> cases = caseService.getFilteredCases(
-                request.getFirNo(),
-                request.getFirYear(),
-                request.getAssignedToId(),
-                request.getIsActive(),
-                request.getMonthYear()
-        );
-
-        return success(cases, "Success");
-    }
-
     // SHO -> all cases of current district + ps
     // IO  -> only assigned cases
     // Others -> all cases of current district + ps
     @PostMapping("/list-by-access")
-    public GenericResponse<String> getCasesByAccess(
-            @RequestBody String encryptedBody) throws Exception {
+    public GenericResponse<String> getCasesByAccess(@RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
 

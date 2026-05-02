@@ -109,33 +109,6 @@ public class CaseService {
         return caseFileRepository.save(caseFile);
     }
 
-    public List<CaseFile> getFilteredCases(String firNo, Integer firYear, Long assignedToId, Boolean isActive, String monthYear) {
-        DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MM-yyyy");
-        final String finalMonthYear;
-        if (monthYear != null) {
-            try {
-                monthYearFormatter.parse(monthYear);
-                finalMonthYear = monthYear;
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("monthYear must be in MM-yyyy format");
-            }
-        } else {
-            finalMonthYear = null;
-        }
-
-        return caseFileRepository.findAll().stream()
-                .filter(c -> firNo == null || firNo.equals(c.getFirNo()))
-                .filter(c -> firYear == null || firYear.equals(c.getFirYear()))
-                .filter(c -> assignedToId == null || (c.getAssignedToUsers() != null &&
-                        c.getAssignedToUsers().stream().anyMatch(u -> assignedToId.equals(u.getId()))))
-                .filter(c -> isActive == null || isActive.equals(c.getIsActive()))
-                .filter(c -> finalMonthYear == null || (c.getCreatedAt() != null &&
-                        finalMonthYear.equals(
-                                monthYearFormatter.format(c.getCreatedAt().atZone(ZoneId.of("Asia/Kolkata")))
-                        )))
-                .toList();
-    }
-
     public List<CaseFile> getCasesByAccess(
             Long districtId,
             Long psId,
