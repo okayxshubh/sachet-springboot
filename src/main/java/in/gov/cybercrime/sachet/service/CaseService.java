@@ -136,6 +136,57 @@ public class CaseService {
                 .toList();
     }
 
+    public List<CaseFile> getCasesByAccess(
+            Long districtId,
+            Long psId,
+            Long userId,
+            String rankName) {
+
+        if (districtId == null) {
+            throw new IllegalArgumentException("District ID required");
+        }
+
+        if (psId == null) {
+            throw new IllegalArgumentException("Police Station ID required");
+        }
+
+        List<CaseFile> filteredCases = caseFileRepository.findAll()
+                .stream()
+                .filter(c ->
+                        c.getDistrict() != null &&
+                                districtId.equals(c.getDistrict().getId()))
+                .filter(c ->
+                        c.getPoliceStation() != null &&
+                                psId.equals(c.getPoliceStation().getId()))
+                .filter(c ->
+                        c.getIsActive() != null &&
+                                c.getIsActive())
+                .toList();
+
+        // IO -> only assigned cases
+        if (rankName != null &&
+                rankName.equalsIgnoreCase("IO (Investigating Officer)")) {
+
+            if (userId == null) {
+                throw new IllegalArgumentException("User ID required");
+            }
+
+            return filteredCases.stream()
+                    .filter(c ->
+                            c.getAssignedToUsers() != null &&
+                                    c.getAssignedToUsers()
+                                            .stream()
+                                            .anyMatch(user ->
+                                                    userId.equals(user.getId())))
+                    .toList();
+        }
+
+        // SHO + Others -> all filtered cases
+        return filteredCases;
+    }
+
+
+
     private CaseFile getCaseEntity(Long id) {
         return caseFileRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Case not found"));

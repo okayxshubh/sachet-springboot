@@ -69,6 +69,29 @@ public class CaseController {
         return success(cases, "Success");
     }
 
+    // SHO -> all cases of current district + ps
+    // IO  -> only assigned cases
+    // Others -> all cases of current district + ps
+    @PostMapping("/list-by-access")
+    public GenericResponse<String> getCasesByAccess(
+            @RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        CaseAccessRequest request =
+                objectMapper.readValue(json, CaseAccessRequest.class);
+
+        List<CaseFile> cases =
+                caseService.getCasesByAccess(
+                        request.getDistrictId(),
+                        request.getPsId(),
+                        request.getUserId(),
+                        request.getRankName()
+                );
+
+        return success(cases, "Cases fetched successfully");
+    }
+
     // Get Specific Case By ID
     @PostMapping("/get-case-by-id")
     public GenericResponse<String> getCase(@RequestBody String encryptedBody) throws Exception {

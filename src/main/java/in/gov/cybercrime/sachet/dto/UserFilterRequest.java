@@ -1,18 +1,9 @@
 package in.gov.cybercrime.sachet.dto;
 
-public class RankFilterRequest {
+public class UserFilterRequest {
 
-    private Long rankId;
     private Long districtId;
     private Long psId;
-
-    public Long getRankId() {
-        return rankId;
-    }
-
-    public void setRankId(Long rankId) {
-        this.rankId = rankId;
-    }
 
     public Long getDistrictId() {
         return districtId;

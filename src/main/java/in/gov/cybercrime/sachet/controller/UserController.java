@@ -26,8 +26,7 @@ public class UserController {
     public GenericResponse<String> register(@RequestBody String encrypted) throws Exception {
 
         String decryptedJson = SachetCrypto.decrypt(encrypted);
-        RegisterRequest registerRequest =
-                objectMapper.readValue(decryptedJson, RegisterRequest.class);
+        RegisterRequest registerRequest = objectMapper.readValue(decryptedJson, RegisterRequest.class);
 
         String result = userService.register(registerRequest);
         String encryptedData = SachetCrypto.encrypt(result);
@@ -138,31 +137,6 @@ public class UserController {
                 .build();
     }
 
-
-    // Get Users for Dropdown, Mini Response via ranks
-    @PostMapping("/mini-by-ranks")
-    public GenericResponse<String> getUsersByRanks(
-            @RequestBody String encryptedBody) throws Exception {
-
-        String json = SachetCrypto.decrypt(encryptedBody);
-
-        RankFilterRequest request =
-                objectMapper.readValue(json, RankFilterRequest.class);
-
-        List<UserMiniResponse> users =
-                userService.getUsersByRanks(request.getRankIds());
-
-        String jsonResponse = objectMapper.writeValueAsString(users);
-        String encryptedData = SachetCrypto.encrypt(jsonResponse);
-
-        return GenericResponse.<String>builder()
-                .status("OK")
-                .message("Users fetched successfully")
-                .data(encryptedData)
-                .timestamp(LocalDateTime.now())
-                .build();
-    }
-
     /*
     * After Approval.. Powers for High users
     * */
@@ -216,22 +190,57 @@ public class UserController {
     }
 
     @PostMapping("/by-rank-active")
-    public GenericResponse<String> getActiveUsersByRank(@RequestBody String encryptedBody) throws Exception {
+    public GenericResponse<String> getUsersByDistrictAndPs(
+            @RequestBody String encryptedBody) throws Exception {
 
         String json = SachetCrypto.decrypt(encryptedBody);
 
-        RankIdRequest request = objectMapper.readValue(json, RankIdRequest.class);
+        RankFilterRequest request =
+                objectMapper.readValue(json, RankFilterRequest.class);
 
-        List<UserResponse> users = userService.getUsersByFilters(request.getRankId(), request.getIsActive());
+        List<UserResponse> users =
+                userService.getUsersByDistrictAndPs(
+                        request.getRankId(),
+                        request.getDistrictId(),
+                        request.getPsId()
+                );
 
-        String jsonList = objectMapper.writeValueAsString(users);
-        String encryptedData = SachetCrypto.encrypt(jsonList);
+        String jsonResponse = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
 
         return GenericResponse.<String>builder()
                 .status("OK")
                 .message("Users fetched successfully")
                 .data(encryptedData)
-                .timestamp(java.time.LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    // Get Users for Dropdown, Mini Response via rank + district + ps
+    @PostMapping("/mini-by-ranks")
+    public GenericResponse<String> getUsersByRanks(
+            @RequestBody String encryptedBody) throws Exception {
+
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        RankFilterRequest request =
+                objectMapper.readValue(json, RankFilterRequest.class);
+
+        List<UserMiniResponse> users =
+                userService.getUsersByRanks(
+                        request.getRankId(),
+                        request.getDistrictId(),
+                        request.getPsId()
+                );
+
+        String jsonResponse = objectMapper.writeValueAsString(users);
+        String encryptedData = SachetCrypto.encrypt(jsonResponse);
+
+        return GenericResponse.<String>builder()
+                .status("OK")
+                .message("Users fetched successfully")
+                .data(encryptedData)
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 

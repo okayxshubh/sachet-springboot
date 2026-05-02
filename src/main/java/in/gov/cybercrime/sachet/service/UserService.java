@@ -248,23 +248,6 @@ public class UserService {
     }
 
 
-    @Transactional(readOnly = true)
-    public List<UserMiniResponse> getUsersByRanks(List<Long> rankIds) {
-
-        if (rankIds == null || rankIds.isEmpty()) {
-            throw new IllegalArgumentException("Rank ids required");
-        }
-
-        return userRepository
-                .findByRankIdInAndIsApprovedTrueAndIsActiveTrue(rankIds)
-                .stream()
-                .map(user -> new UserMiniResponse(
-                        user.getId(),
-                        user.getName(),
-                        user.getPhone()
-                ))
-                .toList();
-    }
 
 
     /*
@@ -294,12 +277,64 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> getUsersByFilters(Long rankId, Boolean isActive) {
-        return userRepository.findByIsApprovedTrue().stream()
-                .filter(user -> rankId == null
-                        || (user.getRank() != null && rankId.equals(user.getRank().getId())))
-                .filter(user -> isActive == null || isActive.equals(user.getIsActive()))
+    public List<UserResponse> getUsersByDistrictAndPs(
+            Long rankId,
+            Long districtId,
+            Long psId) {
+
+        if (rankId == null) {
+            throw new IllegalArgumentException("Rank Id required");
+        }
+
+        if (districtId == null) {
+            throw new IllegalArgumentException("District Id is required");
+        }
+
+        if (psId == null) {
+            throw new IllegalArgumentException("Police Station ID is required");
+        }
+
+        return userRepository
+                .findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_Id(
+                        rankId,
+                        districtId,
+                        psId
+                )
+                .stream()
                 .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserMiniResponse> getUsersByRanks(
+            Long rankId,
+            Long districtId,
+            Long psId) {
+
+        if (rankId == null) {
+            throw new IllegalArgumentException("Rank Id required");
+        }
+
+        if (districtId == null) {
+            throw new IllegalArgumentException("District Id is required");
+        }
+
+        if (psId == null) {
+            throw new IllegalArgumentException("Police Station ID is required");
+        }
+
+        return userRepository
+                .findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_Id(
+                        rankId,
+                        districtId,
+                        psId
+                )
+                .stream()
+                .map(user -> new UserMiniResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getPhone()
+                ))
                 .toList();
     }
 
