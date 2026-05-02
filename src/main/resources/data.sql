@@ -203,66 +203,66 @@ VALUES
 ON CONFLICT (case_id, user_id) DO NOTHING;
 
 -- ==============================
--- NOTICES DATA - USING ONLY 'PENDING' AND 'SENT' STATUS
+-- NOTICES DATA
 -- ==============================
+
 INSERT INTO notices (
     id, case_id, notice_id, notice_type, layer,
     issued_to, issued_date,
     notice_file_name, notice_file_path,
-    reply_by, reply_date, remarks,
+    reply_date, remarks,
     reply_file_name, reply_file_path,
     status,
     created_at, updated_at,
     created_by, updated_by, is_active
 )
 VALUES
--- All notices using either 'PENDING' or 'SENT' status
-(1001, 1, 'NT-1001', '1', 'LAYER_1', 'Meta India', '2026-04-10', 'meta_notice.pdf', '/notices/2026/04/NT-1001.pdf', '2026-04-15', '2026-04-15', 'Data provided successfully', 'meta_reply.pdf', '/notices/replies/NT-1001_reply.pdf', 'SENT', NOW(), NOW(), 2, 2, TRUE),
-(1002, 2, 'NT-1002', '4', 'LAYER_1', 'ICICI Bank', '2026-04-11', 'bank_notice.pdf', '/notices/2026/04/NT-1002.pdf', '2026-04-16', '2026-04-16', 'Account frozen', 'bank_reply.pdf', '/notices/replies/NT-1002_reply.pdf', 'SENT', NOW(), NOW(), 2, 2, TRUE),
-(1003, 3, 'NT-1003', '2', 'LAYER_2', 'WhatsApp Inc.', '2026-04-12', 'whatsapp_notice.pdf', '/notices/2026/04/NT-1003.pdf', NULL, NULL, 'Awaiting response', NULL, NULL, 'PENDING', NOW(), NOW(), 2, 2, TRUE),
-(1004, 4, 'NT-1004', '3', 'LAYER_1', 'John Doe', '2026-04-13', 'summon_order.pdf', '/notices/2026/04/NT-1004.pdf', '2026-04-18', '2026-04-18', 'Appeared for statement', 'statement_record.pdf', '/notices/replies/NT-1004_reply.pdf', 'SENT', NOW(), NOW(), 4, 4, TRUE),
-(1005, 5, 'NT-1005', '5', 'LAYER_2', 'Vodafone Idea', '2026-04-14', 'tower_dump.pdf', '/notices/2026/04/NT-1005.pdf', NULL, NULL, 'Technical team working', NULL, NULL, 'SENT', NOW(), NOW(), 4, 4, TRUE),
-(1006, 6, 'NT-1006', '6', 'LAYER_1', 'SBI CCTV', '2026-04-15', 'cctv_request.pdf', '/notices/2026/04/NT-1006.pdf', '2026-04-20', '2026-04-20', 'Footage submitted', 'cctv_footage.txt', '/notices/replies/NT-1006_reply.txt', 'SENT', NOW(), NOW(), 4, 4, TRUE),
-(1007, 7, 'NT-1007', '1', 'LAYER_2', 'Google LLC', '2026-04-16', 'google_notice.pdf', '/notices/2026/04/NT-1007.pdf', NULL, NULL, 'Request under process', NULL, NULL, 'PENDING', NOW(), NOW(), 7, 7, TRUE),
-(1008, 8, 'NT-1008', '4', 'LAYER_1', 'Paytm Bank', '2026-04-17', 'paytm_notice.pdf', '/notices/2026/04/NT-1008.pdf', '2026-04-22', '2026-04-22', 'Transaction details shared', 'paytm_reply.pdf', '/notices/replies/NT-1008_reply.pdf', 'SENT', NOW(), NOW(), 7, 7, TRUE),
-(1009, 9, 'NT-1009', '2', 'LAYER_3', 'Jane Smith', '2026-04-18', 'summon_witness.pdf', '/notices/2026/04/NT-1009.pdf', NULL, NULL, 'Not reachable', NULL, NULL, 'PENDING', NOW(), NOW(), 7, 7, TRUE),
-(1010, 10, 'NT-1010', '3', 'LAYER_1', 'Robert Johnson', '2026-04-19', 'examination_order.pdf', '/notices/2026/04/NT-1010.pdf', '2026-04-24', '2026-04-24', 'Exam completed', 'exam_report.pdf', '/notices/replies/NT-1010_reply.pdf', 'SENT', NOW(), NOW(), 2, 2, TRUE),
-(1021, 11, 'NT-1021', '1', 'LAYER_1', 'Meta Platforms India', '2026-04-17', 'meta_1021.docx', '/notices/2026/04/NT-1021.docx', NULL, NULL, 'Facebook account preservation requested', NULL, NULL, 'PENDING', NOW(), NOW(), 1, 1, TRUE),
-(1022, 12, 'NT-1022', '4', 'LAYER_1', 'HDFC Bank', '2026-04-18', 'bank_1022.docx', '/notices/2026/04/NT-1022.docx', NULL, NULL, 'Fraud beneficiary account freeze requested', NULL, NULL, 'SENT', NOW(), NOW(), 2, 2, TRUE),
-(1023, 13, 'NT-1023', '2', 'LAYER_1', 'Instagram Compliance Team', '2026-04-19', 'insta_1023.docx', '/notices/2026/04/NT-1023.docx', NULL, NULL, 'Fake profile information requested', NULL, NULL, 'PENDING', NOW(), NOW(), 3, 3, TRUE),
-(1024, 14, 'NT-1024', '5', 'LAYER_2', 'Airtel Nodal Office', '2026-04-20', 'cdr_1024.docx', '/notices/2026/04/NT-1024.docx', NULL, NULL, 'Subscriber CDR requested', NULL, NULL, 'SENT', NOW(), NOW(), 1, 1, TRUE),
-(1025, 15, 'NT-1025', '3', 'LAYER_1', 'Rohit Sood', '2026-04-21', 'summon_1025.docx', '/notices/2026/04/NT-1025.docx', NULL, NULL, 'Victim statement recording pending', NULL, NULL, 'PENDING', NOW(), NOW(), 2, 2, TRUE),
-(1026, 16, 'NT-1026', '4', 'LAYER_1', 'Punjab National Bank', '2026-04-22', 'bank_1026.docx', '/notices/2026/04/NT-1026.docx', NULL, NULL, 'Wallet account freeze request', NULL, NULL, 'SENT', NOW(), NOW(), 4, 4, TRUE),
-(1027, 17, 'NT-1027', '6', 'LAYER_1', 'SBI CCTV Cell', '2026-04-23', 'cctv_1027.docx', '/notices/2026/04/NT-1027.docx', NULL, NULL, 'ATM CCTV footage requested', NULL, NULL, 'PENDING', NOW(), NOW(), 5, 5, TRUE),
-(1028, 18, 'NT-1028', '1', 'LAYER_1', 'Meta Platforms India', '2026-04-24', 'meta_1028.docx', '/notices/2026/04/NT-1028.docx', NULL, NULL, 'Fraud Facebook account traced', NULL, NULL, 'PENDING', NOW(), NOW(), 7, 7, TRUE),
-(1029, 19, 'NT-1029', '5', 'LAYER_2', 'Jio Nodal Office', '2026-04-25', 'cdr_1029.docx', '/notices/2026/04/NT-1029.docx', NULL, NULL, 'SIM activation details requested', NULL, NULL, 'SENT', NOW(), NOW(), 8, 8, TRUE)
-ON CONFLICT (id) DO UPDATE
-SET
-    case_id = EXCLUDED.case_id,
-    notice_id = EXCLUDED.notice_id,
-    notice_type = EXCLUDED.notice_type,
-    layer = EXCLUDED.layer,
-    issued_to = EXCLUDED.issued_to,
-    issued_date = EXCLUDED.issued_date,
-    notice_file_name = EXCLUDED.notice_file_name,
-    notice_file_path = EXCLUDED.notice_file_path,
-    reply_by = EXCLUDED.reply_by,
-    reply_date = EXCLUDED.reply_date,
-    remarks = EXCLUDED.remarks,
-    reply_file_name = EXCLUDED.reply_file_name,
-    reply_file_path = EXCLUDED.reply_file_path,
-    status = EXCLUDED.status,
-    updated_at = EXCLUDED.updated_at,
-    updated_by = EXCLUDED.updated_by;
+(1001,1,'NT-1001','1','LAYER_1','Meta India','2026-04-10','meta_notice.pdf','/notices/2026/04/NT-1001.pdf','2026-04-15','Data provided successfully','meta_reply.pdf','/notices/replies/NT-1001_reply.pdf','SENT',NOW(),NOW(),2,2,TRUE),
+(1002,2,'NT-1002','4','LAYER_1','ICICI Bank','2026-04-11','bank_notice.pdf','/notices/2026/04/NT-1002.pdf','2026-04-16','Account frozen','bank_reply.pdf','/notices/replies/NT-1002_reply.pdf','SENT',NOW(),NOW(),2,2,TRUE),
+(1003,3,'NT-1003','2','LAYER_2','WhatsApp Inc.','2026-04-12','whatsapp_notice.pdf','/notices/2026/04/NT-1003.pdf',NULL,'Awaiting response',NULL,NULL,'PENDING',NOW(),NOW(),2,2,TRUE),
+(1004,4,'NT-1004','3','LAYER_1','John Doe','2026-04-13','summon_order.pdf','/notices/2026/04/NT-1004.pdf','2026-04-18','Appeared for statement','statement_record.pdf','/notices/replies/NT-1004_reply.pdf','SENT',NOW(),NOW(),4,4,TRUE),
+(1005,5,'NT-1005','5','LAYER_2','Vodafone Idea','2026-04-14','tower_dump.pdf','/notices/2026/04/NT-1005.pdf',NULL,'Technical team working',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+(1006,6,'NT-1006','6','LAYER_1','SBI CCTV','2026-04-15','cctv_request.pdf','/notices/2026/04/NT-1006.pdf','2026-04-20','Footage submitted','cctv_footage.txt','/notices/replies/NT-1006_reply.txt','SENT',NOW(),NOW(),4,4,TRUE),
+(1007,7,'NT-1007','1','LAYER_2','Google LLC','2026-04-16','google_notice.pdf','/notices/2026/04/NT-1007.pdf',NULL,'Request under process',NULL,NULL,'PENDING',NOW(),NOW(),7,7,TRUE),
+(1008,8,'NT-1008','4','LAYER_1','Paytm Bank','2026-04-17','paytm_notice.pdf','/notices/2026/04/NT-1008.pdf','2026-04-22','Transaction details shared','paytm_reply.pdf','/notices/replies/NT-1008_reply.pdf','SENT',NOW(),NOW(),7,7,TRUE),
+(1009,9,'NT-1009','2','LAYER_3','Jane Smith','2026-04-18','summon_witness.pdf','/notices/2026/04/NT-1009.pdf',NULL,'Not reachable',NULL,NULL,'PENDING',NOW(),NOW(),7,7,TRUE),
+(1010,10,'NT-1010','3','LAYER_1','Robert Johnson','2026-04-19','examination_order.pdf','/notices/2026/04/NT-1010.pdf','2026-04-24','Exam completed','exam_report.pdf','/notices/replies/NT-1010_reply.pdf','SENT',NOW(),NOW(),2,2,TRUE),
+(1021,11,'NT-1021','1','LAYER_1','Meta Platforms India','2026-04-17','meta_1021.docx','/notices/2026/04/NT-1021.docx',NULL,'Facebook account preservation requested',NULL,NULL,'PENDING',NOW(),NOW(),1,1,TRUE),
+(1022,12,'NT-1022','4','LAYER_1','HDFC Bank','2026-04-18','bank_1022.docx','/notices/2026/04/NT-1022.docx',NULL,'Fraud beneficiary account freeze requested',NULL,NULL,'SENT',NOW(),NOW(),2,2,TRUE),
+(1023,13,'NT-1023','2','LAYER_1','Instagram Compliance Team','2026-04-19','insta_1023.docx','/notices/2026/04/NT-1023.docx',NULL,'Fake profile information requested',NULL,NULL,'PENDING',NOW(),NOW(),3,3,TRUE),
+(1024,14,'NT-1024','5','LAYER_2','Airtel Nodal Office','2026-04-20','cdr_1024.docx','/notices/2026/04/NT-1024.docx',NULL,'Subscriber CDR requested',NULL,NULL,'SENT',NOW(),NOW(),1,1,TRUE),
+(1025,15,'NT-1025','3','LAYER_1','Rohit Sood','2026-04-21','summon_1025.docx','/notices/2026/04/NT-1025.docx',NULL,'Victim statement recording pending',NULL,NULL,'PENDING',NOW(),NOW(),2,2,TRUE),
+(1026,16,'NT-1026','4','LAYER_1','Punjab National Bank','2026-04-22','bank_1026.docx','/notices/2026/04/NT-1026.docx',NULL,'Wallet account freeze request',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
+(1027,17,'NT-1027','6','LAYER_1','SBI CCTV Cell','2026-04-23','cctv_1027.docx','/notices/2026/04/NT-1027.docx',NULL,'ATM CCTV footage requested',NULL,NULL,'PENDING',NOW(),NOW(),5,5,TRUE),
+(1028,18,'NT-1028','1','LAYER_1','Meta Platforms India','2026-04-24','meta_1028.docx','/notices/2026/04/NT-1028.docx',NULL,'Fraud Facebook account traced',NULL,NULL,'PENDING',NOW(),NOW(),7,7,TRUE),
+(1029,19,'NT-1029','5','LAYER_2','Jio Nodal Office','2026-04-25','cdr_1029.docx','/notices/2026/04/NT-1029.docx',NULL,'SIM activation details requested',NULL,NULL,'SENT',NOW(),NOW(),8,8,TRUE)
+
+ON CONFLICT (id) DO UPDATE SET
+case_id=EXCLUDED.case_id,
+notice_id=EXCLUDED.notice_id,
+notice_type=EXCLUDED.notice_type,
+layer=EXCLUDED.layer,
+issued_to=EXCLUDED.issued_to,
+issued_date=EXCLUDED.issued_date,
+notice_file_name=EXCLUDED.notice_file_name,
+notice_file_path=EXCLUDED.notice_file_path,
+reply_date=EXCLUDED.reply_date,
+remarks=EXCLUDED.remarks,
+reply_file_name=EXCLUDED.reply_file_name,
+reply_file_path=EXCLUDED.reply_file_path,
+status=EXCLUDED.status,
+updated_at=EXCLUDED.updated_at,
+updated_by=EXCLUDED.updated_by;
 
 -- ==============================
--- Reset Sequences
+-- RESET SEQUENCES
 -- ==============================
-SELECT setval(pg_get_serial_sequence('mst_district','id'), COALESCE(MAX(id),1), true) FROM mst_district;
-SELECT setval(pg_get_serial_sequence('mst_role','id'), COALESCE(MAX(id),1), true) FROM mst_role;
-SELECT setval(pg_get_serial_sequence('mst_rank','id'), COALESCE(MAX(id),1), true) FROM mst_rank;
-SELECT setval(pg_get_serial_sequence('mst_police_station','id'), COALESCE(MAX(id),1), true) FROM mst_police_station;
-SELECT setval(pg_get_serial_sequence('mst_case_status','id'), COALESCE(MAX(id),1), true) FROM mst_case_status;
-SELECT setval(pg_get_serial_sequence('users','id'), COALESCE(MAX(id),1), true) FROM users;
-SELECT setval(pg_get_serial_sequence('cases','id'), COALESCE(MAX(id),1), true) FROM cases;
-SELECT setval(pg_get_serial_sequence('notices','id'), COALESCE(MAX(id),1), true) FROM notices;
+
+SELECT setval(pg_get_serial_sequence('mst_district','id'),COALESCE(MAX(id),1),true) FROM mst_district;
+SELECT setval(pg_get_serial_sequence('mst_role','id'),COALESCE(MAX(id),1),true) FROM mst_role;
+SELECT setval(pg_get_serial_sequence('mst_rank','id'),COALESCE(MAX(id),1),true) FROM mst_rank;
+SELECT setval(pg_get_serial_sequence('mst_police_station','id'),COALESCE(MAX(id),1),true) FROM mst_police_station;
+SELECT setval(pg_get_serial_sequence('mst_case_status','id'),COALESCE(MAX(id),1),true) FROM mst_case_status;
+SELECT setval(pg_get_serial_sequence('users','id'),COALESCE(MAX(id),1),true) FROM users;
+SELECT setval(pg_get_serial_sequence('cases','id'),COALESCE(MAX(id),1),true) FROM cases;
+SELECT setval(pg_get_serial_sequence('notices','id'),COALESCE(MAX(id),1),true) FROM notices;
