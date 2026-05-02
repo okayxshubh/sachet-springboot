@@ -1,15 +1,4 @@
 -- ==============================
--- Districts
--- ==============================
-INSERT INTO mst_district (id, district_name)
-VALUES
-    (1, 'Shimla'),
-    (2, 'Kullu'),
-    (3, 'Mandi')
-ON CONFLICT (id) DO UPDATE
-SET district_name = EXCLUDED.district_name;
-
--- ==============================
 -- Roles
 -- ==============================
 INSERT INTO mst_role (id, role_name)
@@ -32,141 +21,15 @@ ON CONFLICT (id) DO UPDATE
 SET rank_name = EXCLUDED.rank_name;
 
 -- ==============================
--- Police Stations
+-- Districts
 -- ==============================
-INSERT INTO mst_police_station (id, ps_name, district_id)
+INSERT INTO mst_district (id, district_name)
 VALUES
-    (1, 'Shimla PS', 1),
-    (2, 'Kullu PS', 2),
-    (3, 'Mandi PS', 3)
+    (1, 'CID State Cyber Crime'),
+    (2, 'Test 2'),
+    (3, 'Test 3')
 ON CONFLICT (id) DO UPDATE
-SET
-    ps_name = EXCLUDED.ps_name,
-    district_id = EXCLUDED.district_id;
-
--- ==============================
--- Users
--- ==============================
-INSERT INTO users (
-    name,
-    rank_id,
-    ps_id,
-    phone,
-    role_id,
-    password_hash,
-    is_active,
-    is_approved,
-    created_at,
-    updated_at
-)
-SELECT
-    v.name,
-    r.id,
-    ps.id,
-    v.phone,
-    rl.id,
-    v.password_hash,
-    v.is_active,
-    v.is_approved,
-    v.created_at,
-    v.updated_at
-FROM (
-    VALUES
-
-    -- MAIN USERS
-    ('Rohit Malpani','SHO (Station House Officer)','Shimla PS','9816662225','Admin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Anshita','SHO (Station House Officer)','Shimla PS','7580034077','SuperAdmin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Prikshit','SHO (Station House Officer)','Kullu PS','6230775084','SuperAdmin',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Shubh','SHO (Station House Officer)','Mandi PS','7018437924','SuperAdmin',
-     '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6',TRUE,TRUE,NOW(),NOW()),
-
-    ('Brijesh','SHO (Station House Officer)','Shimla PS','7649928090','Staff',
-     '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6',TRUE,TRUE,NOW(),NOW()),
-
-    -- APPROVED USERS
-    ('Arjun Singh','IO (Investigating Officer)','Shimla PS','9000000101','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Bharat Negi','IO (Investigating Officer)','Kullu PS','9000000102','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Chirag Joshi','IO (Investigating Officer)','Mandi PS','9000000103','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Dinesh Kumar','IO (Investigating Officer)','Shimla PS','9000000104','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Eshan Kapoor','IO (Investigating Officer)','Kullu PS','9000000105','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Farhan Ali','IO (Investigating Officer)','Mandi PS','9000000106','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Gaurav Mehta','IO (Investigating Officer)','Shimla PS','9000000107','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Harsh Vardhan','IO (Investigating Officer)','Kullu PS','9000000108','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Ishaan Gupta','IO (Investigating Officer)','Mandi PS','9000000109','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    ('Jatin Sood','IO (Investigating Officer)','Shimla PS','9000000110','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,TRUE,NOW(),NOW()),
-
-    -- PENDING USERS
-    ('Karan Thapa','IO (Investigating Officer)','Shimla PS','9000000201','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Lokesh Chauhan','IO (Investigating Officer)','Kullu PS','9000000202','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Manoj Pathak','IO (Investigating Officer)','Mandi PS','9000000203','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Nikhil Bansal','IO (Investigating Officer)','Shimla PS','9000000204','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Om Prakash','IO (Investigating Officer)','Kullu PS','9000000205','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Pankaj Sharma','IO (Investigating Officer)','Mandi PS','9000000206','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Qadir Hussain','IO (Investigating Officer)','Shimla PS','9000000207','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Rakesh Dogra','IO (Investigating Officer)','Kullu PS','9000000208','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Suresh Kumar','IO (Investigating Officer)','Mandi PS','9000000209','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW()),
-
-    ('Tarun Negi','IO (Investigating Officer)','Shimla PS','9000000210','Staff',
-     '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu',TRUE,FALSE,NOW(),NOW())
-
-) AS v(name, rank_name, ps_name, phone, role_name, password_hash, is_active, is_approved, created_at, updated_at)
-
-JOIN mst_rank r ON r.rank_name = v.rank_name
-JOIN mst_police_station ps ON ps.ps_name = v.ps_name
-JOIN mst_role rl ON rl.role_name = v.role_name
-
-ON CONFLICT (phone) DO UPDATE
-SET
-    name = EXCLUDED.name,
-    rank_id = EXCLUDED.rank_id,
-    ps_id = EXCLUDED.ps_id,
-    role_id = EXCLUDED.role_id,
-    password_hash = EXCLUDED.password_hash,
-    is_active = EXCLUDED.is_active,
-    is_approved = EXCLUDED.is_approved,
-    updated_at = EXCLUDED.updated_at;
+SET district_name = EXCLUDED.district_name;
 
 -- ==============================
 -- Case Status
@@ -181,41 +44,128 @@ ON CONFLICT (id) DO UPDATE
 SET case_status = EXCLUDED.case_status;
 
 -- ==============================
--- Cases
--- SHO as Case Owners
+-- Police Stations
 -- ==============================
-INSERT INTO cases (
-    id,
-    created_at,
-    created_by,
-    is_active,
-    updated_at,
-    updated_by,
-    district_id,
-    fir_no,
-    fir_year,
-    ps_id,
-    sections,
-    summary,
-    case_owner,
-    case_status
-)
+INSERT INTO mst_police_station (id, ps_name, district_id)
 VALUES
-(1,NOW(),1,TRUE,NOW(),1,1,'FIR-1001',2026,1,'IPC 420,406','UPI fraud through fake customer care complaint',1,1),
-(2,NOW(),2,TRUE,NOW(),2,2,'FIR-1002',2026,2,'IPC 379','Mobile theft with wallet misuse and SIM misuse',3,2),
-(3,NOW(),3,TRUE,NOW(),3,3,'FIR-1003',2026,3,'IPC 302','Suspicious death linked with digital threats',4,1),
-(4,NOW(),1,TRUE,NOW(),1,1,'FIR-1004',2026,1,'IPC 498A','Domestic harassment with abusive chats evidence',2,3),
-(5,NOW(),3,TRUE,NOW(),3,2,'FIR-1005',2026,2,'IPC 354','Stalking and obscene social media messages',3,1),
-(6,NOW(),4,TRUE,NOW(),4,3,'FIR-1006',2026,3,'IPC 465,468','Forged land papers and identity misuse',4,1),
-(7,NOW(),2,TRUE,NOW(),2,1,'FIR-1007',2026,1,'IPC 384','Extortion through threatening calls',2,1),
-(8,NOW(),1,TRUE,NOW(),1,1,'FIR-1008',2026,1,'IPC 379,411','Vehicle theft and resale racket',1,4),
-(9,NOW(),3,TRUE,NOW(),3,2,'FIR-1009',2026,2,'IPC 406','Trust breach in contractor payment matter',3,1),
-(10,NOW(),4,TRUE,NOW(),4,3,'FIR-1010',2026,3,'IPC 354D','Cyber stalking via fake profiles',4,1)
+    (1, 'Dharamshala Police Station', 1),
+    (2, 'Shimla Police Station', 1),
+    (3, 'Mandi Police Station', 1),
+    (4, 'Test A Police Station', 2),
+    (5, 'Test B Police Station', 2),
+    (6, 'Test C Police Station', 2),
+    (7, 'Test D Police Station', 3),
+    (8, 'Test E Police Station', 3),
+    (9, 'Test F Police Station', 3)
 ON CONFLICT (id) DO UPDATE
 SET
-    updated_at = EXCLUDED.updated_at,
-    updated_by = EXCLUDED.updated_by,
-    district_id = EXCLUDED.district_id,
+    ps_name = EXCLUDED.ps_name,
+    district_id = EXCLUDED.district_id;
+
+    -- ==============================
+    -- Notice Types
+    -- ==============================
+    INSERT INTO mst_notice_type (id, notice_type_name)
+    VALUES
+        (1, '791 Act for Meta'),
+        (2, '64 BNSS for Meta Platform'),
+        (3, '35 (3) Summon for Appearance by Police'),
+        (4, '94 & 106 BNSS for Bank'),
+        (5, '95 BNSS for CDR/CAF/IPDR'),
+        (6, '94 BNSS CCTV/ATM Footage')
+    ON CONFLICT (id) DO UPDATE
+    SET notice_type_name = EXCLUDED.notice_type_name;
+
+
+-- ==============================
+-- MAIN SHO USERS
+-- ==============================
+INSERT INTO users (
+    id, name, rank_id, ps_id, phone, role_id, password_hash,
+    is_active, is_approved, created_at, updated_at
+)
+VALUES
+(1, 'Rohit Malpani', 1, 2, '9816662225', 2, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(2, 'Shubh', 1, 2, '7018437924', 1, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE, NOW(), NOW()),
+(3, 'Brijesh', 1, 2, '7649928090', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, TRUE, NOW(), NOW()),
+(4, 'Anshita', 1, 1, '7580034077', 1, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(5, 'Aman Sharma', 1, 1, '9817000001', 2, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(6, 'Karan Thakur', 1, 1, '9817000002', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(7, 'Prikshit', 1, 3, '6230775084', 1, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(8, 'Rahul Verma', 1, 3, '9817000003', 2, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(9, 'Deepak Rana', 1, 3, '9817000004', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(10, 'Abhishek Sharma', 2, 2, '9817100001', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(11, 'Bhavesh Thakur', 2, 2, '9817100002', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(12, 'Chetan Verma', 2, 2, '9817100003', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(13, 'Dinesh Rana', 2, 2, '9817100004', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(14, 'Ekam Chauhan', 2, 2, '9817100005', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(15, 'Arjun Kapoor', 2, 1, '9817200001', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(16, 'Bharat Singh', 2, 1, '9817200002', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(17, 'Chirag Mehta', 2, 1, '9817200003', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(18, 'Dev Malhotra', 2, 1, '9817200004', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(19, 'Eshan Sood', 2, 1, '9817200005', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(20, 'Aakash Negi', 2, 3, '9817300001', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(21, 'Bhuvan Joshi', 2, 3, '9817300002', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(22, 'Chetan Pathania', 2, 3, '9817300003', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(23, 'Dheeraj Kanwar', 2, 3, '9817300004', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(24, 'Eklavya Sen', 2, 3, '9817300005', 3, '$2a$12$ZzTi.apOKBsI/WMCWH0Mn.zzpcLzyJ3TvqFxZ1/OrM7hDyu7DBVVu', TRUE, TRUE, NOW(), NOW()),
+(25, 'Pending User 1 Dharamshala', 2, 1, '8000001001', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(26, 'Pending User 2 Dharamshala', 2, 1, '8000001002', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(27, 'Pending User 3 Dharamshala', 2, 1, '8000001003', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(28, 'Pending User 4 Dharamshala', 2, 1, '8000001004', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(29, 'Pending User 5 Dharamshala', 2, 1, '8000001005', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(30, 'Pending User 1 Shimla', 2, 2, '8000002001', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(31, 'Pending User 2 Shimla', 2, 2, '8000002002', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(32, 'Pending User 3 Shimla', 2, 2, '8000002003', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(33, 'Pending User 4 Shimla', 2, 2, '8000002004', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(34, 'Pending User 5 Shimla', 2, 2, '8000002005', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(35, 'Pending User 1 Mandi', 2, 3, '8000003001', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(36, 'Pending User 2 Mandi', 2, 3, '8000003002', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(37, 'Pending User 3 Mandi', 2, 3, '8000003003', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(38, 'Pending User 4 Mandi', 2, 3, '8000003004', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW()),
+(39, 'Pending User 5 Mandi', 2, 3, '8000003005', 3, '$2a$12$g59i7APUObBG0kw7KMdrouf8wRWG6IQQFTRf260NfHLZExvskrzi6', TRUE, FALSE, NOW(), NOW())
+ON CONFLICT (id) DO UPDATE
+SET
+    name = EXCLUDED.name,
+    rank_id = EXCLUDED.rank_id,
+    ps_id = EXCLUDED.ps_id,
+    phone = EXCLUDED.phone,
+    role_id = EXCLUDED.role_id,
+    password_hash = EXCLUDED.password_hash,
+    is_active = EXCLUDED.is_active,
+    is_approved = EXCLUDED.is_approved,
+    updated_at = EXCLUDED.updated_at;
+
+-- ==============================
+-- CASES DATA
+-- ==============================
+INSERT INTO cases (
+    id, created_at, created_by, is_active, updated_at, updated_by,
+    district_id, fir_no, fir_year, ps_id,
+    sections, summary, case_owner, case_status
+)
+VALUES
+(1, NOW(), 2, TRUE, NOW(), 2, 1, 'FIR-24001', 2026, 2, 'IPC 420, 66D', 'Online job fraud victim lost ₹50,000', 2, 1),
+(2, NOW(), 2, TRUE, NOW(), 2, 1, 'FIR-24002', 2026, 2, 'IPC 406, 66C', 'E-commerce refund scam fake customer care', 2, 1),
+(3, NOW(), 2, TRUE, NOW(), 2, 1, 'FIR-24003', 2026, 2, 'IPC 384, 67', 'Ransomware attack on hospital systems', 2, 2),
+(4, NOW(), 4, TRUE, NOW(), 4, 1, 'FIR-24004', 2026, 1, 'IPC 420, 66D', 'Matrimonial site grooming for crypto fraud', 4, 1),
+(5, NOW(), 4, TRUE, NOW(), 4, 1, 'FIR-24005', 2026, 1, 'IPC 465, 471', 'Forgery of property documents for loan', 4, 3),
+(6, NOW(), 4, TRUE, NOW(), 4, 1, 'FIR-24006', 2026, 1, 'IPC 379, 66B', 'Mobile phone theft and UPI misuse', 4, 1),
+(7, NOW(), 7, TRUE, NOW(), 7, 1, 'FIR-24007', 2026, 3, 'IPC 420, 66D', 'WhatsApp sextortion case from unknown number', 7, 1),
+(8, NOW(), 7, TRUE, NOW(), 7, 1, 'FIR-24008', 2026, 3, 'IPC 406', 'Loan app fraud with hidden terms', 7, 1),
+(9, NOW(), 7, TRUE, NOW(), 7, 1, 'FIR-24009', 2026, 3, 'IPC 384', 'Fake police extortion via video call', 7, 4),
+(10, NOW(), 2, TRUE, NOW(), 2, 1, 'FIR-24010', 2026, 2, 'IPC 420, 66C', 'Credit card OTP sharing fraud', 2, 1),
+(11, NOW(), 1, TRUE, NOW(), 1, 1, 'FIR-1011', 2026, 2, 'IPC 420', 'Fake OLX Army officer scam with UPI fraud', 1, 1),
+(12, NOW(), 2, TRUE, NOW(), 2, 1, 'FIR-1012', 2026, 2, 'IPC 406', 'Investment fraud through Telegram crypto channel', 2, 1),
+(13, NOW(), 3, TRUE, NOW(), 3, 1, 'FIR-1013', 2026, 2, 'IPC 354D', 'Cyber stalking through fake Instagram IDs', 3, 1),
+(14, NOW(), 1, TRUE, NOW(), 1, 1, 'FIR-1014', 2026, 2, 'IPC 467,468', 'Fake government job appointment letters', 1, 2),
+(15, NOW(), 2, TRUE, NOW(), 2, 1, 'FIR-1015', 2026, 2, 'IPC 384', 'Blackmail using morphed photographs', 2, 1),
+(16, NOW(), 4, TRUE, NOW(), 4, 1, 'FIR-1016', 2026, 1, 'IPC 420', 'Loan app harassment and extortion calls', 4, 1),
+(17, NOW(), 5, TRUE, NOW(), 5, 1, 'FIR-1017', 2026, 1, 'IPC 379', 'UPI linked mobile theft complaint', 5, 4),
+(18, NOW(), 7, TRUE, NOW(), 7, 1, 'FIR-1018', 2026, 3, 'IPC 420', 'Fake KYC update banking fraud', 7, 1),
+(19, NOW(), 8, TRUE, NOW(), 8, 1, 'FIR-1019', 2026, 3, 'IPC 465', 'Forged Aadhaar used for SIM activation', 8, 3)
+ON CONFLICT (id) DO UPDATE
+SET
     fir_no = EXCLUDED.fir_no,
     fir_year = EXCLUDED.fir_year,
     ps_id = EXCLUDED.ps_id,
@@ -223,115 +173,96 @@ SET
     summary = EXCLUDED.summary,
     case_owner = EXCLUDED.case_owner,
     case_status = EXCLUDED.case_status,
-    is_active = EXCLUDED.is_active;
+    district_id = EXCLUDED.district_id,
+    updated_at = EXCLUDED.updated_at;
 
 -- ==============================
--- Case Assigned Users
--- Cases assigned ONLY to IOs
--- Removed SHO users from assignments
--- SHO IDs = 1,2,3,4,5
--- IO IDs start from 6 onward
+-- CASE ASSIGNMENTS
 -- ==============================
 INSERT INTO case_assigned_users (case_id, user_id)
 VALUES
-    -- Case 1
-    (1,6),(1,9),(1,12),
-
-    -- Case 2
-    (2,7),(2,10),
-
-    -- Case 3
-    (3,8),(3,11),
-
-    -- Case 4
-    (4,6),(4,13),
-
-    -- Case 5
-    (5,7),(5,10),
-
-    -- Case 6
-    (6,8),(6,11),
-
-    -- Case 7
-    (7,9),(7,12),
-
-    -- Case 8
-    (8,6),(8,14),
-
-    -- Case 9
-    (9,7),(9,15),
-
-    -- Case 10
-    (10,8),(10,11)
-
-ON CONFLICT DO NOTHING;
+(1, 2), (1, 10), (1, 11),
+(2, 2), (2, 12), (2, 13),
+(3, 2), (3, 14), (3, 15),
+(4, 4), (4, 15), (4, 16),
+(5, 4), (5, 17), (5, 18),
+(6, 4), (6, 19),
+(7, 7), (7, 20), (7, 21),
+(8, 7), (8, 22), (8, 23),
+(9, 7), (9, 24),
+(10, 2), (10, 10), (10, 12),
+(11, 10), (11, 11),
+(12, 12), (12, 13),
+(13, 14), (13, 15),
+(14, 10), (14, 12),
+(15, 11), (15, 13),
+(16, 15), (16, 16),
+(17, 17), (17, 18),
+(18, 20), (18, 21),
+(19, 22), (19, 23)
+ON CONFLICT (case_id, user_id) DO NOTHING;
 
 -- ==============================
--- Notice Types
--- ==============================
-INSERT INTO mst_notice_type (id, notice_type_name)
-VALUES
-    (1, '791 Act for Meta'),
-    (2, '64 BNSS for Meta Platform'),
-    (3, '35 (3) Summon for Appearance by Police'),
-    (4, '94 & 106 BNSS for Bank'),
-    (5, '95 BNSS for CDR/CAF/IPDR'),
-    (6, '94 BNSS CCTV/ATM Footage')
-ON CONFLICT (id) DO UPDATE
-SET notice_type_name = EXCLUDED.notice_type_name;
-
--- ==============================
--- Notices
--- Expanded Cases / Layers
+-- NOTICES DATA - USING ONLY 'PENDING' AND 'SENT' STATUS
 -- ==============================
 INSERT INTO notices (
-    id, case_id, notice_id, notice_type, layer, issued_to, issued_date,
-    notice_file_name, notice_file_path, reply_by, reply_date, remarks,
-    reply_file_name, reply_file_path, status,
-    created_at, updated_at, created_by, updated_by, is_active
+    id, case_id, notice_id, notice_type, layer,
+    issued_to, issued_date,
+    notice_file_name, notice_file_path,
+    reply_by, reply_date, remarks,
+    reply_file_name, reply_file_path,
+    status,
+    created_at, updated_at,
+    created_by, updated_by, is_active
 )
 VALUES
-
-(1001,1,'NT-1001','1','LAYER_1','Meta Platforms India','2026-04-01','notice_meta_1001.docx','/notices/2026/04/NT-1001.docx',NULL,NULL,'Awaiting account preservation response',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1002,1,'NT-1002','4','LAYER_2','State Bank of India','2026-04-02','bank_1002.docx','/notices/2026/04/NT-1002.docx',NULL,NULL,'Freeze request sent',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1003,2,'NT-1003','5','LAYER_1','Airtel Nodal Office','2026-04-03','cdr_1003.docx','/notices/2026/04/NT-1003.docx',NULL,NULL,'Pending telecom records',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1004,2,'NT-1004','6','LAYER_2','PNB CCTV Cell','2026-04-04','cctv_1004.docx','/notices/2026/04/NT-1004.docx',NULL,NULL,'ATM footage sought',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1005,3,'NT-1005','3','LAYER_1','Rajeev Sharma','2026-04-05','summon_1005.docx','/notices/2026/04/NT-1005.docx',NULL,NULL,'Appearance pending',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1006,3,'NT-1006','4','LAYER_2','HDFC Bank','2026-04-06','bank_1006.docx','/notices/2026/04/NT-1006.docx',NULL,NULL,'Freeze request sent',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1007,4,'NT-1007','1','LAYER_1','Instagram Compliance Team','2026-04-07','meta_1007.docx','/notices/2026/04/NT-1007.docx',NULL,NULL,'Account preservation requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1008,4,'NT-1008','3','LAYER_2','Vikas Thakur','2026-04-08','summon_1008.docx','/notices/2026/04/NT-1008.docx',NULL,NULL,'Personal appearance required',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1009,5,'NT-1009','2','LAYER_1','Facebook LERT','2026-04-09','meta_1009.docx','/notices/2026/04/NT-1009.docx',NULL,NULL,'Data preservation sought',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1010,5,'NT-1010','3','LAYER_2','Kamal Verma','2026-04-10','summon_1010.docx','/notices/2026/04/NT-1010.docx',NULL,NULL,'Witness examination',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1011,6,'NT-1011','4','LAYER_1','ICICI Bank','2026-04-11','bank_1011.docx','/notices/2026/04/NT-1011.docx',NULL,NULL,'Transaction trail requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1012,6,'NT-1012','5','LAYER_2','Jio Nodal Office','2026-04-12','cdr_1012.docx','/notices/2026/04/NT-1012.docx',NULL,NULL,'Subscriber details sought',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1013,7,'NT-1013','3','LAYER_1','Rakesh Mehta','2026-04-13','summon_1013.docx','/notices/2026/04/NT-1013.docx',NULL,NULL,'Threat caller identified',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1014,7,'NT-1014','5','LAYER_2','Vodafone Idea','2026-04-13','cdr_1014.docx','/notices/2026/04/NT-1014.docx',NULL,NULL,'CDR requested',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1015,8,'NT-1015','6','LAYER_1','SBI CCTV Cell','2026-04-14','cctv_1015.docx','/notices/2026/04/NT-1015.docx',NULL,NULL,'Parking footage requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1016,8,'NT-1016','4','LAYER_2','Axis Bank','2026-04-14','bank_1016.docx','/notices/2026/04/NT-1016.docx',NULL,NULL,'Receiver account traced',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1017,9,'NT-1017','4','LAYER_1','Punjab National Bank','2026-04-15','bank_1017.docx','/notices/2026/04/NT-1017.docx',NULL,NULL,'Contract fund hold requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1018,9,'NT-1018','3','LAYER_2','Sanjay Rana','2026-04-15','summon_1018.docx','/notices/2026/04/NT-1018.docx',NULL,NULL,'Statement required',NULL,NULL,'SENT',NOW(),NOW(),4,4,TRUE),
-
-(1019,10,'NT-1019','1','LAYER_1','Meta Platforms India','2026-04-16','meta_1019.docx','/notices/2026/04/NT-1019.docx',NULL,NULL,'Fake profile data requested',NULL,NULL,'PENDING',NOW(),NOW(),4,4,TRUE),
-(1020,10,'NT-1020','2','LAYER_2','Instagram Compliance Team','2026-04-16','meta_1020.docx','/notices/2026/04/NT-1020.docx',NULL,NULL,'Preservation acknowledged',NULL,NULL,'REPLIED',NOW(),NOW(),4,4,TRUE)
-
-ON CONFLICT (id) DO NOTHING;
+-- All notices using either 'PENDING' or 'SENT' status
+(1001, 1, 'NT-1001', '1', 'LAYER_1', 'Meta India', '2026-04-10', 'meta_notice.pdf', '/notices/2026/04/NT-1001.pdf', '2026-04-15', '2026-04-15', 'Data provided successfully', 'meta_reply.pdf', '/notices/replies/NT-1001_reply.pdf', 'SENT', NOW(), NOW(), 2, 2, TRUE),
+(1002, 2, 'NT-1002', '4', 'LAYER_1', 'ICICI Bank', '2026-04-11', 'bank_notice.pdf', '/notices/2026/04/NT-1002.pdf', '2026-04-16', '2026-04-16', 'Account frozen', 'bank_reply.pdf', '/notices/replies/NT-1002_reply.pdf', 'SENT', NOW(), NOW(), 2, 2, TRUE),
+(1003, 3, 'NT-1003', '2', 'LAYER_2', 'WhatsApp Inc.', '2026-04-12', 'whatsapp_notice.pdf', '/notices/2026/04/NT-1003.pdf', NULL, NULL, 'Awaiting response', NULL, NULL, 'PENDING', NOW(), NOW(), 2, 2, TRUE),
+(1004, 4, 'NT-1004', '3', 'LAYER_1', 'John Doe', '2026-04-13', 'summon_order.pdf', '/notices/2026/04/NT-1004.pdf', '2026-04-18', '2026-04-18', 'Appeared for statement', 'statement_record.pdf', '/notices/replies/NT-1004_reply.pdf', 'SENT', NOW(), NOW(), 4, 4, TRUE),
+(1005, 5, 'NT-1005', '5', 'LAYER_2', 'Vodafone Idea', '2026-04-14', 'tower_dump.pdf', '/notices/2026/04/NT-1005.pdf', NULL, NULL, 'Technical team working', NULL, NULL, 'SENT', NOW(), NOW(), 4, 4, TRUE),
+(1006, 6, 'NT-1006', '6', 'LAYER_1', 'SBI CCTV', '2026-04-15', 'cctv_request.pdf', '/notices/2026/04/NT-1006.pdf', '2026-04-20', '2026-04-20', 'Footage submitted', 'cctv_footage.txt', '/notices/replies/NT-1006_reply.txt', 'SENT', NOW(), NOW(), 4, 4, TRUE),
+(1007, 7, 'NT-1007', '1', 'LAYER_2', 'Google LLC', '2026-04-16', 'google_notice.pdf', '/notices/2026/04/NT-1007.pdf', NULL, NULL, 'Request under process', NULL, NULL, 'PENDING', NOW(), NOW(), 7, 7, TRUE),
+(1008, 8, 'NT-1008', '4', 'LAYER_1', 'Paytm Bank', '2026-04-17', 'paytm_notice.pdf', '/notices/2026/04/NT-1008.pdf', '2026-04-22', '2026-04-22', 'Transaction details shared', 'paytm_reply.pdf', '/notices/replies/NT-1008_reply.pdf', 'SENT', NOW(), NOW(), 7, 7, TRUE),
+(1009, 9, 'NT-1009', '2', 'LAYER_3', 'Jane Smith', '2026-04-18', 'summon_witness.pdf', '/notices/2026/04/NT-1009.pdf', NULL, NULL, 'Not reachable', NULL, NULL, 'PENDING', NOW(), NOW(), 7, 7, TRUE),
+(1010, 10, 'NT-1010', '3', 'LAYER_1', 'Robert Johnson', '2026-04-19', 'examination_order.pdf', '/notices/2026/04/NT-1010.pdf', '2026-04-24', '2026-04-24', 'Exam completed', 'exam_report.pdf', '/notices/replies/NT-1010_reply.pdf', 'SENT', NOW(), NOW(), 2, 2, TRUE),
+(1021, 11, 'NT-1021', '1', 'LAYER_1', 'Meta Platforms India', '2026-04-17', 'meta_1021.docx', '/notices/2026/04/NT-1021.docx', NULL, NULL, 'Facebook account preservation requested', NULL, NULL, 'PENDING', NOW(), NOW(), 1, 1, TRUE),
+(1022, 12, 'NT-1022', '4', 'LAYER_1', 'HDFC Bank', '2026-04-18', 'bank_1022.docx', '/notices/2026/04/NT-1022.docx', NULL, NULL, 'Fraud beneficiary account freeze requested', NULL, NULL, 'SENT', NOW(), NOW(), 2, 2, TRUE),
+(1023, 13, 'NT-1023', '2', 'LAYER_1', 'Instagram Compliance Team', '2026-04-19', 'insta_1023.docx', '/notices/2026/04/NT-1023.docx', NULL, NULL, 'Fake profile information requested', NULL, NULL, 'PENDING', NOW(), NOW(), 3, 3, TRUE),
+(1024, 14, 'NT-1024', '5', 'LAYER_2', 'Airtel Nodal Office', '2026-04-20', 'cdr_1024.docx', '/notices/2026/04/NT-1024.docx', NULL, NULL, 'Subscriber CDR requested', NULL, NULL, 'SENT', NOW(), NOW(), 1, 1, TRUE),
+(1025, 15, 'NT-1025', '3', 'LAYER_1', 'Rohit Sood', '2026-04-21', 'summon_1025.docx', '/notices/2026/04/NT-1025.docx', NULL, NULL, 'Victim statement recording pending', NULL, NULL, 'PENDING', NOW(), NOW(), 2, 2, TRUE),
+(1026, 16, 'NT-1026', '4', 'LAYER_1', 'Punjab National Bank', '2026-04-22', 'bank_1026.docx', '/notices/2026/04/NT-1026.docx', NULL, NULL, 'Wallet account freeze request', NULL, NULL, 'SENT', NOW(), NOW(), 4, 4, TRUE),
+(1027, 17, 'NT-1027', '6', 'LAYER_1', 'SBI CCTV Cell', '2026-04-23', 'cctv_1027.docx', '/notices/2026/04/NT-1027.docx', NULL, NULL, 'ATM CCTV footage requested', NULL, NULL, 'PENDING', NOW(), NOW(), 5, 5, TRUE),
+(1028, 18, 'NT-1028', '1', 'LAYER_1', 'Meta Platforms India', '2026-04-24', 'meta_1028.docx', '/notices/2026/04/NT-1028.docx', NULL, NULL, 'Fraud Facebook account traced', NULL, NULL, 'PENDING', NOW(), NOW(), 7, 7, TRUE),
+(1029, 19, 'NT-1029', '5', 'LAYER_2', 'Jio Nodal Office', '2026-04-25', 'cdr_1029.docx', '/notices/2026/04/NT-1029.docx', NULL, NULL, 'SIM activation details requested', NULL, NULL, 'SENT', NOW(), NOW(), 8, 8, TRUE)
+ON CONFLICT (id) DO UPDATE
+SET
+    case_id = EXCLUDED.case_id,
+    notice_id = EXCLUDED.notice_id,
+    notice_type = EXCLUDED.notice_type,
+    layer = EXCLUDED.layer,
+    issued_to = EXCLUDED.issued_to,
+    issued_date = EXCLUDED.issued_date,
+    notice_file_name = EXCLUDED.notice_file_name,
+    notice_file_path = EXCLUDED.notice_file_path,
+    reply_by = EXCLUDED.reply_by,
+    reply_date = EXCLUDED.reply_date,
+    remarks = EXCLUDED.remarks,
+    reply_file_name = EXCLUDED.reply_file_name,
+    reply_file_path = EXCLUDED.reply_file_path,
+    status = EXCLUDED.status,
+    updated_at = EXCLUDED.updated_at,
+    updated_by = EXCLUDED.updated_by;
 
 -- ==============================
 -- Reset Sequences
 -- ==============================
-SELECT setval(pg_get_serial_sequence('mst_district','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM mst_district;
-SELECT setval(pg_get_serial_sequence('mst_role','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM mst_role;
-SELECT setval(pg_get_serial_sequence('mst_rank','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM mst_rank;
-SELECT setval(pg_get_serial_sequence('mst_police_station','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM mst_police_station;
-SELECT setval(pg_get_serial_sequence('mst_case_status','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM mst_case_status;
-SELECT setval(pg_get_serial_sequence('mst_notice_type','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM mst_notice_type;
-SELECT setval(pg_get_serial_sequence('cases','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM cases;
-SELECT setval(pg_get_serial_sequence('notices','id'), COALESCE((SELECT MAX(id) FROM notices),1), TRUE);
+SELECT setval(pg_get_serial_sequence('mst_district','id'), COALESCE(MAX(id),1), true) FROM mst_district;
+SELECT setval(pg_get_serial_sequence('mst_role','id'), COALESCE(MAX(id),1), true) FROM mst_role;
+SELECT setval(pg_get_serial_sequence('mst_rank','id'), COALESCE(MAX(id),1), true) FROM mst_rank;
+SELECT setval(pg_get_serial_sequence('mst_police_station','id'), COALESCE(MAX(id),1), true) FROM mst_police_station;
+SELECT setval(pg_get_serial_sequence('mst_case_status','id'), COALESCE(MAX(id),1), true) FROM mst_case_status;
+SELECT setval(pg_get_serial_sequence('users','id'), COALESCE(MAX(id),1), true) FROM users;
+SELECT setval(pg_get_serial_sequence('cases','id'), COALESCE(MAX(id),1), true) FROM cases;
+SELECT setval(pg_get_serial_sequence('notices','id'), COALESCE(MAX(id),1), true) FROM notices;

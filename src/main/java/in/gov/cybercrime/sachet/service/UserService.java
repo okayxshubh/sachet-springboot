@@ -339,8 +339,23 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> getApprovalPoolUsers() {
-        return userRepository.findByIsApprovedFalse()
+    public List<UserResponse> getApprovalPoolUsers(
+            Long districtId,
+            Long psId) {
+
+        if (districtId == null) {
+            throw new IllegalArgumentException("District ID required");
+        }
+
+        if (psId == null) {
+            throw new IllegalArgumentException("Police Station ID required");
+        }
+
+        return userRepository
+                .findByIsApprovedFalseAndPs_District_IdAndPs_Id(
+                        districtId,
+                        psId
+                )
                 .stream()
                 .map(this::toResponse)
                 .toList();

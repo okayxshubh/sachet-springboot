@@ -120,11 +120,21 @@ public class UserController {
                 .build();
     }
 
-    // Get all Non-Approved (Newly registered Users)
-    @GetMapping("/approval-pool")
-    public GenericResponse<String> getApprovalPoolUsers() throws Exception {
+    // Get all Non-Approved users according to District + PS
+    @PostMapping("/approval-pool")
+    public GenericResponse<String> getApprovalPoolUsers(
+            @RequestBody String encryptedBody) throws Exception {
 
-        List<UserResponse> users = userService.getApprovalPoolUsers();
+        String json = SachetCrypto.decrypt(encryptedBody);
+
+        ApprovalPoolRequest request =
+                objectMapper.readValue(json, ApprovalPoolRequest.class);
+
+        List<UserResponse> users =
+                userService.getApprovalPoolUsers(
+                        request.getDistrictId(),
+                        request.getPsId()
+                );
 
         String jsonList = objectMapper.writeValueAsString(users);
         String encryptedData = SachetCrypto.encrypt(jsonList);
@@ -133,7 +143,7 @@ public class UserController {
                 .status("OK")
                 .message("Approval pool users fetched successfully")
                 .data(encryptedData)
-                .timestamp(java.time.LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 
