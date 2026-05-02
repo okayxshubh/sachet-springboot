@@ -1,8 +1,11 @@
 package in.gov.cybercrime.sachet.service;
 
+import in.gov.cybercrime.sachet.dto.DocumentInfo;
 import in.gov.cybercrime.sachet.dto.NoticeRequest;
 import in.gov.cybercrime.sachet.entity.CaseFile;
 import in.gov.cybercrime.sachet.entity.Notice;
+import in.gov.cybercrime.sachet.entity.NoticeDispatch;
+import in.gov.cybercrime.sachet.entity.NoticeReply;
 import in.gov.cybercrime.sachet.entity.enums.NoticeLayer;
 import in.gov.cybercrime.sachet.masters.NoticeStatus;
 import in.gov.cybercrime.sachet.repository.CaseFileRepository;
@@ -19,14 +22,6 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final CaseFileRepository caseFileRepository;
-
-    public List<Notice> listByCase(Long caseId) {
-        return noticeRepository.findByCaseFileId(caseId);
-    }
-
-    public List<Notice> listByCaseAndLayer(Long caseId, NoticeLayer layer) {
-        return noticeRepository.findByCaseFileIdAndLayer(caseId, layer);
-    }
 
     public List<Notice> listByCaseWithOptionalLayer(Long caseId, NoticeLayer layer) {
 
@@ -62,15 +57,6 @@ public class NoticeService {
     public Notice getById(Long id) {
         return noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notice not found"));
-    }
-
-    public Notice getByNoticeId(String noticeId) {
-        return noticeRepository.findByNoticeId(noticeId)
-                .orElseThrow(() -> new RuntimeException("Notice not found"));
-    }
-
-    public List<Notice> getByCaseId(Long caseId) {
-        return noticeRepository.findByCaseFileId(caseId);
     }
 
     public Notice update(Long id, NoticeRequest request) {
@@ -120,5 +106,82 @@ public class NoticeService {
 
         Notice notice = getById(id);
         noticeRepository.delete(notice);
+    }
+
+    public Notice getByNoticeId(String noticeId) {
+        return noticeRepository.findByNoticeId(noticeId)
+                .orElseThrow(() -> new RuntimeException("Notice not found"));
+    }
+
+    public List<Notice> getByCaseId(Long caseId) {
+        return noticeRepository.findByCaseFileId(caseId);
+    }
+
+    public List<Notice> listByCase(Long caseId) {
+        return noticeRepository.findByCaseFileId(caseId);
+    }
+
+    public List<Notice> listByCaseAndLayer(Long caseId, NoticeLayer layer) {
+        return noticeRepository.findByCaseFileIdAndLayer(caseId, layer);
+    }
+
+//    HELPER METHODS
+public Notice attachDispatchDocument(
+        Long id,
+        String issuedTo,
+        LocalDate issuedDate,
+        DocumentInfo document
+) {
+
+    Notice notice = getById(id);
+
+    NoticeDispatch dispatch = notice.getDispatch();
+
+    if (dispatch == null) {
+        dispatch = new NoticeDispatch();
+    }
+
+    dispatch.setIssuedTo(issuedTo);
+
+    dispatch.setIssuedDate(
+            issuedDate != null
+                    ? issuedDate
+                    : LocalDate.now()
+    );
+
+    dispatch.setDocument(document);
+
+    notice.setDispatch(dispatch);
+
+    return noticeRepository.save(notice);
+}
+
+    public Notice attachReplyDocument(
+            Long id,
+            LocalDate replyDate,
+            String remarks,
+            DocumentInfo document
+    ) {
+
+        Notice notice = getById(id);
+
+        NoticeReply reply = notice.getReply();
+
+        if (reply == null) {
+            reply = new NoticeReply();
+        }
+
+        reply.setReplyDate(
+                replyDate != null
+                        ? replyDate
+                        : LocalDate.now()
+        );
+
+        reply.setRemarks(remarks);
+        reply.setDocument(document);
+
+        notice.setReply(reply);
+
+        return noticeRepository.save(notice);
     }
 }

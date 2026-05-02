@@ -104,4 +104,46 @@ public class NoticeController {
             return GenericResponse.fail(ex.getMessage());
         }
     }
+
+
+//    Attach Docs
+@PostMapping("/attach-dispatch")
+public GenericResponse<Notice> attachDispatch(
+        @RequestBody NoticeRequest request
+) {
+    try {
+
+        return GenericResponse.ok(
+                noticeService.attachDispatchDocument(
+                        request.getId(),
+                        request.getIssuedTo(),
+                        request.getIssuedDate(),
+                        request.getDocument()
+                )
+        );
+
+    } catch (Exception ex) {
+        return GenericResponse.fail(ex.getMessage());
+    }
+}
+
+    @PostMapping("/attach-reply")
+    public GenericResponse<Notice> attachReply(
+            @RequestBody NoticeRequest request
+    ) {
+        try {
+
+            return GenericResponse.ok(
+                    noticeService.attachReplyDocument(
+                            request.getId(),
+                            request.getReplyDate(),
+                            request.getRemarks(),
+                            request.getDocument()
+                    )
+            );
+
+        } catch (Exception ex) {
+            return GenericResponse.fail(ex.getMessage());
+        }
+    }
 }

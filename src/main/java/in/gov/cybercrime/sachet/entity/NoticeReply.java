@@ -12,9 +12,6 @@ import java.time.LocalDate;
 @Setter
 public class NoticeReply {
 
-    @Column(name = "reply_by")
-    private String replyBy;
-
     @Column(name = "reply_date")
     private LocalDate replyDate;
 

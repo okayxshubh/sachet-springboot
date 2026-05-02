@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,4 +26,12 @@ public class NoticeRequest {
 
     private NoticeDispatch dispatch;
     private NoticeReply reply;
+
+    private String issuedTo;
+    private LocalDate issuedDate;
+
+    private String remarks;
+    private LocalDate replyDate;
+
+    private DocumentInfo document;
 }
