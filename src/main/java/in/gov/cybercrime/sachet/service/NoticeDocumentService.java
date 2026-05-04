@@ -3,11 +3,10 @@ package in.gov.cybercrime.sachet.service;
 import in.gov.cybercrime.sachet.dto.DocumentInfo;
 import in.gov.cybercrime.sachet.entity.Notice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -51,23 +50,16 @@ public class NoticeDocumentService {
 
     private Resource loadResource(DocumentInfo document) {
 
-        try {
+        Path filePath = Paths.get(document.getFilePath())
+                .toAbsolutePath()
+                .normalize();
 
-            Path filePath = Paths.get(
-                    document.getFilePath()
-            ).normalize();
+        Resource resource = new PathResource(filePath);
 
-            Resource resource =
-                    new UrlResource(filePath.toUri());
-
-            if (!resource.exists()) {
-                throw new RuntimeException("File not found");
-            }
-
-            return resource;
-
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("Invalid file path");
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new RuntimeException("File not found");
         }
+
+        return resource;
     }
 }

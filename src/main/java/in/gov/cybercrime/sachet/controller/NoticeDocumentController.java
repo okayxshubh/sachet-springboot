@@ -1,5 +1,6 @@
 package in.gov.cybercrime.sachet.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.gov.cybercrime.sachet.dto.GenericResponse;
 import in.gov.cybercrime.sachet.dto.NoticeRequest;
@@ -26,13 +27,27 @@ public class NoticeDocumentController {
     /*
     * DOWNLOAD DISPATCH DOCUMENT
     * */
+    private String decryptRequestBody(String encrypted) throws Exception {
+        String body = String.valueOf(encrypted == null ? "" : encrypted).trim();
+
+        if (body.startsWith("{") && body.endsWith("}")) {
+            JsonNode root = objectMapper.readTree(body);
+            if (root.has("payload")) {
+                body = root.get("payload").asText();
+            } else {
+                return body;
+            }
+        }
+
+        return SachetCrypto.decrypt(body);
+    }
+
     @PostMapping("/download-dispatch")
     public ResponseEntity<Resource> downloadDispatchDocument(
             @RequestBody String encrypted
     ) throws Exception {
 
-        String decryptedJson =
-                SachetCrypto.decrypt(encrypted);
+        String decryptedJson = decryptRequestBody(encrypted);
 
         NoticeRequest request =
                 objectMapper.readValue(
@@ -55,6 +70,7 @@ public class NoticeDocumentController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(resource.contentLength())
                 .header(
                         HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + fileName + "\""
@@ -70,8 +86,7 @@ public class NoticeDocumentController {
             @RequestBody String encrypted
     ) throws Exception {
 
-        String decryptedJson =
-                SachetCrypto.decrypt(encrypted);
+        String decryptedJson = decryptRequestBody(encrypted);
 
         NoticeRequest request =
                 objectMapper.readValue(
@@ -94,6 +109,7 @@ public class NoticeDocumentController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(resource.contentLength())
                 .header(
                         HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + fileName + "\""

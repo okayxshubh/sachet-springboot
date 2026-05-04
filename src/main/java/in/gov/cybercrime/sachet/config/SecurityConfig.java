@@ -133,6 +133,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/crypto/**").permitAll()
                 .requestMatchers("/api/master/**").permitAll()
                 .requestMatchers("/api/masters/**").permitAll()
+//                .requestMatchers("/api/notices/**").permitAll()
 
 
                 // =========================
