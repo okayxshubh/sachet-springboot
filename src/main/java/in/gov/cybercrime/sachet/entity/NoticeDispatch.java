@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 public class NoticeDispatch {
 
-    @Column(name = "issued_to")
+    @Column(name = "issued_to", length = 512)
     private String issuedTo;
 
     @Column(name = "issued_date")
@@ -20,8 +20,8 @@ public class NoticeDispatch {
 
     @Embedded
     @AttributeOverrides({
-        @AttributeOverride(name = "fileName", column = @Column(name = "notice_file_name")),
-        @AttributeOverride(name = "filePath", column = @Column(name = "notice_file_path"))
+        @AttributeOverride(name = "fileName", column = @Column(name = "notice_file_name", length = 512)),
+        @AttributeOverride(name = "filePath", column = @Column(name = "notice_file_path", length = 1024))
     })
     private DocumentInfo document;
 }

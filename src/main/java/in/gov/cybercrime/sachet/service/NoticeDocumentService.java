@@ -2,53 +2,155 @@ package in.gov.cybercrime.sachet.service;
 
 import in.gov.cybercrime.sachet.dto.DocumentInfo;
 import in.gov.cybercrime.sachet.entity.Notice;
+import in.gov.cybercrime.sachet.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class NoticeDocumentService {
 
     private final NoticeService noticeService;
+    private static final int MAX_STORED_FILE_NAME_LENGTH = 180;
+    private static final int MAX_DISPLAY_FILE_NAME_LENGTH = 512;
 
     public Resource getDispatchDocument(Long noticeId) {
+        return loadResource(
+                getDispatchDocumentInfo(noticeId),
+                "Dispatch"
+        );
+    }
 
+    public DocumentInfo getDispatchDocumentInfo(Long noticeId) {
         Notice notice = noticeService.getById(noticeId);
 
-        if (
-                notice.getDispatch() == null ||
-                notice.getDispatch().getDocument() == null
-        ) {
-            throw new RuntimeException("Dispatch document not found");
-        }
-
-        return loadResource(
-                notice.getDispatch().getDocument()
+        return requireDocumentInfo(
+                notice.getDispatch() != null
+                        ? notice.getDispatch().getDocument()
+                        : null,
+                "Dispatch"
         );
     }
 
     public Resource getReplyDocument(Long noticeId) {
-
-        Notice notice = noticeService.getById(noticeId);
-
-        if (
-                notice.getReply() == null ||
-                notice.getReply().getDocument() == null
-        ) {
-            throw new RuntimeException("Reply document not found");
-        }
-
         return loadResource(
-                notice.getReply().getDocument()
+                getReplyDocumentInfo(noticeId),
+                "Reply"
         );
     }
 
-    private Resource loadResource(DocumentInfo document) {
+    public DocumentInfo getReplyDocumentInfo(Long noticeId) {
+        Notice notice = noticeService.getById(noticeId);
+
+        return requireDocumentInfo(
+                notice.getReply() != null
+                        ? notice.getReply().getDocument()
+                        : null,
+                "Reply"
+        );
+    }
+
+    public Notice storeDispatchDocument(Long noticeId, String issuedTo, java.time.LocalDate issuedDate, MultipartFile file) {
+        DocumentInfo documentInfo = storeDocument(noticeId, "dispatch", file);
+        return noticeService.attachDispatchDocument(noticeId, issuedTo, issuedDate, documentInfo);
+    }
+
+    public Notice storeReplyDocument(Long noticeId, java.time.LocalDate replyDate, String remarks, MultipartFile file) {
+        DocumentInfo documentInfo = storeDocument(noticeId, "reply", file);
+        return noticeService.attachReplyDocument(noticeId, replyDate, remarks, documentInfo);
+    }
+
+    private DocumentInfo storeDocument(Long noticeId, String type, MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Document file is required");
+        }
+
+        String originalFileName = String.valueOf(file.getOriginalFilename() != null ? file.getOriginalFilename() : "").trim();
+        if (originalFileName.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Document file name is required");
+        }
+
+        try {
+            Path storageDirectory = Paths.get("notice-documents", type, "notice-" + noticeId)
+                    .toAbsolutePath()
+                    .normalize();
+            Files.createDirectories(storageDirectory);
+
+            String safeFileName = buildStoredFileName(originalFileName);
+            Path targetPath = storageDirectory.resolve(safeFileName);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            DocumentInfo documentInfo = new DocumentInfo();
+            documentInfo.setFileName(truncate(originalFileName, MAX_DISPLAY_FILE_NAME_LENGTH));
+            documentInfo.setFilePath(targetPath.toString());
+            return documentInfo;
+        } catch (IOException exception) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to store document file", exception);
+        }
+    }
+
+    private String sanitizeFileName(String fileName) {
+        String sanitized = String.valueOf(fileName == null ? "" : fileName)
+                .trim()
+                .replaceAll("[\\p{Cntrl}]+", "_")
+                .replaceAll("[\\\\/:*?\"<>|]+", "_")
+                .replaceAll("\\s+", "_");
+        return sanitized.isBlank() ? "document" : sanitized;
+    }
+
+    private String buildStoredFileName(String originalFileName) {
+        String sanitized = truncate(sanitizeFileName(originalFileName), MAX_STORED_FILE_NAME_LENGTH);
+        return UUID.randomUUID() + "_" + sanitized;
+    }
+
+    private String truncate(String value, int maxLength) {
+        if (value == null || value.length() <= maxLength) {
+            return value;
+        }
+
+        return value.substring(0, maxLength);
+    }
+
+    private DocumentInfo requireDocumentInfo(
+            DocumentInfo document,
+            String documentLabel
+    ) {
+
+        if (document == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    documentLabel + " document not found"
+            );
+        }
+
+        String filePath = document.getFilePath();
+
+        if (filePath == null || filePath.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    documentLabel + " document is not available for download"
+            );
+        }
+
+        return document;
+    }
+
+    private Resource loadResource(
+            DocumentInfo document,
+            String documentLabel
+    ) {
 
         Path filePath = Paths.get(document.getFilePath())
                 .toAbsolutePath()
@@ -57,7 +159,10 @@ public class NoticeDocumentService {
         Resource resource = new PathResource(filePath);
 
         if (!resource.exists() || !resource.isReadable()) {
-            throw new RuntimeException("File not found");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    documentLabel + " document file not found"
+            );
         }
 
         return resource;

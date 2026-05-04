@@ -32,6 +32,7 @@ public class EncryptedRequestFilter extends OncePerRequestFilter {
         if (!path.startsWith("/api/")) return true;
         if (path.startsWith("/api/crypto/")) return true;
         if ("/api/auth/get-token".equals(path)) return true; // skip filter for get token
+        if ("/api/dashboard/system-summary".equals(path)) return true; // Skip encryption for system summary
         if ("GET".equalsIgnoreCase(method)) return true;
         if ("OPTIONS".equalsIgnoreCase(method)) return true;
 
