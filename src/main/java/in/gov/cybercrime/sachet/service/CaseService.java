@@ -31,17 +31,20 @@ public class CaseService {
     private final CaseStatusRepository caseStatusRepository;
     private final PoliceStationMasterRepository policeStationRepository;
     private final DistrictMasterRepository districtRepository;
+    private final CaseDiaryService caseDiaryService;
 
     public CaseService(CaseFileRepository caseFileRepository,
                        UserRepository userRepository,
                        CaseStatusRepository caseStatusRepository,
                        PoliceStationMasterRepository policeStationRepository,
-                       DistrictMasterRepository districtRepository) {
+                       DistrictMasterRepository districtRepository,
+                       CaseDiaryService caseDiaryService) {
         this.caseFileRepository = caseFileRepository;
         this.userRepository = userRepository;
         this.caseStatusRepository = caseStatusRepository;
         this.policeStationRepository = policeStationRepository;
         this.districtRepository = districtRepository;
+        this.caseDiaryService = caseDiaryService;
     }
 
     public CaseFile createCase(CaseCreateRequest request) {
@@ -64,7 +67,10 @@ public class CaseService {
                 caseFile.setAssignedToUsers(getUsersByIds(request.getAssignedToIds()));
             }
 
-            return caseFileRepository.save(caseFile);
+            CaseFile saved = caseFileRepository.save(caseFile);
+            caseDiaryService.logCaseCreated(saved, saved.getCaseOwner());
+
+            return saved;
 
         } catch (DataIntegrityViolationException ex) {
             throw new IllegalArgumentException("FIR number must be unique");
@@ -93,7 +99,14 @@ public class CaseService {
         if (request.getUpdatedBy() != null)
             caseFile.setUpdatedBy(request.getUpdatedBy());
 
-        return caseFileRepository.save(caseFile);
+        CaseFile saved = caseFileRepository.save(caseFile);
+        caseDiaryService.logCaseUpdated(
+                saved,
+                caseDiaryService.resolveOfficer(request.getCreatedById(), request.getUpdatedBy()),
+                request.getUpdatedBy()
+        );
+
+        return saved;
     }
 
     public CaseFile assignCase(Long id, AssignCaseRequest request) {
@@ -106,7 +119,14 @@ public class CaseService {
         if (request.getUpdatedBy() != null)
             caseFile.setUpdatedBy(request.getUpdatedBy());
 
-        return caseFileRepository.save(caseFile);
+        CaseFile saved = caseFileRepository.save(caseFile);
+        caseDiaryService.logCaseAssigned(
+                saved,
+                caseDiaryService.resolveOfficer(null, request.getUpdatedBy()),
+                request.getUpdatedBy()
+        );
+
+        return saved;
     }
 
     public List<CaseFile> getCasesByAccess(
@@ -203,6 +223,11 @@ public class CaseService {
         if (updatedBy != null) {
             caseFile.setUpdatedBy(updatedBy);
         }
-        caseFileRepository.save(caseFile);
+        CaseFile saved = caseFileRepository.save(caseFile);
+        caseDiaryService.logCaseDeleted(
+                saved,
+                caseDiaryService.resolveOfficer(null, updatedBy),
+                updatedBy
+        );
     }
 }

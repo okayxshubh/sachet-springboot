@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CaseDiaryRepository extends JpaRepository<CaseDiary, Long> {
     List<CaseDiary> findByCaseFileIdAndIsActiveTrue(Long caseId);
+    List<CaseDiary> findByCaseFileIdAndIsActiveTrueOrderByEventTimeDescIdDesc(Long caseId);
 }

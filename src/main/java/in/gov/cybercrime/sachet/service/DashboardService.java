@@ -1,8 +1,8 @@
 package in.gov.cybercrime.sachet.service;
 
 import in.gov.cybercrime.sachet.dto.CaseDashboardResponse;
+import in.gov.cybercrime.sachet.dto.CaseDiaryResponse;
 import in.gov.cybercrime.sachet.dto.SystemDashboardResponse;
-import in.gov.cybercrime.sachet.entity.CaseDiary;
 import in.gov.cybercrime.sachet.entity.CaseFile;
 import in.gov.cybercrime.sachet.entity.Notice;
 import in.gov.cybercrime.sachet.entity.User;
@@ -33,7 +33,7 @@ public class DashboardService {
 
         CaseFile caseFile = caseService.getCase(caseId);
         List<Notice> notices = noticeService.getByCaseId(caseId);
-        List<CaseDiary> diaries = caseDiaryService.listByCase(caseId);
+        List<CaseDiaryResponse> diaries = caseDiaryService.listByCase(caseId);
 
         int noticeCount = notices.size();
         int sentNoticeCount = (int) notices.stream().filter(n -> n.getStatus() == NoticeStatus.SENT).count();

@@ -1,32 +1,70 @@
 package in.gov.cybercrime.sachet.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import in.gov.cybercrime.sachet.entity.enums.CaseDiaryEventType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "case_diaries")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CaseDiary extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id", nullable = false)
     private CaseFile caseFile;
 
-    @Column(name = "diary_date", nullable = false)
-    private LocalDate diaryDate;
+    /**
+     * Event Type
+     * NOTICE_CREATED
+     * NOTICE_SENT
+     * NOTICE_REPLIED
+     * etc
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_type", nullable = false, length = 100)
+    private CaseDiaryEventType eventType;
 
-    @Column(name = "content", nullable = false)
-    private String content;
+    /**
+     * Human readable diary text
+     */
+    @Column(name = "summary", nullable = false, length = 5000)
+    private String summary;
 
-    @Column(name = "version", nullable = false)
-    private Integer version = 1;
+    /**
+     * Reference Notice
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
+    /**
+     * Who performed action
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "performed_by")
+    private User performedBy;
+
+    /**
+     * Exact event timestamp
+     */
+    @Column(name = "event_time", nullable = false)
+    private LocalDateTime eventTime = LocalDateTime.now();
+
+    /**
+     * Soft ordering/versioning
+     */
+    @Column(name = "version_no")
+    private Integer versionNo = 1;
+
+    /**
+     * Optional metadata JSON
+     */
+    @Column(name = "meta_data", columnDefinition = "TEXT")
+    private String metaData;
 }
