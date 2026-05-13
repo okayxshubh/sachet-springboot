@@ -21,7 +21,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CaseService {
@@ -79,6 +81,15 @@ public class CaseService {
 
     public CaseFile updateCase(Long id, CaseUpdateRequest request) {
         CaseFile caseFile = getCaseEntity(id);
+        String previousFirNo = caseFile.getFirNo();
+        Integer previousFirYear = caseFile.getFirYear();
+        Long previousPsId = caseFile.getPoliceStation() != null ? caseFile.getPoliceStation().getId() : null;
+        Long previousDistrictId = caseFile.getDistrict() != null ? caseFile.getDistrict().getId() : null;
+        String previousSections = caseFile.getSections();
+        String previousSummary = caseFile.getSummary();
+        Long previousOwnerId = caseFile.getCaseOwner() != null ? caseFile.getCaseOwner().getId() : null;
+        Long previousStatusId = caseFile.getCaseStatus() != null ? caseFile.getCaseStatus().getId() : null;
+        Set<User> previousAssignedToUsers = copyUsers(caseFile.getAssignedToUsers());
 
         if (request.getFirNo() != null) caseFile.setFirNo(request.getFirNo());
         if (request.getFirYear() != null) caseFile.setFirYear(request.getFirYear());
@@ -88,7 +99,7 @@ public class CaseService {
         if (request.getSummary() != null) caseFile.setSummary(request.getSummary());
         if (request.getCreatedById() != null) caseFile.setCaseOwner(getUser(request.getCreatedById()));
 
-        if (request.getAssignedToIds() != null && !request.getAssignedToIds().isEmpty()) {
+        if (request.getAssignedToIds() != null) {
             caseFile.setAssignedToUsers(getUsersByIds(request.getAssignedToIds()));
         }
 
@@ -100,19 +111,40 @@ public class CaseService {
             caseFile.setUpdatedBy(request.getUpdatedBy());
 
         CaseFile saved = caseFileRepository.save(caseFile);
-        caseDiaryService.logCaseUpdated(
-                saved,
-                caseDiaryService.resolveOfficer(request.getCreatedById(), request.getUpdatedBy()),
-                request.getUpdatedBy()
-        );
+        User performedBy = caseDiaryService.resolveOfficer(request.getCreatedById(), request.getUpdatedBy());
+        boolean assignmentChanged = request.getAssignedToIds() != null
+                && !sameUserIds(previousAssignedToUsers, saved.getAssignedToUsers());
+        boolean caseDetailsChanged =
+                !Objects.equals(previousFirNo, saved.getFirNo())
+                        || !Objects.equals(previousFirYear, saved.getFirYear())
+                        || !Objects.equals(previousPsId, saved.getPoliceStation() != null ? saved.getPoliceStation().getId() : null)
+                        || !Objects.equals(previousDistrictId, saved.getDistrict() != null ? saved.getDistrict().getId() : null)
+                        || !Objects.equals(previousSections, saved.getSections())
+                        || !Objects.equals(previousSummary, saved.getSummary())
+                        || !Objects.equals(previousOwnerId, saved.getCaseOwner() != null ? saved.getCaseOwner().getId() : null)
+                        || !Objects.equals(previousStatusId, saved.getCaseStatus() != null ? saved.getCaseStatus().getId() : null);
+
+        if (caseDetailsChanged || !assignmentChanged) {
+            caseDiaryService.logCaseUpdated(saved, performedBy, request.getUpdatedBy());
+        }
+        if (assignmentChanged) {
+            caseDiaryService.logCaseAssignmentUpdated(
+                    saved,
+                    performedBy,
+                    request.getUpdatedBy(),
+                    previousAssignedToUsers,
+                    saved.getAssignedToUsers()
+            );
+        }
 
         return saved;
     }
 
     public CaseFile assignCase(Long id, AssignCaseRequest request) {
         CaseFile caseFile = getCaseEntity(id);
+        Set<User> previousAssignedToUsers = copyUsers(caseFile.getAssignedToUsers());
 
-        if (request.getAssignedToIds() != null && !request.getAssignedToIds().isEmpty()) {
+        if (request.getAssignedToIds() != null) {
             caseFile.setAssignedToUsers(getUsersByIds(request.getAssignedToIds()));
         }
 
@@ -120,10 +152,12 @@ public class CaseService {
             caseFile.setUpdatedBy(request.getUpdatedBy());
 
         CaseFile saved = caseFileRepository.save(caseFile);
-        caseDiaryService.logCaseAssigned(
+        caseDiaryService.logCaseAssignmentUpdated(
                 saved,
                 caseDiaryService.resolveOfficer(null, request.getUpdatedBy()),
-                request.getUpdatedBy()
+                request.getUpdatedBy(),
+                previousAssignedToUsers,
+                saved.getAssignedToUsers()
         );
 
         return saved;
@@ -196,6 +230,24 @@ public class CaseService {
             users.add(getUser(id));
         }
         return users;
+    }
+
+    private Set<User> copyUsers(Set<User> users) {
+        return users == null ? new HashSet<>() : new HashSet<>(users);
+    }
+
+    private boolean sameUserIds(Set<User> left, Set<User> right) {
+        return userIds(left).equals(userIds(right));
+    }
+
+    private Set<Long> userIds(Set<User> users) {
+        if (users == null || users.isEmpty()) {
+            return Set.of();
+        }
+        return users.stream()
+                .map(User::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     private CaseStatusMaster getCaseStatus(Long statusId) {

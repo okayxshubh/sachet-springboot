@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -117,16 +118,30 @@ public class CaseDiaryService {
     }
 
     public void logCaseAssigned(CaseFile caseFile, User performedBy, String updatedBy) {
+        logCaseAssignmentUpdated(caseFile, performedBy, updatedBy, Set.of(), caseFile.getAssignedToUsers());
+    }
+
+    public void logCaseAssignmentUpdated(
+            CaseFile caseFile,
+            User performedBy,
+            String updatedBy,
+            Set<User> previousUsers,
+            Set<User> currentUsers
+    ) {
         String summary = String.format(
                 """
-                Case Assigned:
+                Case Assignment Updated:
                 FIR No: %s/%s
                 Assigned Officers: %s
+                Added Officers: %s
+                Removed Officers: %s
                 Updated By: %s
                 """,
                 value(caseFile.getFirNo()),
                 value(caseFile.getFirYear()),
-                formatUsers(caseFile.getAssignedToUsers()),
+                formatUsers(currentUsers),
+                formatUserDiff(previousUsers, currentUsers, true),
+                formatUserDiff(previousUsers, currentUsers, false),
                 value(updatedBy)
         );
 
@@ -342,10 +357,44 @@ public class CaseDiaryService {
         if (users == null || users.isEmpty()) {
             return "N/A";
         }
-        return users.stream()
+        String text = users.stream()
                 .map(User::getName)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(name -> !name.isBlank())
                 .sorted()
                 .collect(Collectors.joining(", "));
+        return text.isBlank() ? "N/A" : text;
+    }
+
+    private String formatUserDiff(Set<User> previousUsers, Set<User> currentUsers, boolean added) {
+        Set<Long> comparisonIds = userIds(added ? previousUsers : currentUsers);
+        Set<User> sourceUsers = added ? currentUsers : previousUsers;
+
+        if (sourceUsers == null || sourceUsers.isEmpty()) {
+            return "N/A";
+        }
+
+        String users = sourceUsers.stream()
+                .filter(user -> user.getId() != null && !comparisonIds.contains(user.getId()))
+                .map(User::getName)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(name -> !name.isBlank())
+                .sorted()
+                .collect(Collectors.joining(", "));
+
+        return users.isBlank() ? "N/A" : users;
+    }
+
+    private Set<Long> userIds(Set<User> users) {
+        if (users == null || users.isEmpty()) {
+            return Set.of();
+        }
+        return users.stream()
+                .map(User::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     private String value(Object value) {

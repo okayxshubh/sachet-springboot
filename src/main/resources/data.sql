@@ -255,6 +255,116 @@ updated_at=EXCLUDED.updated_at,
 updated_by=EXCLUDED.updated_by;
 
 -- ==============================
+-- CASE DIARIES DATA
+-- ==============================
+INSERT INTO case_diaries (
+    id, created_at, created_by, is_active, updated_at, updated_by,
+    case_id, event_type, summary, notice_id, performed_by,
+    event_time, version_no, meta_data
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY sort_group, case_id, notice_id NULLS LAST, assigned_user_id NULLS LAST, event_type),
+    NOW(),
+    performed_by::TEXT,
+    TRUE,
+    NOW(),
+    performed_by::TEXT,
+    case_id,
+    event_type,
+    summary,
+    notice_id,
+    performed_by,
+    event_time,
+    1,
+    meta_data
+FROM (
+    SELECT
+        1 AS sort_group,
+        c.id AS case_id,
+        NULL::BIGINT AS notice_id,
+        NULL::BIGINT AS assigned_user_id,
+        'CASE_CREATED' AS event_type,
+        'Case registered: ' || c.summary AS summary,
+        c.case_owner AS performed_by,
+        ('2026-04-01 09:00:00'::TIMESTAMP + ((c.id - 1) * INTERVAL '1 day')) AS event_time,
+        '{"source":"seed","action":"case_created"}' AS meta_data
+    FROM cases c
+
+    UNION ALL
+
+    SELECT
+        2 AS sort_group,
+        cau.case_id,
+        NULL::BIGINT AS notice_id,
+        cau.user_id AS assigned_user_id,
+        'CASE_ASSIGNED' AS event_type,
+        'Case assigned to ' || u.name AS summary,
+        c.case_owner AS performed_by,
+        ('2026-04-01 10:00:00'::TIMESTAMP + ((cau.case_id - 1) * INTERVAL '1 day')) AS event_time,
+        '{"source":"seed","assignedUserId":' || cau.user_id || '}' AS meta_data
+    FROM case_assigned_users cau
+    JOIN cases c ON c.id = cau.case_id
+    JOIN users u ON u.id = cau.user_id
+
+    UNION ALL
+
+    SELECT
+        3 AS sort_group,
+        n.case_id,
+        n.id AS notice_id,
+        NULL::BIGINT AS assigned_user_id,
+        'NOTICE_CREATED' AS event_type,
+        'Notice ' || n.notice_id || ' created for ' || n.issued_to AS summary,
+        NULLIF(n.created_by, '')::BIGINT AS performed_by,
+        (n.issued_date::TIMESTAMP + INTERVAL '9 hours') AS event_time,
+        '{"source":"seed","action":"notice_created"}' AS meta_data
+    FROM notices n
+
+    UNION ALL
+
+    SELECT
+        4 AS sort_group,
+        n.case_id,
+        n.id AS notice_id,
+        NULL::BIGINT AS assigned_user_id,
+        'NOTICE_SENT' AS event_type,
+        'Notice ' || n.notice_id || ' sent to ' || n.issued_to AS summary,
+        NULLIF(n.updated_by, '')::BIGINT AS performed_by,
+        (n.issued_date::TIMESTAMP + INTERVAL '10 hours') AS event_time,
+        '{"source":"seed","status":"' || n.status || '"}' AS meta_data
+    FROM notices n
+
+    UNION ALL
+
+    SELECT
+        5 AS sort_group,
+        n.case_id,
+        n.id AS notice_id,
+        NULL::BIGINT AS assigned_user_id,
+        'NOTICE_REPLIED' AS event_type,
+        'Reply received for notice ' || n.notice_id || ': ' || COALESCE(n.remarks, 'Reply received') AS summary,
+        NULLIF(n.updated_by, '')::BIGINT AS performed_by,
+        (n.reply_date::TIMESTAMP + INTERVAL '10 hours') AS event_time,
+        '{"source":"seed","action":"notice_replied"}' AS meta_data
+    FROM notices n
+    WHERE n.reply_date IS NOT NULL
+) diary_seed
+ON CONFLICT (id) DO UPDATE
+SET
+    created_by = EXCLUDED.created_by,
+    is_active = EXCLUDED.is_active,
+    updated_at = EXCLUDED.updated_at,
+    updated_by = EXCLUDED.updated_by,
+    case_id = EXCLUDED.case_id,
+    event_type = EXCLUDED.event_type,
+    summary = EXCLUDED.summary,
+    notice_id = EXCLUDED.notice_id,
+    performed_by = EXCLUDED.performed_by,
+    event_time = EXCLUDED.event_time,
+    version_no = EXCLUDED.version_no,
+    meta_data = EXCLUDED.meta_data;
+
+-- ==============================
 -- RESET SEQUENCES
 -- ==============================
 
@@ -266,3 +376,4 @@ SELECT setval(pg_get_serial_sequence('mst_case_status','id'),COALESCE(MAX(id),1)
 SELECT setval(pg_get_serial_sequence('users','id'),COALESCE(MAX(id),1),true) FROM users;
 SELECT setval(pg_get_serial_sequence('cases','id'),COALESCE(MAX(id),1),true) FROM cases;
 SELECT setval(pg_get_serial_sequence('notices','id'),COALESCE(MAX(id),1),true) FROM notices;
+SELECT setval(pg_get_serial_sequence('case_diaries','id'),COALESCE(MAX(id),1),true) FROM case_diaries;
