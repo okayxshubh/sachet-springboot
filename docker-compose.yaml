@@ -13,31 +13,10 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  ollama:
-    image: ollama/ollama
-    container_name: ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama:/root/.ollama
-
-  python-ai:
-    build: ./python-ai
-    container_name: python-ai
-    depends_on:
-      - ollama
-      - db
-    environment:
-      DB_URL: postgresql://cid:cid@db:5432/cid
-      OLLAMA_URL: http://ollama:11434
-    ports:
-      - "8000:8000"
-
   springboot:
     build: ./springboot
     container_name: springboot
     depends_on:
-      - python-ai
       - db
     ports:
       - "8080:8080"

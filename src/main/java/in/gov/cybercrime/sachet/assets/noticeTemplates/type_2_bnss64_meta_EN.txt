@@ -1,0 +1,72 @@
+SECTION 64 BNSS
+INFORMATION / DATA PRESERVATION REQUEST TO META PLATFORMS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Nodal Officer / Law Enforcement Response Team
+Meta Platforms, Inc.
+(WhatsApp / Facebook / Instagram)
+
+Subject: Notice under Section 64 BNSS for furnishing information, records and preservation of electronic evidence in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above case, certain social media / communication accounts hosted on your platform are found relevant for the purpose of lawful investigation. You are hereby required to furnish available information and preserve electronic evidence relating to the below identifiers.
+
+Relevant Identifiers:
+
+WhatsApp Number: {{whatsapp_no}}
+Facebook ID / URL: {{facebook_id}}
+Instagram ID / URL: {{instagram_id}}
+Email ID: {{email_id}}
+Mobile Number: {{mobile_no}}
+Profile Link: {{profile_link}}
+Other Identifier: {{other_identifier}}
+
+You are required to furnish:
+
+1. Subscriber / registered user details.
+2. Date and time of account creation.
+3. Registered mobile number(s) and email address(es).
+4. Recent login/logout IP logs with timestamps.
+5. Device identifiers / user agent details, if available.
+6. Linked or associated accounts, if available.
+7. Basic metadata relevant to investigation.
+8. Preservation of account contents, logs and records.
+9. Any change history of registered credentials, if available.
+10. Certified reply through official channel at the earliest.
+
+The information may kindly be transmitted to:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+Non-compliance shall invite action as per law.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}

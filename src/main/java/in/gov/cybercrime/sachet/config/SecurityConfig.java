@@ -135,6 +135,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/masters/**").permitAll()
                 .requestMatchers("/api/dashboard/system-summary").permitAll() // Public dashboard stats
 //                .requestMatchers("/api/notices/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/notices/templates", "/api/notices/templates/*").authenticated()
+                .requestMatchers("/api/notices/templates/detail").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/notices/templates/*").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/notices/templates/update").hasAnyRole("ADMIN", "SUPERADMIN")
 
 
                 // =========================

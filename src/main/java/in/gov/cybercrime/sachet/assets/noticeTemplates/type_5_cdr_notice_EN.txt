@@ -1,0 +1,73 @@
+SECTION 95 BNSS
+NOTICE TO TELECOM SERVICE PROVIDER FOR CDR / CAF / IPDR / SUBSCRIBER DETAILS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Nodal Officer
+{{telecom_company}}
+{{office_address}}
+
+Subject: Notice under Section 95 BNSS for furnishing CAF, CDR, IPDR, subscriber details and preservation of telecom records in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, telecom records relating to the below mentioned number / device are required for lawful investigation. You are therefore directed to preserve relevant records and furnish the following information.
+
+Subscriber Particulars:
+
+Mobile Number: {{mobile_no}}
+Alternate Number: {{alternate_mobile}}
+IMEI Number: {{imei_no}}
+IMSI Number: {{imsi_no}}
+Period Required: {{from_date}} to {{to_date}}
+Circle / State: {{circle_name}}
+
+You are required to provide:
+
+1. Customer Application Form (CAF).
+2. Complete subscriber KYC documents.
+3. Activation date and present status of SIM.
+4. Call Detail Record (Incoming / Outgoing).
+5. SMS detail records, if available.
+6. Internet Protocol Detail Record (IPDR) / data session logs.
+7. Tower location / Cell ID chart with address.
+8. Last known location details, if available as per rules.
+9. Alternate linked numbers / family plan details, if available.
+10. Recharge / retailer / POS details, if available.
+11. Ownership change / re-verification history, if any.
+12. Preserve all related records till further orders.
+
+The reply may kindly be sent urgently on:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This matter may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}

@@ -76,6 +76,323 @@ SET
     ON CONFLICT (id) DO UPDATE
     SET notice_type_name = EXCLUDED.notice_type_name;
 
+-- ==============================
+-- Notice Templates
+-- ==============================
+INSERT INTO notice_templates (
+    id, notice_type_id, file_name, template_content,
+    is_active, created_at, updated_at, created_by, updated_by
+)
+VALUES
+(1, 1, 'type_1_meta_notice_EN.txt', $template$
+lol
+$template$, TRUE, NOW(), NOW(), 'system', 'system'),
+(2, 2, 'type_2_bnss64_meta_EN.txt', $template$
+SECTION 64 BNSS
+INFORMATION / DATA PRESERVATION REQUEST TO META PLATFORMS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Nodal Officer / Law Enforcement Response Team
+Meta Platforms, Inc.
+(WhatsApp / Facebook / Instagram)
+
+Subject: Notice under Section 64 BNSS for furnishing information, records and preservation of electronic evidence in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above case, certain social media / communication accounts hosted on your platform are found relevant for the purpose of lawful investigation. You are hereby required to furnish available information and preserve electronic evidence relating to the below identifiers.
+
+Relevant Identifiers:
+
+WhatsApp Number: {{whatsapp_no}}
+Facebook ID / URL: {{facebook_id}}
+Instagram ID / URL: {{instagram_id}}
+Email ID: {{email_id}}
+Mobile Number: {{mobile_no}}
+Profile Link: {{profile_link}}
+Other Identifier: {{other_identifier}}
+
+You are required to furnish:
+
+1. Subscriber / registered user details.
+2. Date and time of account creation.
+3. Registered mobile number(s) and email address(es).
+4. Recent login/logout IP logs with timestamps.
+5. Device identifiers / user agent details, if available.
+6. Linked or associated accounts, if available.
+7. Basic metadata relevant to investigation.
+8. Preservation of account contents, logs and records.
+9. Any change history of registered credentials, if available.
+10. Certified reply through official channel at the earliest.
+
+The information may kindly be transmitted to:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+Non-compliance shall invite action as per law.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}
+$template$, TRUE, NOW(), NOW(), 'system', 'system'),
+(3, 3, 'type_3_summon_35_3_EN.txt', $template$
+okayxshubh
+$template$, TRUE, NOW(), NOW(), 'system', 'system'),
+(4, 4, 'type_4_bank_notice_EN.txt', $template$
+SECTIONS 94 & 106 BNSS
+NOTICE TO BANK FOR ACCOUNT DETAILS / FREEZE / TRANSACTION RECORDS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Branch Manager / Nodal Officer
+{{bank_name}}
+{{branch_address}}
+
+Subject: Notice under Sections 94 & 106 BNSS for furnishing bank account details, statement of account, KYC documents and necessary debit freeze in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, suspicious financial transactions routed through your bank have surfaced. The records are required for fair, lawful and time-bound investigation. You are therefore directed to furnish the following information and take necessary lawful action wherever applicable in respect of the bank records linked with your institution.
+
+Bank Summary:
+
+{{bank_record_brief}}
+
+Record Details:
+
+{{bank_record_entries}}
+
+You are required to provide:
+
+1. Certified account opening form, complete KYC documents and customer profile for all identified account numbers reflected above.
+2. Certified statement of account for the relevant records from {{from_date}} to {{to_date}} along with debit / credit narration.
+3. Customer ID / CIF, linked mobile number, linked email ID and branch details for the concerned records.
+4. Beneficiary account details of outward transfers and inward remitter details, wherever available.
+5. Internet / mobile banking login logs, IP logs, device identifiers and session metadata, if available.
+6. Current available balance, lien status and details of any debit freeze / hold marked in compliance with law and bank procedure.
+7. Preserve all records, logs and related digital evidence till further orders.
+
+The reply may kindly be sent urgently on:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This matter may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}
+
+$template$, TRUE, NOW(), NOW(), 'system', 'system'),
+(5, 5, 'type_5_cdr_notice_EN.txt', $template$
+SECTION 95 BNSS
+NOTICE TO TELECOM SERVICE PROVIDER FOR CDR / CAF / IPDR / SUBSCRIBER DETAILS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Nodal Officer
+{{telecom_company}}
+{{office_address}}
+
+Subject: Notice under Section 95 BNSS for furnishing CAF, CDR, IPDR, subscriber details and preservation of telecom records in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, telecom records relating to the below mentioned number / device are required for lawful investigation. You are therefore directed to preserve relevant records and furnish the following information.
+
+Subscriber Particulars:
+
+Mobile Number: {{mobile_no}}
+Alternate Number: {{alternate_mobile}}
+IMEI Number: {{imei_no}}
+IMSI Number: {{imsi_no}}
+Period Required: {{from_date}} to {{to_date}}
+Circle / State: {{circle_name}}
+
+You are required to provide:
+
+1. Customer Application Form (CAF).
+2. Complete subscriber KYC documents.
+3. Activation date and present status of SIM.
+4. Call Detail Record (Incoming / Outgoing).
+5. SMS detail records, if available.
+6. Internet Protocol Detail Record (IPDR) / data session logs.
+7. Tower location / Cell ID chart with address.
+8. Last known location details, if available as per rules.
+9. Alternate linked numbers / family plan details, if available.
+10. Recharge / retailer / POS details, if available.
+11. Ownership change / re-verification history, if any.
+12. Preserve all related records till further orders.
+
+The reply may kindly be sent urgently on:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This matter may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}
+$template$, TRUE, NOW(), NOW(), 'system', 'system'),
+(6, 6, 'type_6_cctv_atm_notice_EN.txt', $template$
+SECTION 94 BNSS
+NOTICE FOR PRESERVATION AND FURNISHING OF CCTV / ATM FOOTAGE
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Manager / Authorized Officer
+{{institution_name}}
+{{branch_address}}
+
+Subject: Notice under Section 94 BNSS for preservation and furnishing of CCTV footage / ATM surveillance footage in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, CCTV / ATM surveillance footage of the below mentioned premises is required for lawful investigation. You are therefore directed to preserve relevant footage immediately and furnish the same at the earliest.
+
+Location Particulars:
+
+Name of Premises: {{location_name}}
+Address: {{location_address}}
+Camera ID / ATM ID: {{camera_id}}
+Incident Date: {{incident_date}}
+Required Time Slot: {{from_time}} to {{to_time}}
+No. of Cameras Installed: {{camera_count}}
+
+You are required to provide:
+
+1. CCTV / ATM footage for the specified date and time.
+2. Original quality digital copy in pen drive / DVD / secure medium.
+3. Footage of entry, exit and surrounding cameras.
+4. DVR / NVR exported copy with date-time stamp.
+5. Hash value / export authenticity details, if available.
+6. Camera layout / installation map.
+7. Make / model of DVR, NVR or recording device.
+8. Name and contact of custodian of CCTV system.
+9. Confirmation that relevant footage has been preserved and not overwritten.
+10. Backup copy preserved till further orders.
+11. Certificate under applicable law/rules, if required.
+12. Immediate reply through official channel.
+
+The reply / footage may kindly be handed over or sent on:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This matter may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}
+$template$, TRUE, NOW(), NOW(), 'system', 'system')
+ON CONFLICT (id) DO UPDATE
+SET
+    notice_type_id = EXCLUDED.notice_type_id,
+    file_name = EXCLUDED.file_name,
+    template_content = EXCLUDED.template_content,
+    is_active = EXCLUDED.is_active,
+    updated_at = EXCLUDED.updated_at,
+    updated_by = EXCLUDED.updated_by;
+
 
 -- ==============================
 -- MAIN SHO USERS

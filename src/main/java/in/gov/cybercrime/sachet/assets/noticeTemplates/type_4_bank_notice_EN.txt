@@ -1,0 +1,67 @@
+SECTIONS 94 & 106 BNSS
+NOTICE TO BANK FOR ACCOUNT DETAILS / FREEZE / TRANSACTION RECORDS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Branch Manager / Nodal Officer
+{{bank_name}}
+{{branch_address}}
+
+Subject: Notice under Sections 94 & 106 BNSS for furnishing bank account details, statement of account, KYC documents and necessary debit freeze in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, suspicious financial transactions routed through your bank have surfaced. The records are required for fair, lawful and time-bound investigation. You are therefore directed to furnish the following information and take necessary lawful action wherever applicable in respect of the bank records linked with your institution.
+
+Bank Summary:
+
+{{bank_record_brief}}
+
+Record Details:
+
+{{bank_record_entries}}
+
+You are required to provide:
+
+1. Certified account opening form, complete KYC documents and customer profile for all identified account numbers reflected above.
+2. Certified statement of account for the relevant records from {{from_date}} to {{to_date}} along with debit / credit narration.
+3. Customer ID / CIF, linked mobile number, linked email ID and branch details for the concerned records.
+4. Beneficiary account details of outward transfers and inward remitter details, wherever available.
+5. Internet / mobile banking login logs, IP logs, device identifiers and session metadata, if available.
+6. Current available balance, lien status and details of any debit freeze / hold marked in compliance with law and bank procedure.
+7. Preserve all records, logs and related digital evidence till further orders.
+
+The reply may kindly be sent urgently on:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This matter may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}

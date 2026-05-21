@@ -1,0 +1,73 @@
+SECTION 94 BNSS
+NOTICE FOR PRESERVATION AND FURNISHING OF CCTV / ATM FOOTAGE
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Manager / Authorized Officer
+{{institution_name}}
+{{branch_address}}
+
+Subject: Notice under Section 94 BNSS for preservation and furnishing of CCTV footage / ATM surveillance footage in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, CCTV / ATM surveillance footage of the below mentioned premises is required for lawful investigation. You are therefore directed to preserve relevant footage immediately and furnish the same at the earliest.
+
+Location Particulars:
+
+Name of Premises: {{location_name}}
+Address: {{location_address}}
+Camera ID / ATM ID: {{camera_id}}
+Incident Date: {{incident_date}}
+Required Time Slot: {{from_time}} to {{to_time}}
+No. of Cameras Installed: {{camera_count}}
+
+You are required to provide:
+
+1. CCTV / ATM footage for the specified date and time.
+2. Original quality digital copy in pen drive / DVD / secure medium.
+3. Footage of entry, exit and surrounding cameras.
+4. DVR / NVR exported copy with date-time stamp.
+5. Hash value / export authenticity details, if available.
+6. Camera layout / installation map.
+7. Make / model of DVR, NVR or recording device.
+8. Name and contact of custodian of CCTV system.
+9. Confirmation that relevant footage has been preserved and not overwritten.
+10. Backup copy preserved till further orders.
+11. Certificate under applicable law/rules, if required.
+12. Immediate reply through official channel.
+
+The reply / footage may kindly be handed over or sent on:
+
+Official Email: {{official_email}}
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This matter may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}

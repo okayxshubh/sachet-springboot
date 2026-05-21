@@ -493,7 +493,59 @@ All endpoints below require `Authorization: Bearer <token>`.
 - Response: `GenericResponse`
   - `data`: plain `Notice`
 
-## 4.8 Notice Replies
+## 4.8 Notice Templates
+
+### GET `/api/notices/templates`
+- Request body: none
+- Response: `GenericResponse`
+  - `data`: encrypted `NoticeTemplateResponse[]`
+  - Each item contains `id`, `noticeTypeId`, `noticeTypeName`, `fileName`, `content`
+
+### GET `/api/notices/templates/{id}`
+- Request body: none
+- Use this endpoint to load the selected template into the frontend editor.
+- Response: `GenericResponse`
+  - `data`: encrypted `NoticeTemplateResponse`
+
+### PUT `/api/notices/templates/{id}`
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt:
+  ```json
+  {
+    "content": "Updated template content"
+  }
+  ```
+- Response: `GenericResponse`
+  - `data`: encrypted `NoticeTemplateResponse`
+
+### POST `/api/notices/templates/detail`
+- Compatibility endpoint.
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt:
+  ```json
+  {
+    "id": 1
+  }
+```
+- Also accepts `{ "noticeTypeId": 1 }`.
+- Response: `GenericResponse`
+  - `data`: encrypted `NoticeTemplateResponse`
+
+### PUT `/api/notices/templates/update`
+- Compatibility endpoint.
+- Request type: **JSON payload wrapper** (`application/json`)
+- Plain JSON to encrypt:
+  ```json
+  {
+    "id": 1,
+    "content": "Updated template content"
+  }
+```
+- Also accepts `noticeTypeId` instead of `id`.
+- Response: `GenericResponse`
+  - `data`: encrypted `NoticeTemplateResponse`
+
+## 4.9 Notice Replies
 
 ### POST `/api/replies/list`
 - Request type: **JSON payload wrapper** (`application/json`)
@@ -513,7 +565,7 @@ All endpoints below require `Authorization: Bearer <token>`.
 - Response: `GenericResponse`
   - `data`: plain `NoticeReply`
 
-## 4.9 Notice-Transaction Mapping
+## 4.10 Notice-Transaction Mapping
 
 ### GET `/api/notices/{noticeId}/transactions`
 - Request body: none
