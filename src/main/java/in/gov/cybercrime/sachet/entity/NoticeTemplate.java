@@ -20,9 +20,6 @@ public class NoticeTemplate extends BaseEntity {
     @JoinColumn(name = "notice_type_id", nullable = false, unique = true)
     private NoticeTypeMaster noticeType;
 
-    @Column(name = "file_name", nullable = false)
-    private String fileName;
-
-    @Column(name = "template_content", nullable = false, columnDefinition = "TEXT")
-    private String content;
+    @Column(name = "file_path", nullable = false, length = 1024)
+    private String filePath;
 }

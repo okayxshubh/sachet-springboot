@@ -1,1 +1,72 @@
-lol
+79(3) INFORMATION TECHNOLOGY ACT, 2000
+DATA PRESERVATION / INFORMATION REQUEST TO META PLATFORMS
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+The Nodal Officer / Law Enforcement Response Team
+Meta Platforms, Inc.
+(WhatsApp / Facebook / Instagram)
+
+Subject: Request for Preservation of Data and Furnishing of Information under Section 79(3) of the Information Technology Act, 2000 in connection with investigation of FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No. {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+Investigating Officer: {{io_name}}, {{rank}}
+
+Sir/Madam,
+
+During investigation of the above noted case, certain digital identifiers/accounts hosted or operated on your platform have surfaced and are relevant for fair and lawful investigation. You are therefore requested to preserve relevant records and furnish permissible information available with your platform.
+
+Relevant Identifiers:
+
+Mobile Number: {{mobile_no}}
+WhatsApp Number: {{whatsapp_no}}
+Facebook Account ID/URL: {{facebook_id}}
+Instagram ID/URL: {{instagram_id}}
+Email ID: {{email_id}}
+Profile Link: {{profile_link}}
+Any Other Identifier: {{other_identifier}}
+
+You are requested to kindly:
+
+1. Preserve all available data, logs, metadata and associated records relating to above identifiers/accounts.
+2. Furnish subscriber / registration details.
+3. Furnish linked mobile numbers and email addresses.
+4. Furnish account creation date and time.
+5. Furnish login/logout IP logs with timestamps and timezone.
+6. Furnish device information / user agent details, if available.
+7. Furnish linked accounts / associated profiles, if legally permissible.
+8. Furnish message backup / metadata details, wherever legally permissible.
+9. Preserve records till further communication/orders from competent authority.
+10. Send reply urgently through official channel/email.
+
+The information may kindly be sent on:
+
+Official Email: {{official_email}}
+
+Investigating Officer Details:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+This may be treated as MOST URGENT.
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}

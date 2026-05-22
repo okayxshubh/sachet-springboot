@@ -1,1 +1,63 @@
-okayxshubh
+SECTION 35(3) BNSS
+SUMMON FOR APPEARANCE BEFORE POLICE OFFICER
+
+Office of {{office_name}}
+Police Station / Unit: {{police_station}}
+District: {{district}}
+State: Himachal Pradesh
+
+Memo No.: {{notice_no}}
+Date: {{date}}
+
+To,
+
+Name: {{person_name}}
+Father's / Mother's Name: {{guardian_name}}
+Address: {{address}}
+Mobile No.: {{mobile_no}}
+
+Subject: Notice / Summons for Appearance under Section 35(3) BNSS in connection with FIR No. {{fir_no}}/{{fir_year}}.
+
+Reference:
+
+FIR No.: {{fir_no}}/{{fir_year}}
+Date of FIR: {{fir_date}}
+Sections of Law: {{sections}}
+Police Station: {{police_station}}
+District: {{district}}
+
+Sir/Madam,
+
+Whereas information has been received and during investigation of the above noted case your presence is considered necessary for the purpose of examination / enquiry / production of facts or documents relevant to the investigation.
+
+You are hereby directed to appear before the undersigned at the place, date and time mentioned below:
+
+Place of Appearance: {{appearance_place}}
+Date of Appearance: {{appearance_date}}
+Time of Appearance: {{appearance_time}}
+
+You are required to bring the following, if applicable:
+
+1. Relevant mobile handset / device.
+2. SIM card(s) in use.
+3. Identity proof.
+4. Relevant documents / transaction records.
+5. Any electronic evidence in your possession.
+6. Other documents: {{required_documents}}
+
+You are directed to cooperate in the investigation and remain available as and when required.
+
+Failure to comply without lawful excuse may attract action as per law.
+
+Investigating Officer:
+
+Name: {{io_name}}
+Rank: {{rank}}
+Mobile: {{phone}}
+Police Station / Unit: {{police_station}}
+
+Authorized Signatory
+
+{{io_name}}
+{{rank}}
+{{seal_line}}

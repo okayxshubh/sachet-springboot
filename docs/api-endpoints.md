@@ -495,11 +495,14 @@ All endpoints below require `Authorization: Bearer <token>`.
 
 ## 4.8 Notice Templates
 
+Notice template rows store only the template file path. The template body is read from and written back to that text file.
+
 ### GET `/api/notices/templates`
 - Request body: none
 - Response: `GenericResponse`
   - `data`: encrypted `NoticeTemplateResponse[]`
-  - Each item contains `id`, `noticeTypeId`, `noticeTypeName`, `fileName`, `content`
+  - Each item contains `id`, `noticeTypeId`, `noticeTypeName`, `fileName`, `filePath`, `content`, `contentBase64`, `encoding`, `mimeType`
+  - `contentBase64` is the exact UTF-8 file content encoded before encryption. Prefer it on the frontend and decode after decrypting `data`.
 
 ### GET `/api/notices/templates/{id}`
 - Request body: none
@@ -512,9 +515,10 @@ All endpoints below require `Authorization: Bearer <token>`.
 - Plain JSON to encrypt:
   ```json
   {
-    "content": "Updated template content"
+    "contentBase64": "VXBkYXRlZCB0ZW1wbGF0ZSBjb250ZW50"
   }
   ```
+- `content` is still accepted for compatibility, but `contentBase64` should be used to preserve tabs, newlines, and spacing exactly.
 - Response: `GenericResponse`
   - `data`: encrypted `NoticeTemplateResponse`
 
@@ -538,10 +542,11 @@ All endpoints below require `Authorization: Bearer <token>`.
   ```json
   {
     "id": 1,
-    "content": "Updated template content"
+    "contentBase64": "VXBkYXRlZCB0ZW1wbGF0ZSBjb250ZW50"
   }
 ```
 - Also accepts `noticeTypeId` instead of `id`.
+- `content` is still accepted for compatibility, but `contentBase64` should be used to preserve tabs, newlines, and spacing exactly.
 - Response: `GenericResponse`
   - `data`: encrypted `NoticeTemplateResponse`
 

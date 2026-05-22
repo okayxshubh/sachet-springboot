@@ -7,4 +7,5 @@ public class NoticeTemplateRequest {
     private Long id;
     private Long noticeTypeId;
     private String content;
+    private String contentBase64;
 }

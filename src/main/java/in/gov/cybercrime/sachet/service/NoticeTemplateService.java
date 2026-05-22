@@ -8,8 +8,11 @@ import in.gov.cybercrime.sachet.repository.NoticeTemplateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -37,24 +40,32 @@ public class NoticeTemplateService {
                 .orElseThrow(() -> new ResourceNotFoundException("Notice template not found for notice type: " + noticeTypeId)));
     }
 
-    public NoticeTemplateResponse updateTemplate(Long id, String content) {
-        String normalizedContent = normalizeTemplateContent(content);
-        if (!StringUtils.hasText(normalizedContent)) {
+    public NoticeTemplateResponse updateTemplate(Long id, String content, String contentBase64) {
+        byte[] bytes = resolveRequestContent(content, contentBase64);
+        if (bytes == null) {
             throw new IllegalArgumentException("Template content is required");
         }
 
         NoticeTemplate template = getTemplateEntity(id);
-        template.setContent(normalizedContent);
+        writeTemplateBytes(template, bytes);
         return toResponse(noticeTemplateRepository.save(template));
     }
 
-    public NoticeTemplateResponse updateTemplateByNoticeType(Long noticeTypeId, String content) {
+    public NoticeTemplateResponse updateTemplate(Long id, String content) {
+        return updateTemplate(id, content, null);
+    }
+
+    public NoticeTemplateResponse updateTemplateByNoticeType(Long noticeTypeId, String content, String contentBase64) {
         if (noticeTypeId == null) {
             throw new IllegalArgumentException("Notice type id is required");
         }
         NoticeTemplate template = noticeTemplateRepository.findByNoticeType_Id(noticeTypeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Notice template not found for notice type: " + noticeTypeId));
-        return updateTemplate(template.getId(), content);
+        return updateTemplate(template.getId(), content, contentBase64);
+    }
+
+    public NoticeTemplateResponse updateTemplateByNoticeType(Long noticeTypeId, String content) {
+        return updateTemplateByNoticeType(noticeTypeId, content, null);
     }
 
     private NoticeTemplate getTemplateEntity(Long id) {
@@ -67,52 +78,66 @@ public class NoticeTemplateService {
 
     private NoticeTemplateResponse toResponse(NoticeTemplate template) {
         NoticeTypeMaster noticeType = template.getNoticeType();
+        byte[] contentBytes = readTemplateBytes(template);
+        String content = new String(contentBytes, StandardCharsets.UTF_8);
+        Path templatePath = resolveTemplatePath(template);
+
         return NoticeTemplateResponse.builder()
                 .id(template.getId())
                 .noticeTypeId(noticeType.getId())
                 .noticeTypeName(noticeType.getName())
-                .fileName(template.getFileName())
-                .content(normalizeTemplateContent(template.getContent()))
+                .fileName(templatePath.getFileName().toString())
+                .filePath(template.getFilePath())
+                .content(content)
+                .contentBase64(Base64.getEncoder().encodeToString(contentBytes))
+                .encoding(StandardCharsets.UTF_8.name())
+                .mimeType("text/plain")
                 .build();
     }
 
-    private String normalizeTemplateContent(String content) {
-        if (content == null) {
-            return "";
+    private byte[] resolveRequestContent(String content, String contentBase64) {
+        if (contentBase64 != null) {
+            try {
+                return Base64.getDecoder().decode(contentBase64);
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("Template contentBase64 is invalid");
+            }
+        }
+        return content == null ? null : content.getBytes(StandardCharsets.UTF_8);
+    }
+
+    private Path resolveTemplatePath(NoticeTemplate template) {
+        String filePath = template.getFilePath();
+        if (filePath == null || filePath.isBlank()) {
+            throw new IllegalStateException("Template file path is missing for template: " + template.getId());
         }
 
-        String normalized = content
-                .replace("\r\n", "\n")
-                .replace('\r', '\n')
-                .replace("\\r\\n", "\n")
-                .replace("\\n", "\n")
-                .replace("\\t", "    ")
-                .replace("\t", "    ")
-                .replace('\u00A0', ' ');
-
-        StringBuilder builder = new StringBuilder();
-        int blankLineCount = 0;
-        String[] lines = normalized.split("\n", -1);
-
-        for (String line : lines) {
-            String cleanedLine = line.stripTrailing();
-            boolean blank = cleanedLine.isBlank();
-
-            if (blank) {
-                blankLineCount += 1;
-                if (blankLineCount > 2) {
-                    continue;
-                }
-            } else {
-                blankLineCount = 0;
-            }
-
-            if (builder.length() > 0) {
-                builder.append('\n');
-            }
-            builder.append(cleanedLine);
+        Path path = Path.of(filePath);
+        if (!path.isAbsolute()) {
+            path = Path.of("").toAbsolutePath().resolve(path);
         }
+        return path.normalize();
+    }
 
-        return builder.toString().strip();
+    private byte[] readTemplateBytes(NoticeTemplate template) {
+        Path path = resolveTemplatePath(template);
+        try {
+            return Files.readAllBytes(path);
+        } catch (Exception ex) {
+            throw new IllegalStateException("Unable to read notice template file: " + path, ex);
+        }
+    }
+
+    private void writeTemplateBytes(NoticeTemplate template, byte[] bytes) {
+        Path path = resolveTemplatePath(template);
+        try {
+            Path parent = path.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+            Files.write(path, bytes);
+        } catch (Exception ex) {
+            throw new IllegalStateException("Unable to write notice template file: " + path, ex);
+        }
     }
 }

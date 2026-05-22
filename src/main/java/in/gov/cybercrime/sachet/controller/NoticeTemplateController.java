@@ -76,7 +76,7 @@ public class NoticeTemplateController {
     ) {
         try {
             return success(
-                    noticeTemplateService.updateTemplate(id, request.getContent()),
+                    noticeTemplateService.updateTemplate(id, request.getContent(), request.getContentBase64()),
                     "Notice template updated successfully"
             );
         } catch (Exception ex) {
@@ -88,8 +88,8 @@ public class NoticeTemplateController {
     public GenericResponse<String> update(@RequestBody NoticeTemplateRequest request) {
         try {
             NoticeTemplateResponse response = request.getId() != null
-                    ? noticeTemplateService.updateTemplate(request.getId(), request.getContent())
-                    : noticeTemplateService.updateTemplateByNoticeType(request.getNoticeTypeId(), request.getContent());
+                    ? noticeTemplateService.updateTemplate(request.getId(), request.getContent(), request.getContentBase64())
+                    : noticeTemplateService.updateTemplateByNoticeType(request.getNoticeTypeId(), request.getContent(), request.getContentBase64());
             return success(response, "Notice template updated successfully");
         } catch (Exception ex) {
             return GenericResponse.fail(ex.getMessage());
