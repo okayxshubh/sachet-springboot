@@ -1,0 +1,68 @@
+[POLICE STATION LETTERHEAD]
+
+CASE FIR NO. [FIR_NO] DATED [FIR_DATE] U/S [OFFENCE_SECTIONS] POLICE STATION [POLICE_STATION] DISTT. [DISTRICT]
+
+ARREST MEMO U/S 35 BNSS & COMPLIANCE OF SEC 47 & 48 BNSS
+
+| Sl. No. | Particulars | Details |
+| :--: | :-- | :-- |
+| 1. | Name with Alias and Parentage of the Arrestee. (गिरफ़्तार व्यक्ति का नाम, उपनाम और उसके माता-पिता का नाम) | [ACCUSED_NAME] S/o [FATHER_NAME] |
+| 2. | Mobile No./WhatsApp Mobile No./Email Address | [MOBILE_NO] / [EMAIL] |
+| 3. | Present Address of the Arrestee. (गिरफ्तार व्यक्ति का वर्तमान पता) | [PRESENT_ADDRESS] |
+| 4. | Permanent Address of the Arrestee. (गिरफ्तार व्यक्ति का स्थायी पता) | [PERMANENT_ADDRESS] |
+| 5. | FIR No./D.D. No. & Sec. of Law. | [FIR_NO] Dated [FIR_DATE] U/S [OFFENCE_SECTIONS] |
+| 6. | Place of Arrest. (गिरफ़्तारी का स्थान) | [ARREST_PLACE] |
+| 7. | Date & Time of Arrest. (गिरफ्तारी की तारीख और समय) | [ARREST_DATE] at [ARREST_TIME] Hrs |
+| 8. | Name, Address, e-mail ID & Tel. No. Whomsoever to convey the Arrest information u/s 48 of BNSS. (गिरफ्तारी के बारे में किसे सूचित किया गया, उसका नाम, पता, ईमेल आईडी और फ़ोन नंबर) | [INFORMANT_NAME], [INFORMANT_RELATION], [INFORMANT_ADDRESS], [INFORMANT_PHONE] |
+| 9. | Name, Rank & No. of the officer who is making the arrest. (गिरफ़्तारी करने वाले अधिकारी का नाम, पद और सं0) | [ARRESTING_OFFICER], [RANK], [BUCKLE_NO] |
+| 10. | Reasons/Grounds of arrest u/s 47 of BNSS. (गिरफ़्तारी का कारण/आधार) | (See detailed grounds below - Tick applicable) |
+
+**GROUNDS OF ARREST UNDER SECTION 47 BNSS (Tick as applicable):**
+☐ 10(a) To prevent the accused person from committing any further offence.
+☐ 10(b) For proper investigation of the offence.
+☐ 10(c) To prevent the accused person from causing the evidence of the offence to disappear or tampering with such evidence in any manner.
+☐ 10(d) To prevent such person from making any inducement, threat or promise to any person acquainted with the facts of the case so as to dissuade him from disclosing such facts to the court or to the Police officer.
+☐ 10(e) Unless such a person is arrested, his presence in the court whenever required cannot be ensured.
+
+Signature of Arrestee: ____________________
+(गिरफ्तार व्यक्ति के हस्ताक्षर)
+
+Witnesses:
+1. [WITNESS1_NAME], [WITNESS1_ADDRESS] - Signature: __________________
+2. [WITNESS2_NAME], [WITNESS2_ADDRESS] - Signature: __________________
+
+[ARRESTING_OFFICER]
+[RANK]
+[POLICE_STATION]
+
+---
+
+[POLICE STATION LETTERHEAD]
+
+CASE FIR NO. [FIR_NO] DATED [FIR_DATE] U/S [OFFENCE_SECTIONS] POLICE STATION [POLICE_STATION] DISTT. [DISTRICT]
+
+ARREST INFORMATION U/S 48 BNSS
+
+Today on dated [ARREST_DATE], I [ARRESTING_OFFICER], [RANK] of [POLICE_STATION], arrested accused [ACCUSED_NAME] S/o [FATHER_NAME] R/o [PRESENT_ADDRESS] Age [AGE] Years in Case FIR No. [FIR_NO] dated [FIR_DATE] U/S [OFFENCE_SECTIONS] at [ARREST_TIME] Hrs at [ARREST_PLACE] after making him aware of the crime and his role in this crime and about his rights, including the right to meet and take advice of his lawyer.
+
+Your arrest information has been given to [INFORMANT_NAME] ([INFORMANT_RELATION]), who is [MODE_OF_INTIMATION - e.g., present at the police station / informed via telephone No. [INFORMANT_PHONE]] as nominated by the accused. The accused will be kept in the lock-up of [POLICE_STATION] / will be produced before the Hon'ble Court of [COURT_NAME] on [PRODUCTION_DATE] for remand.
+
+This is for your kind information please.
+
+[ARRESTING_OFFICER]
+[RANK]
+[POLICE_STATION]
+Dated: [DATE]
+
+---
+
+GROUNDS OF ARREST U/S 47 BNSS (DETAILED)
+
+Today on dated [ARREST_DATE], I [ARRESTING_OFFICER], [RANK] of [POLICE_STATION], made aware you namely [ACCUSED_NAME] S/o [FATHER_NAME] R/o [PRESENT_ADDRESS] Age [AGE] Years regarding the grounds of arrest in the above-mentioned case.
+
+You are being arrested in the above-mentioned F.I.R. for [BRIEF_GROUNDS_OF_ARRESTS - e.g., actively participating by way of receiving in account and withdrawal of amount of Rs. [AMOUNT]/- out of the total fraud amount of Rs. [TOTAL_AMOUNT]/-]. The offence is non-bailable in nature. [ADDITIONAL_REASON - e.g., You are not cooperating with the investigation / You are not sharing details of utilization of the fraudulent amount].
+
+[ARRESTING_OFFICER]
+[RANK]
+[POLICE_STATION]
+Dated: [DATE]

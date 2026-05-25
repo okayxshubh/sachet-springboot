@@ -2,11 +2,11 @@ package in.gov.cybercrime.sachet.service;
 
 import in.gov.cybercrime.sachet.dto.DocumentInfo;
 import in.gov.cybercrime.sachet.entity.Notice;
-import in.gov.cybercrime.sachet.service.NoticeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,6 +25,9 @@ public class NoticeDocumentService {
     private final NoticeService noticeService;
     private static final int MAX_STORED_FILE_NAME_LENGTH = 180;
     private static final int MAX_DISPLAY_FILE_NAME_LENGTH = 512;
+
+    @Value("${sachet.storage.notice-documents-root:${user.home}/sachet/notice-documents}")
+    private String noticeDocumentsRoot;
 
     public Resource getDispatchDocument(Long noticeId) {
         return loadResource(
@@ -83,9 +86,8 @@ public class NoticeDocumentService {
         }
 
         try {
-            Path storageDirectory = Paths.get("notice-documents", type, "notice-" + noticeId)
-                    .toAbsolutePath()
-                    .normalize();
+            Path storageRoot = getStorageRoot();
+            Path storageDirectory = storageRoot.resolve(type).resolve("notice-" + noticeId).normalize();
             Files.createDirectories(storageDirectory);
 
             String safeFileName = buildStoredFileName(originalFileName);
@@ -94,11 +96,41 @@ public class NoticeDocumentService {
 
             DocumentInfo documentInfo = new DocumentInfo();
             documentInfo.setFileName(truncate(originalFileName, MAX_DISPLAY_FILE_NAME_LENGTH));
-            documentInfo.setFilePath(targetPath.toString());
+            documentInfo.setFilePath(toStoredPath(storageRoot, targetPath));
             return documentInfo;
         } catch (IOException exception) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to store document file", exception);
         }
+    }
+
+    public Path getDocumentPath(DocumentInfo document) {
+        String filePath = document.getFilePath();
+        Path path = Paths.get(filePath);
+
+        if (path.isAbsolute()) {
+            return path.normalize();
+        }
+
+        Path storageRoot = getStorageRoot();
+        Path resolvedPath = storageRoot.resolve(path).normalize();
+        if (!resolvedPath.startsWith(storageRoot)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid document file path");
+        }
+
+        return resolvedPath;
+    }
+
+    private Path getStorageRoot() {
+        return Paths.get(noticeDocumentsRoot).toAbsolutePath().normalize();
+    }
+
+    private String toStoredPath(Path storageRoot, Path targetPath) {
+        Path normalizedTarget = targetPath.toAbsolutePath().normalize();
+        if (!normalizedTarget.startsWith(storageRoot)) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Document path is outside storage root");
+        }
+
+        return storageRoot.relativize(normalizedTarget).toString().replace('\\', '/');
     }
 
     private String sanitizeFileName(String fileName) {
@@ -152,9 +184,7 @@ public class NoticeDocumentService {
             String documentLabel
     ) {
 
-        Path filePath = Paths.get(document.getFilePath())
-                .toAbsolutePath()
-                .normalize();
+        Path filePath = getDocumentPath(document);
 
         Resource resource = new PathResource(filePath);
 

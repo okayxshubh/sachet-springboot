@@ -1,0 +1,78 @@
+फार्म न0 25-54(1) Original/Duplicate
+रिपोर्ट जिमनी / CASE DIARY REPORT
+
+थाना / Police Station: [POLICE_STATION]
+जिला / District: [DISTRICT]
+मु0न0 / Case FIR No.: [FIR_NO]
+जिमनी न0 / Diary No.: [DIARY_NO]
+
+तिथि व मुकाम वकुहा थाना मे पहुंचने का वक्त व तारीख / Date and Time of Arrival at PS: [ARRIVAL_DATE_TIME]
+थाना से रवानगी का वक्त व तारीख / Date and Time of Departure from PS: [DEPARTURE_DATE_TIME]
+जेर धारा / Offence U/S: [OFFENCE_SECTIONS]
+
++------------------+------------------+--------------------------------------------------------+
+| तारीख व वक्त जब    | सिलसिलावार न0     | हालात व कवायद तफतीश अज थाना व अदालत                     |
+| कार्यवाही की गई    | शुमार रिपोर्ट      | (Nature and Details of Investigation)                 |
+| (Date & Time)    | (Serial No.)      |                                                        |
++:=================+:=================+:=======================================================+
+| दिनांक / Date:   | 1.                | व मुकदमा सरकार वजरिया / State through:- [COMPLAINANT_NAME] |
+| [DATE]           |                   | बनामः- / Versus:- [ACCUSED_NAME]                        |
+| समय / Time:      | 2.                |                                                        |
+| [TIME_FROM]      |                   | लेखक / Writer:- [IO_NAME], [IO_RANK]                  |
+|                  | 3.                | अन्वेषणाधिकारी / Investigating Officer                 |
+|                  |                   | [POLICE_STATION]                                       |
+|                  | 4.                |                                                        |
+|                  |                   | श्रीमान जी / Sir,                                      |
+|                  | 5.                |                                                        |
+|                  |                   | [PROCEEDINGS_DONE_IN_HINDI_OR_ENGLISH]                |
+|                  | [TIME_TO]         |                                                        |
+|                  |                   | (Provide a detailed chronological account of all       |
+|                  |                   | investigative steps taken during this diary period.    |
+|                  |                   | Include:                                              |
+|                  |                   | - Movement details (Place of visit).                  |
+|                  |                   | - Witnesses examined (Names and brief summary of      |
+|                  |                   |   statement).                                         |
+|                  |                   | - Documents collected/received.                       |
+|                  |                   | - Arrests made or remand obtained.                    |
+|                  |                   | - Correspondence sent/received.                       |
+|                  |                   | - Any important development in the case.)             |
+|                  |                   |                                                        |
+|                  |                   | **Example Entry:**                                     |
+|                  |                   | "वसिलसिला जीमनी न0 [PREV_DIARY_NO] दिनांक [PREV_DATE]  |
+|                  |                   | लिखित खुद के आगे निवेदन है कि इमरोज मन अन्वेषणाधिकारी        |
+|                  |                   | मय मु0आ0 [CONSTABLE_NAME] के [PLACE] पहुंचा जहां        |
+|                  |                   | गवाह [WITNESS_NAME] का ब्यान अन्तर्गत धारा 180 BNSS     |
+|                  |                   | कलमबद्ध किया गया..."                                    |
+|                  |                   |                                                        |
+|                  |                   | **सारांश / Summary:**                                  |
+|                  |                   | [SUMMARY_OF_DAY_IN_BRIEF]                             |
+|                  |                   |                                                        |
+|                  |                   | मुकदमा में तफतीश जारी है / Investigation is continuing.  |
++------------------+------------------+--------------------------------------------------------+
+
+[IO_NAME]
+[IO_RANK]
+अन्वेषणाधिकारी / Investigating Officer
+[POLICE_STATION]
+[PLACE]
+दिनांक / Date: [DIARY_DATE]
+
+---
+
+**ENGLISH EQUIVALENT SUMMARY FORMAT (For Quick Reference):**
+
+CASE DIARY ENTRY
+
+| Field | Details |
+| :-- | :-- |
+| **Case FIR No.** | [FIR_NO] |
+| **Diary No.** | [DIARY_NO] |
+| **Date** | [DIARY_DATE] |
+| **Time From - To** | [TIME_FROM] - [TIME_TO] |
+| **IO Name & Rank** | [IO_NAME], [IO_RANK] |
+| **Proceedings Done** | [PROCEEDINGS_DONE] |
+| **Witness Examined** | [WITNESS_EXAMINED] |
+| **Documents Collected** | [DOCUMENTS_COLLECTED] |
+| **Next Action Planned** | [NEXT_ACTION] |
+
+Signature of I.O.: __________________

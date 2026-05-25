@@ -22,7 +22,7 @@ public class NoticeTemplateService {
     private final NoticeTemplateRepository noticeTemplateRepository;
 
     public List<NoticeTemplateResponse> listTemplates() {
-        return noticeTemplateRepository.findAll(Sort.by("id").ascending())
+        return noticeTemplateRepository.findAll(Sort.by("id").descending())
                 .stream()
                 .map(this::toResponse)
                 .toList();

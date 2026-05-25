@@ -16,12 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhoneAndIsApprovedTrue(String phone);
 
     // For Approval pool
-    List<User> findByIsApprovedFalseAndPs_District_IdAndPs_Id(
+    List<User> findByIsApprovedFalseAndPs_District_IdAndPs_IdOrderByCreatedAtDescIdDesc(
             Long districtId,
             Long psId
     );
 
-    List<User> findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_Id(
+    List<User> findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_IdOrderByCreatedAtDescIdDesc(
             Long rankId,
             Long districtId,
             Long psId

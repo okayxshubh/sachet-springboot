@@ -1,0 +1,134 @@
+FINAL FORM/REPORT
+अन्तिम फार्म/रिपोर्ट
+(Under Section 193 BNSS के अन्तर्गत)
+
+IN THE COURT OF HON'BLE [COURT_NAME], [COURT_PLACE], [DISTRICT], [STATE]
+
+1.  District/जिला: [DISTRICT]
+    PS/थाना: [POLICE_STATION]
+    Year/वर्ष: [YEAR]
+    FIR No./प्र०सु०रि०सं: [FIR_NO]
+    Date/दिनांक: [FIR_DATE]
+
+2.  Final Report/Charge Sheet No.: [CHARGE_SHEET_NO]
+    अन्तिम रिपोर्ट/आरोप पत्र संख्या: [CHARGE_SHEET_NO]
+
+3.  Date/दिनांक: [DATE]
+
+4.  (i) Act/अधिनियम: [ACTS_APPLIED - e.g., BNS, IT Act]
+    Section/धाराएं: [OFFENCE_SECTIONS]
+
+5.  Type of Final Form/Report: ☒ **Charge Sheet (आरोप पत्र दाखिल किया)**
+    (अन्तिम रिपोर्ट फार्म/रिपोर्ट का प्रकार)
+
+6.  Name of I.O./जांच अधिकारी का नाम: [IO_NAME]
+    Rank/पद: [IO_RANK]
+    No./सं: [BUCKLE_NO]
+
+7.  (a) Name of Complainant/वादी का नाम: [COMPLAINANT_NAME]
+    (b) Father's/Husband's Name/पिता/पति का नाम: [FATHER_NAME]
+
+8.  Particulars of Accused Persons Charge Sheeted (आरोप पत्र दाखिल अभियुक्तों का विवरण):
+
+| Sr. | Name | Father's Name | Address | Age | Status | Date of Arrest |
+| :--: | :-- | :-- | :-- | :--: | :-- | :--: |
+| 1. | [ACCUSED_NAME_1] | [FATHER_NAME_1] | [ADDRESS_1] | [AGE_1] | [STATUS_1] | [ARREST_DATE_1] |
+| 2. | [ACCUSED_NAME_2] | [FATHER_NAME_2] | [ADDRESS_2] | [AGE_2] | [STATUS_2] | [ARREST_DATE_2] |
+
+9.  Particulars of Witnesses to be Examined (पूछताछ किए जाने वाले गवाहों का विवरण):
+    *(List Attached as Annexure - See Witness List Below)*
+
+10. Brief Facts of the Case (मामले से सम्बन्धित संक्षिप्त तथ्य):
+    *(Detailed Narrative Attached - See Below)*
+
+11. List of Enclosures/संलग्नकों की सूची:
+    *(List Attached as Annexure - See Document List Below)*
+
+Forwarded by Officer in Charge: _____________________
+
+Signature of Investigating Officer: _____________________
+Submitting Final Report/Charge Sheet
+
+--------------------------------------------------------------------
+DETAILED NARRATIVE / संक्षिप्त हालात मुकदमा (आरोप पत्र)
+
+Case FIR No.: [FIR_NO] dated [FIR_DATE]
+Offence U/S: [OFFENCE_SECTIONS]
+Police Station: [POLICE_STATION], District: [DISTRICT]
+
+श्रीमान जी / May it please Your Honour,
+
+1. प्रस्तावना / INTRODUCTION
+[OPENING_PARAGRAPH - e.g., संक्षिप्त हालात मुकदमा इस प्रकार से है कि दिनांक [FIR_DATE] को [COMPLAINANT_NAME] पुत्र/पत्नी [FATHER_NAME] निवासी [COMPLAINANT_ADDRESS] ने थाना हजा में हाजिर आकर एक टाईपशुद्धा शिकायत पत्र पेश पुलिस किया जिसके मजबून पर थाना में अभियोग संख्या [FIR_NO] दिनांक [FIR_DATE] अधीन धारा [OFFENCE_SECTIONS] पंजीकृत किया गया।]
+
+2. शिकायतकर्ता का कथन / COMPLAINANT'S ALLEGATIONS
+[SUMMARY_OF_COMPLAINT - e.g., शिकायतकर्ता ने अपने शिकायत पत्र में बताया कि... (Briefly state what the complainant alleged happened, including the amount defrauded and the modus operandi).]
+
+3. अन्वेषण की कार्यवाही / INVESTIGATION PROCEEDINGS
+[CHRONOLOGICAL_INVESTIGATION_DETAILS - Provide a detailed, chronological summary of all major investigative steps taken:
+- Correspondence with Banks/TSPs and analysis of replies.
+- Collection of evidence (KYC, Bank Statements, CDR, IPDR, CCTV Footage).
+- Examination of witnesses under Section 180 BNSS.
+- Arrest of accused persons.
+- Seizure of articles (Mobile phones, SIM cards, documents).
+- Disclosure statements made by accused.
+- Forensic analysis of digital devices (mention if report awaited or attached).
+- Role of each accused established during investigation.]
+
+4. आरोपीगण की भूमिका / ROLE OF THE ACCUSED
+[ACCUSED_WISE_ROLE - Detail the specific role played by each accused person in the commission of the offence based on the evidence collected. E.g.,
+**आरोपी [ACCUSED_NAME_1]:** इस आरोपी ने अपना बैंक खाता उपलब्ध करवाया जिसमें ठगी की राशि प्राप्त हुई तथा स्वयं चैक के माध्यम से राशि निकालकर अन्य आरोपी को सौंपी।
+**आरोपी [ACCUSED_NAME_2]:** यह आरोपी मुख्य साजिशकर्ता है जिसने फर्जी ट्रेडिंग ऐप के माध्यम से शिकायतकर्ता को प्रलोभन दिया और धोखाधड़ी को अंजाम दिया।]
+
+5. शेष अन्वेषण / PENDING INVESTIGATION (If applicable)
+[PENDING_INVESTIGATION - e.g., अभियोग में शेष अन्वेषण के संदर्भ में:
+1. आरोपी से बरामद मोबाइल फोन की SFSL रिपोर्ट आना शेष है। रिपोर्ट प्राप्त होने पर अनुपूरक आरोप पत्र प्रेषित किया जाएगा।
+2. अभियोग में संलिप्त अन्य फरार आरोपी [FUGITIVE_NAME] की तलाश जारी है।
+3. प्राथमिक बैंक खातों के सबंध में अन्वेषण जारी है।]
+
+6. निष्कर्ष व प्रार्थना / CONCLUSION AND PRAYER
+इस प्रकार अभियोग में उपरोक्त आरोपियो [ACCUSED_NAME_1], [ACCUSED_NAME_2] के विरूद्ध जुर्म जेर धारा [OFFENCE_SECTIONS] का साबित होने पर आरोपीगण के विरूद्ध आरोप पत्र तैयार करके विचारण हेतु माननीय न्यायालय में प्रेषित है। अभियोग में शेष अन्वेषण पूर्ण करने के उपरान्त अनुपूरक आरोप पत्र आइन्दा माननीय न्यायालय मे प्रेषित किया जाएगा।
+
+अत: माननीय न्यायालय से गुजारिश है कि अभियोग में उपरोक्त आरोपीगणो के विरूद्ध तैयार आरोप पत्र का विचारण करके आरोपी को कानूनी तौर पर दंडित करने की कृपा करें।
+
+प्रभारी / Investigating Officer
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[PLACE]
+दिनांक / Date: [FINAL_REPORT_DATE]
+
+--------------------------------------------------------------------
+WITNESS LIST / सूची गवाहन
+
+| क्र.स. | नाम व पता गवाहन (Name & Address of Witness) | विवरण (Nature of Evidence) |
+| :--: | :-- | :-- |
+| 1. | [WITNESS_NAME_1] (Complainant) [ADDRESS_1] | वादी मुकदमा। शिकायत पत्र व पत्र के साथ सल्गन दस्तावेजो इत्यादि पेश करने वारा ब्यान करेगा। |
+| 2. | [WITNESS_NAME_2] (Bank Manager) [ADDRESS_2] | संदिग्ध खाता संख्या [ACCOUNT_NO] का AOF, KYC, Statement व 63 BSA प्रमाण पत्र उपलब्ध करवाने बारा ब्यान करेगे। |
+| 3. | [WITNESS_NAME_3] (Nodal Officer TSP) [ADDRESS_3] | आरोपी के मोबाईल नम्बर [MOBILE_NO] के CAF, CDR, IPDR व 63 BSA प्रमाण पत्र उपलब्ध करवाने बारा ब्यान करेगे। |
+| 4. | [WITNESS_NAME_4] (Seizure Witness) [ADDRESS_4] | फर्द पेशकर्दा व मकबुजगी [ARTICLE_SEIZED] दिनांक [SEIZURE_DATE] वारा ब्यान करेगा। |
+| 5. | [WITNESS_NAME_5] (Arrest Witness) [ADDRESS_5] | आरोपी की गिरफ्तारी व जामा तलाशी का गवाह। |
+| 6. | [WITNESS_NAME_6] (Investigating Officer) [ADDRESS_6] | आरोपपत्र तैयार करने व अन्वेषण की कार्यवाही बारा ब्यान करेगे। |
+
+(Add more rows as needed. Total Witness Count: [WITNESS_COUNT])
+
+--------------------------------------------------------------------
+LIST OF DOCUMENTS / सूची कागजात
+
+| क्र.स. | किस्म कागजात (Description of Document) | वर्क (Pages) |
+| :--: | :-- | :--: |
+| 1. | चालान फार्म मय आरोप पत्र (Charge Sheet Form) | [PAGES] |
+| 2. | असल शिकायतपत्र मय अन्य दस्तावेज (Original Complaint) | [PAGES] |
+| 3. | ब्यानात गवाहन (Witness Statements u/s 180 BNSS) | [PAGES] |
+| 4. | शिकायतकर्ता के बैंक खाता संख्या [ACCOUNT_NO] का AOF, KYC, Statement व 63 BSA प्रमाण पत्र | [PAGES] |
+| 5. | संदिग्ध बैंक खाता संख्या [ACCOUNT_NO] का AOF, KYC, Statement व 63 BSA प्रमाण पत्र | [PAGES] |
+| 6. | CCTV Footage व चैक की सत्यापित छायाप्रतियां व 63 BSA प्रमाण पत्र | [PAGES] + [MEDIA] |
+| 7. | फर्द पेशकर्दा व मकबुजगी [ARTICLE_SEIZED] दिनांक [DATE] | [PAGES] |
+| 8. | आरोपी के मोबाईल नम्बर [MOBILE_NO] के CAF, CDR व 63 BSA प्रमाण पत्र | [PAGES] |
+| 9. | सुचना गिरफ्तारी व नोटिस 35(3) BNSS | [PAGES] |
+| 10. | CCTNS Certificate | 01 |
+| 11. | FSL Docket व रोड़ प्रमाण पत्र | [PAGES] |
+
+प्रभारी / Investigating Officer
+[IO_NAME], [IO_RANK]
+[POLICE_STATION]

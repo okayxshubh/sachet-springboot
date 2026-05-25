@@ -30,10 +30,10 @@ public class NoticeService {
     public List<Notice> listByCaseWithOptionalLayer(Long caseId, NoticeLayer layer) {
 
         if (layer == null) {
-            return noticeRepository.findByCaseFileId(caseId);
+            return noticeRepository.findByCaseFileIdOrderByCreatedAtDescIdDesc(caseId);
         }
 
-        return noticeRepository.findByCaseFileIdAndLayer(caseId, layer);
+        return noticeRepository.findByCaseFileIdAndLayerOrderByCreatedAtDescIdDesc(caseId, layer);
     }
 
     public Notice create(
@@ -205,11 +205,11 @@ public class NoticeService {
     }
 
     public List<Notice> getByCaseId(Long caseId) {
-        return noticeRepository.findByCaseFileId(caseId);
+        return noticeRepository.findByCaseFileIdOrderByCreatedAtDescIdDesc(caseId);
     }
 
     public List<Notice> listByCase(Long caseId) {
-        return noticeRepository.findByCaseFileId(caseId);
+        return noticeRepository.findByCaseFileIdOrderByCreatedAtDescIdDesc(caseId);
     }
 
     public List<Notice> listByCaseAndLayer(
@@ -217,7 +217,7 @@ public class NoticeService {
             NoticeLayer layer
     ) {
 
-        return noticeRepository.findByCaseFileIdAndLayer(
+        return noticeRepository.findByCaseFileIdAndLayerOrderByCreatedAtDescIdDesc(
                 caseId,
                 layer
         );

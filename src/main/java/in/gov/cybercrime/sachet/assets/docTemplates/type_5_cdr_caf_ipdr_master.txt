@@ -1,0 +1,44 @@
+[Annexure IX]
+
+Performa to seek Call Data/Internet Protocol Detail Record
+(Request under Section 95 of the Bharatiya Nagarik Suraksha Sanhita, 2023)
+
+[OFFICE LETTERHEAD OF INVESTIGATING AGENCY]
+
+No. [CASE_NO]/[YEAR]/[POLICE_STATION_CODE]          Dated: [DATE]
+
+To,
+The Nodal Officer,
+[OPERATOR_NAME - e.g., Airtel / Jio / VI / BSNL],
+[STATE_NAME - e.g., Himachal Pradesh].
+
+Subject: REQUEST FOR [REQUESTED_TYPE - CDR/CAF/IPDR] UNDER SECTION 95 BNSS IN CONNECTION WITH [CASE_NO] / [FIR_NO] U/S [OFFENCE_SECTIONS] OF [POLICE_STATION].
+
+Respected Sir/Madam,
+
+Please provide the [REQUESTED_TYPE] details of the following mobile number(s) in PAN India as per the details given below:
+
+| Sr. No. | Phone/Mobile No. | Period | Case FIR / Ack No. |
+| :--: | :-- | :--: | :-- |
+| | | **From** | **To** | |
+| 1. | [MOBILE_NO] | [FROM_DATE] | [TO_DATE] | [CASE_NO] / [FIR_NO] |
+| 2. | [ALTERNATE_NO] | [FROM_DATE] | [TO_DATE] | [CASE_NO] / [FIR_NO] |
+
+2. SPECIFIC REQUIREMENTS (TICK AS APPLICABLE)
+☐ **CDR (Call Detail Record):** Incoming/Outgoing Calls, SMS details with Cell Tower Location (Lat/Long).
+☐ **CAF (Customer Application Form):** Scanned copy of original application form with KYC documents and photograph.
+☐ **IPDR (Internet Protocol Detail Record):** Data usage sessions, assigned IP addresses (Public & Private), Port numbers, IMEI/Device MAC ID, and Cell ID used for internet access.
+☐ **Tower Dump:** IMEI and mobile numbers active at [TOWER_LOCATION] on [INCIDENT_DATE] between [FROM_TIME] to [TO_TIME].
+
+3. DECLARATION (MANDATORY FOR SECTION 95 REQUESTS)
+1. The subscriber identity has been ascertained, and it is ensured that the person in question is not someone whose call details are of a sensitive nature.
+2. The number is not subscribed in the name of a sitting MP/MLA.
+
+The above information is required for the purpose of investigation. An early response is highly solicited. Please provide the records in both **Soft Copy (Excel/PDF)** and **Hard Copy** along with the certificate under Section 63 of the Bharatiya Sakshya Adhiniyam.
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[CONTACT_EMAIL]

@@ -10,5 +10,5 @@ import java.util.List;
 public interface PoliceStationMasterRepository extends JpaRepository<PoliceStationMaster, Long> {
 
     // Purpose: Fetch all police stations by district id
-    List<PoliceStationMaster> findByDistrictId(Long districtId);
+    List<PoliceStationMaster> findByDistrictIdOrderByIdDesc(Long districtId);
 }

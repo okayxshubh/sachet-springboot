@@ -13,6 +13,9 @@ target/
 .springBeans
 .sts4-cache
 
+# Notice documents
+notice-documents/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

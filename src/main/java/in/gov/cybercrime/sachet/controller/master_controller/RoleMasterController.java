@@ -27,7 +27,7 @@ public class RoleMasterController {
     public GenericResponse<String> getAllRoles() {
         try {
             // Fetch all roles
-            List<RoleMaster> roles = repo.findAll(Sort.by("id").ascending());
+            List<RoleMaster> roles = repo.findAll(Sort.by("id").descending());
 
             // Serialize only the list of roles
             String jsonList = mapper.writeValueAsString(roles);

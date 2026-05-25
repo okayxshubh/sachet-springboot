@@ -1,0 +1,55 @@
+[OFFICE LETTERHEAD OF INVESTIGATING AGENCY]
+(Email: [IO_EMAIL] | Phone: [IO_PHONE])
+
+NOTICE UNDER SECTION 94 OF THE BHARATIYA NAGARIK SURAKSHA SANHITA, 2023 (BNSS)
+
+**PLEASE TREAT THIS MAIL/COMMUNICATION ON TOP PRIORITY BASIS.**
+
+No. [CASE_NO]/[YEAR]/[POLICE_STATION_CODE]          Dated: [DATE]
+
+To,
+The Nodal Officer,
+[PLATFORM_NAME - e.g., Flipkart / Amazon Pay / Amazon Seller Services],
+[PLATFORM_CITY], [PLATFORM_STATE].
+
+Subject: NOTICE U/S 94 BNSS IN CONNECTION WITH COMPLAINT ACKNOWLEDGEMENT NO. [ACK_NO] / CASE FIR NO. [FIR_NO] DATED [FIR_DATE] U/S [OFFENCE_SECTIONS] OF [POLICE_STATION].
+
+Sir/Madam,
+
+1. BRIEF FACTS
+Greetings for the day!
+This office has received a complaint from **[COMPLAINANT_NAME]** registered on NCRP Portal vide Acknowledgement No. **[ACK_NO]** regarding a financial fraud to the tune of **Rs. [FRAUD_AMOUNT]/-**. During the investigation, it has been found that the defrauded amount was utilized to purchase goods/services on your platform or was transferred to a wallet/account linked to your platform.
+
+2. SUSPECT TRANSACTION DETAILS
+The details of the suspect transaction(s) are as follows:
+
+| S.No. | Money Transfer To | Account / Wallet No. / Order ID | Transaction ID / UTR Number | Transaction Date & Time | Transaction Amount | Disputed Amount |
+| :--: | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1. | [PLATFORM_NAME] | [ACCOUNT_NO_OR_ORDER_ID] | [TXN_ID] | [TXN_DATE] at [TXN_TIME] | Rs. [AMOUNT]/- | Rs. [AMOUNT]/- |
+| 2. | [PLATFORM_NAME] | [ACCOUNT_NO_OR_ORDER_ID] | [TXN_ID] | [TXN_DATE] at [TXN_TIME] | Rs. [AMOUNT]/- | Rs. [AMOUNT]/- |
+
+3. ACTION REQUIRED (SECTION 94 BNSS - PRODUCTION OF DOCUMENTS)
+For the purpose of enquiry/investigation, you are requested to **IMMEDIATELY** furnish the following information to this office forthwith. You are also directed to **stop/hold the transaction/disbursement** and refund the same into the victim's account number mentioned below.
+
+1. **Complete Beneficiary/Seller Details:** Full name, registered mobile number, email ID, and complete KYC/pickup address of the seller/beneficiary to whom the payment has been settled.
+2. **Order Details:** Complete order details including product name, quantity, delivery address, and current status of the order (Delivered/Pending/Cancelled).
+3. **Lien Mark / Hold:** **IMMEDIATELY Lien Mark / Hold** the beneficiary/suspected account/wallet against the disputed amount of **Rs. [AMOUNT]/-** to prevent further layering of funds.
+4. **Account/Wallet Statement:** Complete account/wallet statement from **[FROM_DATE]** to **[TO_DATE]** (or till date).
+5. **IP Logs:** The IP logs associated with the account/transaction in question from **[FROM_DATE]** to **[TO_DATE]**.
+6. **Linked Accounts:** Details of any other accounts/wallets/bank accounts linked to the suspect's profile.
+
+4. VICTIM ACCOUNT DETAILS (FOR REFUND)
+Victim Name: [COMPLAINANT_NAME]
+Victim Bank: [VICTIM_BANK_NAME]
+Victim Account No.: [VICTIM_ACCOUNT_NO]
+Victim IFSC: [VICTIM_IFSC]
+
+5. COMPLIANCE
+The said information is required as per the provisions laid out for police investigations under Section 94 of the BNSS. **KINDLY INFORM ACTION TAKEN TO THIS OFFICE ON TOP PRIORITY BASIS.** Non-compliance with this directive may result in legal consequences as per the provisions of the law.
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[CONTACT_EMAIL]

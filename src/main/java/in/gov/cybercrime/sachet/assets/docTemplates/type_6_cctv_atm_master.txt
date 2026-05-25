@@ -1,0 +1,46 @@
+[OFFICE LETTERHEAD OF INVESTIGATING AGENCY]
+(Email: [IO_EMAIL] | Phone: [IO_PHONE])
+
+No. [CASE_NO]/[YEAR]/[POLICE_STATION_CODE]          Dated: [DATE]
+
+To,
+The Nodal Officer / Branch Manager,
+[INSTITUTION_NAME],
+[BRANCH_NAME],
+[BRANCH_ADDRESS].
+
+Subject: REQUEST FOR CCTV FOOTAGE UNDER SECTION 94 BNSS - CASE FIR NO. [FIR_NO] DATED [FIR_DATE] U/S [OFFENCE_SECTIONS] AND ACK. NO. [ACK_NO].
+
+Respected Sir/Madam,
+
+1. BRIEF FACTS
+It is respectfully submitted that **Case FIR No. [FIR_NO] dated [FIR_DATE] u/s [OFFENCE_SECTIONS]** has been registered at [POLICE_STATION], regarding a **cyber financial fraud amounting to Rs. [FRAUD_AMOUNT]/-.** The said complaint has already been registered on NCRP Portal vide Acknowledgement No. [ACK_NO] dated [ACK_DATE].
+
+2. TRANSACTION & LOCATION DETAILS
+In this connection, you are requested to provide the CCTV footage of the ATM/Branch premises as per the following transaction details:
+
+| S.No. | Account No. | UTR No./ Tran. ID | Withdrawal Date & Time | Withdrawal Amount | ATM ID / Branch Location |
+| :--: | :-- | :-- | :-- | :-- | :-- |
+| 1. | [ACCOUNT_NO] | [TRANSACTION_ID] | [DATE] at [TIME] | Rs. [AMOUNT]/- | [ATM_ID] / [LOCATION] |
+| 2. | [ACCOUNT_NO] | [TRANSACTION_ID] | [DATE] at [TIME] | Rs. [AMOUNT]/- | [ATM_ID] / [LOCATION] |
+| 3. | [ACCOUNT_NO] | [TRANSACTION_ID] | [DATE] at [TIME] | Rs. [AMOUNT]/- | [ATM_ID] / [LOCATION] |
+
+3. ACTION REQUIRED
+You are directed to provide the following under Section 94 of the Bharatiya Nagarik Suraksha Sanhita, 2023:
+
+1. **CCTV Footage:** Provide clear, timestamped CCTV footage for the above-mentioned location covering the period from **[FROM_TIME]** (5-10 minutes before first transaction) to **[TO_TIME]** (5-10 minutes after last transaction). The footage must cover all available camera angles at the ATM/Branch location.
+2. **Preservation Format:** Preserve and submit the footage in a secure digital format (e.g., USB Drive, DVD, or Secure Cloud Link). Do not compress the video in a manner that degrades facial recognition quality.
+3. **Certificate of Authenticity:** Include a **Certificate under Section 63 of the Bharatiya Sakshya Adhiniyam, 2023** for the footage, duly signed by an authorized officer of the bank, confirming that the footage has not been tampered with.
+4. **Still Photographs:** Provide clear still photographs/snapshots of the individual(s) conducting the transaction from the footage.
+
+4. COMPLIANCE
+Non-compliance with this directive may result in legal consequences as per the provisions of the Bharatiya Nagarik Suraksha Sanhita, 2023.
+
+Kindly treat this matter as **URGENT**.
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[CONTACT_EMAIL]

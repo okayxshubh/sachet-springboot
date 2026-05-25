@@ -1,0 +1,84 @@
+[OFFICE LETTERHEAD OF INVESTIGATING AGENCY]
+(Email: [IO_EMAIL] | Phone: [IO_PHONE])
+
+No. [CASE_NO]/[YEAR]/[POLICE_STATION_CODE]          Dated: [DATE]
+
+To,
+The Director,
+State Forensic Science Laboratory (SFSL),
+[LAB_ADDRESS - e.g., Junga, Distt. Shimla, Himachal Pradesh].
+
+Subject: REQUEST TO ANALYZE EXHIBITS IN CASE FIR NO. [FIR_NO] DATED [FIR_DATE] U/S [OFFENCE_SECTIONS] OF [POLICE_STATION], [DISTRICT] (HP).
+
+Sir,
+
+1. BRIEF FACTS OF THE CASE
+It is submitted that FIR No. [FIR_NO] dated [FIR_DATE] U/S [OFFENCE_SECTIONS] has been registered at [POLICE_STATION] on the complaint of Sh. [COMPLAINANT_NAME] regarding [BRIEF_FACTS - e.g., a financial fraud of Rs. [AMOUNT]/- / circulation of obscene content / hacking of social media account].
+
+2. EXHIBITS BEING SENT FOR ANALYSIS
+During the course of investigation, the following article(s) were recovered/seized and are being sent to your laboratory for forensic analysis. The description of the exhibit(s) is as under:
+
+**Parcel No. 1:** One parcel sealed with **[SEAL_COUNT]** impressions of seal **"[SEAL_NO]"** containing the following:
+
+| S.No. | Article Description | Make/Model | IMEI / Serial No. | Associated Mobile No. / SIM |
+| :--: | :-- | :-- | :-- | :-- |
+| 1. | [ARTICLE_SENT - e.g., Mobile Phone] | [MAKE_MODEL] | [IMEI_1] / [IMEI_2] | [MOBILE_NO_1] / [MOBILE_NO_2] |
+| 2. | [ARTICLE_SENT - e.g., SIM Card] | [OPERATOR_NAME] | [SIM_SERIAL] | [MOBILE_NO] |
+| 3. | [ARTICLE_SENT - e.g., Pen Drive / Hard Disk] | [MAKE] | [SERIAL_NO] | N/A |
+
+**Total Number of Exhibits/Parcles: [EXHIBIT_COUNT]**
+
+3. QUESTIONNAIRE / POINTS FOR EXAMINATION
+You are requested to analyze the above-mentioned exhibit(s) and furnish the following information for the purpose of investigation:
+
+**General Digital Forensics:**
+1. Extract and provide the complete list of **Contacts** saved in the device/SIM.
+2. Extract the **Call Logs** (Dialed, Received, Missed) with timestamps and durations.
+3. Extract all **SMS Messages** (Inbox, Sent, Drafts, Deleted).
+4. Provide the **IMEI Number(s)** of the handset and the **IMSI/MSISDN** of the SIM card(s).
+
+**Social Media & Communication Apps (WhatsApp, Telegram, Signal, Instagram, Facebook):**
+5. Extract the **Chat History** (including deleted messages, if recoverable) of all social media and messaging applications installed on the device. Provide a readable PDF/Excel report.
+6. Specifically extract the chat history with the following mobile numbers/IDs: [SPECIFIC_NUMBERS_OR_IDS].
+7. Extract all **Media Files** (Images, Videos, Audio, Documents) shared/received via these applications.
+8. Provide details of **Groups** owned/administered by the user and the list of group members.
+
+**Financial Apps & Browser History:**
+9. List all **Banking/Financial Applications** (e.g., Google Pay, PhonePe, Paytm, Binance, WazirX, Trust Wallet) installed on the device.
+10. Extract **UPI Transaction History** and linked Bank Account details.
+11. Extract **Browser History**, Bookmarks, and Saved Passwords from all installed web browsers (Chrome, Firefox, etc.).
+12. Provide details of **Email IDs** configured/logged in on the device and extract the associated email data.
+
+**Files and Media:**
+13. Extract the complete **Gallery** (Photos and Videos) including metadata (EXIF data: Date, Time, GPS Location).
+14. Recover and provide **Deleted Files** (Photos, Videos, Documents) from the device memory and external storage (SD Card).
+15. Extract **Documents** (PDF, Word, Excel, Text files) stored on the device.
+
+**User Accounts & Cloud Storage:**
+16. Provide a list of all **Gmail / Email IDs** and **Cloud Storage** accounts (Google Drive, iCloud) linked to the device.
+17. Extract data from the internal storage and any external SD Card.
+
+**Any Other Relevant Information:**
+18. Any other relevant data/detail recovered from the exhibit which is beneficial for the investigation of this case may kindly be provided.
+
+**Note:-** You are requested to provide a **Police Copy** along with the **Court Copy** of the result/forensic report so that further action in this matter can be taken accordingly. Please also provide the report in **Soft Copy (CD/DVD)** along with the hard copy.
+
+**Enclosed:**
+1. Docket / Forwarding Letter
+2. Copy of FIR
+3. Seizure Memo (फर्द मकबूजगी)
+4. Sample Seal
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[DISTRICT], [STATE]
+
+---
+
+**FOR SFSL OFFICE USE ONLY**
+Received by: __________________
+Lab Receipt No.: ______________
+Date of Receipt: ______________

@@ -1,0 +1,46 @@
+[OFFICE LETTERHEAD OF INVESTIGATING AGENCY]
+(Email: [IO_EMAIL] | Phone: [IO_PHONE])
+
+No. [CASE_NO]/[YEAR]/[POLICE_STATION_CODE]          Dated: [DATE]
+
+To,
+The Nodal Officer,
+[OPERATOR_NAME - e.g., Reliance Jio / Airtel / Vodafone Idea / BSNL],
+[STATE_CIRCLE - e.g., Himachal Pradesh].
+
+Subject: REQUEST FOR BLOCKING OF MOBILE NUMBER INVOLVED IN CYBER CRIME - CASE FIR NO. [FIR_NO] DATED [FIR_DATE] U/S [OFFENCE_SECTIONS] OF [POLICE_STATION].
+
+Respected Sir/Madam,
+
+1. REFERENCE
+Kind attention is invited to the Department of Telecommunications (DoT) circulars File No. 800-21/2015-AS.II dated 07.12.2021 and File No. 800-21/2015-AS.II dated 10.02.2022, regarding the blocking of mobile numbers involved in cybercrimes.
+
+2. BRIEF FACTS & REASON FOR BLOCKING
+It is informed that mobile number **[MOBILE_NO]** has been found actively involved in the commission of a cybercrime as noted below:
+Case FIR No.: [FIR_NO] dated [FIR_DATE]
+Offence Sections: [OFFENCE_SECTIONS]
+Nature of Crime: [REASON_FOR_BLOCKING - e.g., Financial Fraud / Impersonation / Sextortion / Phishing / Sending Malicious Links]
+
+During verification conducted by police, it is established that this number is being used by cybercriminals to defraud innocent citizens. The number needs to be deactivated immediately to prevent further occurrence of cybercrimes and to protect potential victims.
+
+3. SUBSCRIBER DETAILS (If known)
+SIM Owner Name (as per CAF): [SIM_OWNER_NAME]
+IMEI of Handset used with this number: [IMEI_NUMBER]
+Last Known Location: [LAST_LOCATION]
+
+4. ACTION REQUESTED
+Therefore, it is requested that the mobile number **[MOBILE_NO]** be **disconnected / blocked immediately** to restrain the fraudsters from committing further offences. Please also flag the associated IMEI number [IMEI_NUMBER] in your network to prevent the use of this handset with any other SIM card for illegal activities.
+
+5. COMPLIANCE
+An early action and compliance report to this office is highly solicited.
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[CONTACT_EMAIL]
+
+Copy to:
+1. The Deputy Director General, Department of Telecommunications, GoI, Sanchar Bhawan, New Delhi-110001.
+2. The CEO, I4C, MHA, 5th Floor, NDCC-II Building, Jai Singh Road, New Delhi-110001.

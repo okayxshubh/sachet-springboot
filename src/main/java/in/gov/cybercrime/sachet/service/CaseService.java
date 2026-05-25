@@ -15,6 +15,7 @@ import in.gov.cybercrime.sachet.repository.master_repos.CaseStatusRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.DistrictMasterRepository;
 import in.gov.cybercrime.sachet.repository.master_repos.PoliceStationMasterRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -177,7 +178,9 @@ public class CaseService {
             throw new IllegalArgumentException("Police Station ID required");
         }
 
-        List<CaseFile> filteredCases = caseFileRepository.findAll()
+        List<CaseFile> filteredCases = caseFileRepository.findAll(
+                        Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("id"))
+                )
                 .stream()
                 .filter(c ->
                         c.getDistrict() != null &&

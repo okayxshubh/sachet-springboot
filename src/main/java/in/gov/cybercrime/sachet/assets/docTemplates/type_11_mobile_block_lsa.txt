@@ -1,0 +1,47 @@
+[OFFICE LETTERHEAD OF SENIOR OFFICER - e.g., SUPERINTENDENT OF POLICE]
+
+No. [CASE_NO]/[YEAR]/[OFFICE_CODE]          Dated: [DATE]
+
+To,
+The LSA Head,
+Licensed Service Area (LSA),
+Department of Telecommunications,
+[CIRCLE_NAME - e.g., Himachal Pradesh], Shimla-171002.
+
+Subject: REQUEST FOR DISCONNECTION OF MOBILE NUMBERS INVOLVED IN CYBER CRIMES IDENTIFIED BY LAW ENFORCEMENT AGENCIES (LEAs).
+
+Sir,
+
+1. REFERENCE
+Kind attention is invited to the Department of Telecommunications (DoT) circulars File No. 800-21/2015-AS.II dated 07.12.2021 and File No. 800-21/2015-AS.II dated 10.02.2022 on the subject cited above.
+
+2. DETAILS OF FRAUDULENT NUMBERS
+In this context, it is informed that **[NUMBER_COUNT]** mobile number(s) mentioned in **Annexure-I** are found involved in cybercrimes of the nature noted against each. During verification conducted by the police, it has been established that these numbers are involved in **[NATURE_OF_CRIME - e.g., cyber fraud / cyber bullying / impersonation of government officials]** and would need to be deactivated immediately to prevent further occurrence of cybercrimes.
+
+| S.No. | Mobile Number | Operator | Nature of Crime | Linked Case FIR / Ack No. | IMEI (if known) |
+| :--: | :-- | :-- | :-- | :-- | :-- |
+| 1. | [MOBILE_NO_1] | [OPERATOR_1] | [REASON_1] | [CASE_NO_1] | [IMEI_1] |
+| 2. | [MOBILE_NO_2] | [OPERATOR_2] | [REASON_2] | [CASE_NO_2] | [IMEI_2] |
+| 3. | [MOBILE_NO_3] | [OPERATOR_3] | [REASON_3] | [CASE_NO_3] | [IMEI_3] |
+
+3. REQUEST FOR ACTION
+Therefore, it is requested that these mobile numbers be **disconnected immediately** across all Telecom Service Providers (TSPs) to restrain the fraudsters from committing further offences. You are also requested to direct the concerned TSPs to share the **Customer Application Form (CAF)** and **IMEI details** of these numbers with the undersigned for further investigation.
+
+4. ENCLOSURES
+(**Encls:** Annexure-I - Details of phone numbers)
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK - e.g., Superintendent of Police]
+[OFFICE_NAME]
+[STATE], [PIN_CODE]
+
+Endst. No. [ENDORSEMENT_NO] Dated: [DATE]
+
+Copy is forwarded to:-
+1. The Deputy Director General, Department of Telecommunications, GoI, Sanchar Bhawan, New Delhi-110001.
+2. The CEO, I4C, MHA, 5th Floor, NDCC-II Building, Jai Singh Road, New Delhi-110001.
+
+[IO_NAME]
+[IO_RANK]

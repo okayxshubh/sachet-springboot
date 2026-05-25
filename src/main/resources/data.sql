@@ -286,19 +286,23 @@ INSERT INTO case_diaries (
 SELECT
     ROW_NUMBER() OVER (ORDER BY sort_group, case_id, notice_id NULLS LAST, assigned_user_id NULLS LAST, event_type),
     NOW(),
-    performed_by::TEXT,
+    resolved_performed_by::TEXT,
     TRUE,
     NOW(),
-    performed_by::TEXT,
+    resolved_performed_by::TEXT,
     case_id,
     event_type,
     summary,
     notice_id,
-    performed_by,
+    resolved_performed_by,
     event_time,
     1,
     meta_data
 FROM (
+    SELECT
+        diary_seed.*,
+        COALESCE(user_by_id.id, user_by_phone.id) AS resolved_performed_by
+    FROM (
     SELECT
         1 AS sort_group,
         c.id AS case_id,
@@ -369,6 +373,9 @@ FROM (
         '{"source":"seed","action":"notice_replied"}' AS meta_data
     FROM notices n
     WHERE n.reply_date IS NOT NULL
+) diary_seed
+    LEFT JOIN users user_by_id ON user_by_id.id = diary_seed.performed_by
+    LEFT JOIN users user_by_phone ON user_by_phone.phone = diary_seed.performed_by::TEXT
 ) diary_seed
 ON CONFLICT (id) DO UPDATE
 SET

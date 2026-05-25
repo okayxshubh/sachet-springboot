@@ -295,7 +295,7 @@ public class UserService {
         }
 
         return userRepository
-                .findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_Id(
+                .findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_IdOrderByCreatedAtDescIdDesc(
                         rankId,
                         districtId,
                         psId
@@ -324,7 +324,7 @@ public class UserService {
         }
 
         return userRepository
-                .findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_Id(
+                .findByRankIdAndIsApprovedTrueAndIsActiveTrueAndPs_District_IdAndPs_IdOrderByCreatedAtDescIdDesc(
                         rankId,
                         districtId,
                         psId
@@ -352,7 +352,7 @@ public class UserService {
         }
 
         return userRepository
-                .findByIsApprovedFalseAndPs_District_IdAndPs_Id(
+                .findByIsApprovedFalseAndPs_District_IdAndPs_IdOrderByCreatedAtDescIdDesc(
                         districtId,
                         psId
                 )

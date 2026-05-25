@@ -1,0 +1,92 @@
+COMPLAINT DETAILS FORM
+CYBER CRIME POLICE STATION, [DISTRICT], [STATE]
+
+Acknowledgement No.: [ACK_NO]                          Date: [DATE]
+
+PART A: COMPLAINANT DETAILS
+
+1. Full Name (पूरा नाम): [COMPLAINANT_NAME]
+2. Father's / Mother's / Spouse Name (पिता/माता/पति का नाम): [FATHER_NAME]
+3. Gender (लिंग): ☐ Male ☐ Female ☐ Other
+4. Date of Birth (जन्म तिथि): [DOB]
+5. Working Mobile No. (मोबाइल नंबर): [MOBILE_NO]
+6. Alternate Mobile No. (वैकल्पिक मोबाइल नंबर): [ALTERNATE_MOBILE]
+7. E-Mail ID (ईमेल आईडी): [EMAIL]
+
+PART B: ADDRESS DETAILS
+
+Current Address (वर्तमान पता):
+House No./Street: [HOUSE_NO_STREET]
+Village/Ward (गाँव/वार्ड): [VILLAGE]
+Post Office (डाकघर): [POST_OFFICE]
+Tehsil (तहसील): [TEHSIL]
+District (जिला): [DISTRICT]
+Police Station (थाना): [COMPLAINANT_PS]
+PIN Code (पिन कोड): [PIN_CODE]
+
+PART C: INCIDENT DETAILS
+
+1. Date of Incident (घटना की तिथि): [INCIDENT_DATE]
+2. Date of Complaint (शिकायत की तिथि): [COMPLAINT_DATE]
+3. Nature of Complaint (शिकायत की प्रकृति):
+   ☐ Financial Fraud (वित्तीय धोखाधड़ी)
+   ☐ Social Media Fraud / Fake Profile (सोशल मीडिया फर्जी प्रोफाइल)
+   ☐ Impersonation (प्रतिरूपण)
+   ☐ Cyber Defamation / Harassment (साइबर मानहानि/उत्पीड़न)
+   ☐ Sextortion / Revenge Porn (सेक्सटॉर्शन)
+   ☐ Hacking (Account/Device) (हैकिंग)
+   ☐ Online Job Fraud (ऑनलाइन नौकरी धोखाधड़ी)
+   ☐ E-Commerce / Delivery Fraud (ई-कॉमर्स धोखाधड़ी)
+   ☐ Other (अन्य): [OTHER_NATURE]
+
+PART D: FINANCIAL FRAUD DETAILS (If applicable)
+
+1. Total Amount Defrauded (कुल धोखाधड़ी राशि): Rs. [FRAUD_AMOUNT]/-
+2. Total Number of Transactions (कुल ट्रांजेक्शन की संख्या): [TXN_COUNT]
+3. Victim Bank Details (पीड़ित का बैंक विवरण):
+   Bank Name: [VICTIM_BANK_NAME]
+   Account Number: [VICTIM_ACCOUNT_NO]
+   IFSC Code: [VICTIM_IFSC]
+4. Suspect / Beneficiary Account Details (संदिग्ध खाता विवरण):
+
+| S.No. | Bank Name | Account No. | IFSC Code | Transaction ID/UTR | Amount | Date & Time |
+| :--: | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1. | [BANK_NAME] | [ACCOUNT_NO] | [IFSC] | [TXN_ID] | Rs. [AMOUNT]/- | [DATE] [TIME] |
+| 2. | [BANK_NAME] | [ACCOUNT_NO] | [IFSC] | [TXN_ID] | Rs. [AMOUNT]/- | [DATE] [TIME] |
+
+5. Suspect Mobile Number / Contact Details (संदिग्ध मोबाइल नंबर/संपर्क विवरण):
+   Mobile No. 1: [SUSPECT_MOBILE_1]
+   Mobile No. 2: [SUSPECT_MOBILE_2]
+   Email / Telegram / WhatsApp ID: [SUSPECT_CONTACT_OTHER]
+
+PART E: BRIEF FACTS OF THE CASE (संक्षिप्त तथ्य)
+
+Please explain in detail how the incident happened, including any communication with the fraudster, websites visited, or apps downloaded. Also mention any suspect contact numbers or social media profiles used.
+
+[BRIEF_FACTS_PARAGRAPH]
+
+PART F: DOCUMENTS ENCLOSED (Tick as applicable)
+
+☐ Copy of Aadhar Card / Identity Proof
+☐ Copy of Bank Statement / Passbook highlighting fraudulent transactions
+☐ Screenshots of WhatsApp/Telegram Chat / Social Media Posts
+☐ Screenshots of UPI / Banking App Transactions
+☐ Copy of Complaint filed on NCRP Portal (1930)
+☐ Any other document (Please specify): [OTHER_DOCUMENTS]
+
+PART G: DECLARATION
+
+I, [COMPLAINANT_NAME], hereby declare that the information provided above is true and correct to the best of my knowledge and belief. I understand that providing false information is a punishable offence.
+
+Signature of Complainant: ______________________
+Date: [DATE]
+Place: [PLACE]
+
+---
+FOR OFFICE USE ONLY
+
+Received by: [RECEIVING_OFFICER]
+Rank: [RANK]
+Date: [RECEIVING_DATE]
+Time: [RECEIVING_TIME]
+Diary No.: [DIARY_NO]

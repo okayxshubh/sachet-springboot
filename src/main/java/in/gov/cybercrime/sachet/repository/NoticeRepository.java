@@ -11,9 +11,9 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     Optional<Notice> findByNoticeId(String noticeId);
 
-    List<Notice> findByCaseFileId(Long caseId);
+    List<Notice> findByCaseFileIdOrderByCreatedAtDescIdDesc(Long caseId);
 
-    List<Notice> findByCaseFileIdAndLayer(Long caseId, NoticeLayer layer);
+    List<Notice> findByCaseFileIdAndLayerOrderByCreatedAtDescIdDesc(Long caseId, NoticeLayer layer);
 
     Optional<Notice> findByIdAndCaseFileIdAndLayer(
             Long id,

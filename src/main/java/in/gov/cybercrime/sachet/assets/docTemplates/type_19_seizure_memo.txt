@@ -1,0 +1,60 @@
+[POLICE STATION LETTERHEAD]
+थाना [POLICE_STATION], जिला [DISTRICT], [STATE]
+
+CASE FIR NO.: [FIR_NO] DATED [FIR_DATE]
+OFFENCE U/S: [OFFENCE_SECTIONS]
+POLICE STATION: [POLICE_STATION], DISTRICT: [DISTRICT]
+
+फर्द पेश्कर्दा व मकबुजगी / SEIZURE MEMO
+
+निम्नलिखित गवाहों के सामने आज दिनांक [SEIZURE_DATE] को समय [SEIZURE_TIME] बजे मुकाम [SEIZURE_PLACE] में, मुसमी [PERSON_PRODUCING_NAME] पुत्र/पत्नी श्री [FATHER_NAME] निवासी [ADDRESS] उम्र [AGE] वर्ष, ने निम्नलिखित वस्तु/वस्तुएं पेश पुलिस की और बताया कि:
+
+[REASON_FOR_SEIZURE - e.g., "यह [ARTICLE_DESCRIPTION] जो इसके कब्जे से बरामद हुआ है, इसी के माध्यम से इसने/आरोपी ने अभियोग को अंजाम दिया है।" / "यह वस्तु इसने स्वेच्छा से पेश की है।"]
+
+विवरण पेश्कर्दा वस्तु / DETAILS OF ARTICLE(S) PRODUCED:
+
+| क्र.स. | वस्तु का विवरण (Article Description) | मात्रा (Qty) | मार्का/मॉडल (Make/Model) | सीरियल/IMEI नं. (Serial/IMEI No.) | अन्य पहचान (Other ID) |
+| :--: | :-- | :--: | :-- | :-- | :-- |
+| 1. | [ARTICLE_DESCRIPTION - e.g., मोबाइल फ़ोन] | 01 | [MAKE_MODEL] | [IMEI_1] / [IMEI_2] | [MOBILE_NO] |
+| 2. | [ARTICLE_DESCRIPTION - e.g., सिम कार्ड] | 02 | [OPERATOR] | [SIM_SERIAL] | [MOBILE_NOS] |
+| 3. | [ARTICLE_DESCRIPTION - e.g., लैपटॉप / चैक बुक / पेन ड्राइव] | [QTY] | [MAKE] | [SERIAL_NO] | [OTHER_DETAILS] |
+
+**विशेष विवरण / SPECIAL REMARKS (For Digital Devices):**
+मोबाइल फ़ोन में निम्नलिखित खाते/एप्प संचालित पाए गए:
+- WhatsApp No.: [WHATSAPP_NO]
+- Gmail ID: [GMAIL_ID]
+- Telegram ID: [TELEGRAM_ID]
+- UPI Apps: [UPI_APPS_LIST]
+
+[DESCRIBE_CONDITION_OF_ARTICLE - e.g., "फ़ोन की स्क्रीन सही सलामत है व चालू हालत में है।" / "फ़ोन क्षतिग्रस्त अवस्था में है।"]
+
+**पैकिंग व सीलिंग प्रक्रिया / PACKING AND SEALING PROCESS:**
+उपरोक्त वस्तु/वस्तुओं को [DESCRIBE_WRAPPING - e.g., "सफेद कागज में लपेटकर"] तथा [DESCRIBE_CLOTH - e.g., "एक सफेद कपडे के पुलिंदा में बंद करके"] मोहर **"[SEAL_NO]"** की **[SEAL_COUNT]** मोहरों से सर्वमोहर किया गया। नमूना मोहर "[SEAL_NO]" अलग कपडे पर ली गई।
+
+**मोहर का हवाला / SEAL HANDOVER:**
+मोहर "[SEAL_NO]" को बाद इस्तेमाल हवाले गवाह **[SEAL_CUSTODIAN_NAME]** ([SEAL_CUSTODIAN_RANK]) के किया गया।
+
+पुलिंदा सर्वमोहर शुदा मय नमूना मोहर को बतौर वजह सबूत वजरिया फर्द कब्ज़ा पुलिस में लिया गया। फर्द मौके पर तैयार करी गई, फर्द पर मुसमी [PERSON_PRODUCING_NAME] ने बतौर पेशकर्दा तथा गवाहों ने अपने अपने हस्ताक्षर किये हैं।
+
+**गवाह / WITNESSES:**
+
+1. **नाम / Name:** [WITNESS1_NAME]
+   **पिता का नाम / Father's Name:** [WITNESS1_FATHER]
+   **पता / Address:** [WITNESS1_ADDRESS]
+   **हस्ताक्षर / Signature:** __________________
+
+2. **नाम / Name:** [WITNESS2_NAME]
+   **पिता का नाम / Father's Name:** [WITNESS2_FATHER]
+   **पता / Address:** [WITNESS2_ADDRESS]
+   **हस्ताक्षर / Signature:** __________________
+
+**पेशकर्दा / PERSON PRODUCING:**
+नाम / Name: [PERSON_PRODUCING_NAME]
+हस्ताक्षर / Signature: __________________
+
+**अन्वेषणाधिकारी / INVESTIGATING OFFICER:**
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+दिनांक / Date: [SEIZURE_DATE]
+स्थान / Place: [SEIZURE_PLACE]

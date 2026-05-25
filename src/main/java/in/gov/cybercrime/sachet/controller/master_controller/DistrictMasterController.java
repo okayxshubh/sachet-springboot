@@ -26,7 +26,7 @@ public class DistrictMasterController {
     public GenericResponse<String> getAllDistricts() {
         try {
             // Fetch all districts
-            List<DistrictMaster> districts = repo.findAll(Sort.by("id").ascending());
+            List<DistrictMaster> districts = repo.findAll(Sort.by("id").descending());
 
             // Serialize list only
             String jsonList = mapper.writeValueAsString(districts);

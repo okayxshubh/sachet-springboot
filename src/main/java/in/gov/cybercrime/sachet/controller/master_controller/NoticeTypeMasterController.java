@@ -30,7 +30,7 @@ public class NoticeTypeMasterController {
     public GenericResponse<String> getAllNoticeTypes() {
         try {
             // Fetch all districts
-            List<NoticeTypeMaster> noticeTypes = repo.findAll(Sort.by("id").ascending());
+            List<NoticeTypeMaster> noticeTypes = repo.findAll(Sort.by("id").descending());
 
             // Serialize list only
             String jsonList = mapper.writeValueAsString(noticeTypes);

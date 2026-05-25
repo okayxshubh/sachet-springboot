@@ -21,7 +21,7 @@ public class PoliceStationService {
     // Purpose: Fetch police stations list by districtId
     public List<PSResponse> getPoliceStationsByDistrict(Long districtId) {
 
-        List<PoliceStationMaster> psList = policeStationRepository.findByDistrictId(districtId);
+        List<PoliceStationMaster> psList = policeStationRepository.findByDistrictIdOrderByIdDesc(districtId);
 
         return psList.stream().map(ps -> new PSResponse(
                 ps.getId(),

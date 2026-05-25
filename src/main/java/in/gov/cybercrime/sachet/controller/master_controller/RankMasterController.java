@@ -27,7 +27,7 @@ public class RankMasterController {
     public GenericResponse<String> getAllRanks() {
         try {
             // Fetch all ranks
-            List<RankMaster> ranks = repo.findAll(Sort.by("id").ascending());
+            List<RankMaster> ranks = repo.findAll(Sort.by("id").descending());
 
             // Serialize the list only
             String jsonList = mapper.writeValueAsString(ranks);

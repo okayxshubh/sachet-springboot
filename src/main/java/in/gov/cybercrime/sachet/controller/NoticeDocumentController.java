@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/notices")
@@ -90,7 +89,7 @@ public class NoticeDocumentController {
                 noticeDocumentService.getDispatchDocument(noticeId);
 
         String fileName = resolveFileName(resource, documentInfo.getFileName());
-        Path filePath = Paths.get(documentInfo.getFilePath()).toAbsolutePath().normalize();
+        Path filePath = noticeDocumentService.getDocumentPath(documentInfo);
 
         return ResponseEntity.ok()
                 .contentType(resolveMediaType(filePath))
@@ -124,7 +123,7 @@ public class NoticeDocumentController {
                 noticeDocumentService.getReplyDocument(noticeId);
 
         String fileName = resolveFileName(resource, documentInfo.getFileName());
-        Path filePath = Paths.get(documentInfo.getFilePath()).toAbsolutePath().normalize();
+        Path filePath = noticeDocumentService.getDocumentPath(documentInfo);
 
         return ResponseEntity.ok()
                 .contentType(resolveMediaType(filePath))

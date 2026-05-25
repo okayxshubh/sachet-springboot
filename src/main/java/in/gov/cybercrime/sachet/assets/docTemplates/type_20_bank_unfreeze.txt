@@ -1,0 +1,59 @@
+[OFFICE LETTERHEAD OF INVESTIGATING AGENCY]
+(Email: [IO_EMAIL] | Phone: [IO_PHONE])
+
+**PLEASE TREAT THIS COMMUNICATION ON HIGH PRIORITY.**
+
+No. [CASE_NO]/[YEAR]/[POLICE_STATION_CODE]          Dated: [DATE]
+
+To,
+The Nodal Officer / Branch Manager,
+[BANK_NAME],
+[BRANCH_NAME],
+[BRANCH_ADDRESS].
+
+Subject: REQUEST FOR DE-FREEZE / RELEASE OF HOLD ON ACCOUNT NO. [ACCOUNT_NO] IN CONNECTION WITH CASE FIR NO. [FIR_NO] / ACK NO. [ACK_NO] - REGARDING.
+
+Respected Sir/Madam,
+
+1. REFERENCE
+With due respect, kindly refer to this office's previous communication vide Letter No. [FREEZE_LETTER_NO] dated [FREEZE_DATE] / Notice u/s 94/106 BNSS, wherein your bank was directed to place a Debit Freeze/Hold on the following account:
+
+| Bank Name | Account No. | IFSC Code | Account Holder Name | Amount Frozen/Held |
+| :-- | :-- | :-- | :-- | :-- |
+| [BANK_NAME] | [ACCOUNT_NO] | [IFSC_CODE] | [ACCOUNT_HOLDER_NAME] | Rs. [AMOUNT]/- |
+
+2. REASON FOR DE-FREEZE / UNFREEZE
+[UNFREEZE_REASON - Select the appropriate reason below and delete others]
+
+☐ **Complaint Resolved / Disposed Of:**
+The complaint/FIR in connection with which the said account was frozen has been resolved/disposed of. The matter has been amicably settled between the parties / The investigation has concluded that the account holder was not involved in the alleged fraud.
+
+☐ **Court Order:**
+The Hon'ble Court of [COURT_NAME] vide order dated [COURT_ORDER_DATE] in [CASE_DETAILS] has directed the release of the said bank account. A copy of the court order is enclosed herewith.
+
+☐ **Verification of Genuine Account:**
+Now the said bank account holder has approached this office and has provided sufficient documentary proof to establish that the transaction was genuine / the account is a legitimate business account and not involved in fraudulent activities. The account holder has also reverted the disputed amount to the complainant's account.
+
+☐ **Investigation Finding:**
+During the course of the investigation, it has been established that the funds were transferred to this account without the knowledge or consent of the account holder (e.g., in cases of fake appointment letters used to open mule accounts). The account holder has cooperated with the investigation.
+
+3. VICTIM/COMPLAINANT DETAILS (If Refund Made)
+[OPTIONAL: The account holder has reverted the disputed amount of Rs. [AMOUNT]/- to the complainant's account, details of which are as follows:
+Complainant Name: [COMPLAINANT_NAME]
+Complainant Bank: [COMPLAINANT_BANK]
+Complainant Account No.: [COMPLAINANT_ACCOUNT_NO]]
+
+4. ACTION REQUESTED
+In view of the above, you are hereby requested to **IMMEDIATELY DE-FREEZE / RELEASE THE HOLD** on the above-mentioned Account No. **[ACCOUNT_NO]** and restore all transactional rights to the genuine account holder.
+
+5. COMPLIANCE
+Kindly confirm the action taken via return email/fax at your earliest convenience. A compliance report in this regard may be sent to this office for record purposes.
+
+Yours faithfully,
+
+[IO_NAME]
+[IO_RANK]
+[POLICE_STATION]
+[CONTACT_EMAIL]
+
+Encl: [LIST_ENCLOSURES - e.g., Copy of Court Order / Copy of Settlement Deed / Copy of Refund Transaction Receipt]
