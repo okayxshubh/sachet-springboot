@@ -139,6 +139,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/notices/templates/detail").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/notices/templates/*").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/notices/templates/update").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/docs/templates", "/api/docs/templates/*").authenticated()
+                .requestMatchers("/api/docs/templates/detail").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/docs/templates/*").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/docs/templates/update").hasAnyRole("ADMIN", "SUPERADMIN")
 
 
                 // =========================

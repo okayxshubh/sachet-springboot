@@ -97,6 +97,63 @@ SET
     updated_at = EXCLUDED.updated_at,
     updated_by = EXCLUDED.updated_by;
 
+-- ==============================
+-- Remove obsolete seeded doc rows from the previous 7-20 numbering
+-- ==============================
+DELETE FROM doc_templates WHERE doc_type_id BETWEEN 15 AND 20;
+DELETE FROM mst_doc_type WHERE id BETWEEN 15 AND 20;
+
+-- ==============================
+-- Doc Types
+-- ==============================
+INSERT INTO mst_doc_type (id, doc_type_name)
+VALUES
+    (1, '63 BSA Certificate for Electronic Evidence'),
+    (2, 'Arrest Memo'),
+    (3, 'Complaint Details Form'),
+    (4, 'Mobile Number Blocking Request'),
+    (5, 'LSA Mobile Blocking Request'),
+    (6, 'Notice for Amazon / Flipkart'),
+    (7, 'Bail Reply'),
+    (8, 'Case Diary'),
+    (9, 'First Case Diary'),
+    (10, 'Police Remand Application'),
+    (11, 'FSL Docket'),
+    (12, 'Charge Sheet / Challan'),
+    (13, 'Seizure Memo'),
+    (14, 'Bank Account Unfreeze Letter')
+ON CONFLICT (id) DO UPDATE
+SET doc_type_name = EXCLUDED.doc_type_name;
+
+-- ==============================
+-- Doc Templates
+-- ==============================
+INSERT INTO doc_templates (
+    id, doc_type_id, file_path,
+    is_active, created_at, updated_at, created_by, updated_by
+)
+VALUES
+(1, 1, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_7_bsa63_evidence_cert.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(2, 2, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_8_arrest_memo.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(3, 3, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_9_complaint_form.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(4, 4, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_10_mobile_block_tsp.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(5, 5, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_11_mobile_block_lsa.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(6, 6, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_12_ecommerce_notice.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(7, 7, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_13_bail_reply.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(8, 8, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_14_case_diary.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(9, 9, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_15_first_case_diary.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(10, 10, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_16_police_remand.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(11, 11, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_17_fsl_docket.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(12, 12, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_18_charge_sheet.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(13, 13, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_19_seizure_memo.txt', TRUE, NOW(), NOW(), 'system', 'system'),
+(14, 14, 'src/main/java/in/gov/cybercrime/sachet/assets/docTemplates/type_20_bank_unfreeze.txt', TRUE, NOW(), NOW(), 'system', 'system')
+ON CONFLICT (doc_type_id) DO UPDATE
+SET
+    file_path = EXCLUDED.file_path,
+    is_active = EXCLUDED.is_active,
+    updated_at = EXCLUDED.updated_at,
+    updated_by = EXCLUDED.updated_by;
+
 
 -- ==============================
 -- MAIN SHO USERS
@@ -401,7 +458,9 @@ SELECT setval(pg_get_serial_sequence('mst_role','id'),COALESCE(MAX(id),1),true) 
 SELECT setval(pg_get_serial_sequence('mst_rank','id'),COALESCE(MAX(id),1),true) FROM mst_rank;
 SELECT setval(pg_get_serial_sequence('mst_police_station','id'),COALESCE(MAX(id),1),true) FROM mst_police_station;
 SELECT setval(pg_get_serial_sequence('mst_case_status','id'),COALESCE(MAX(id),1),true) FROM mst_case_status;
+SELECT setval(pg_get_serial_sequence('mst_doc_type','id'),COALESCE(MAX(id),1),true) FROM mst_doc_type;
 SELECT setval(pg_get_serial_sequence('users','id'),COALESCE(MAX(id),1),true) FROM users;
 SELECT setval(pg_get_serial_sequence('cases','id'),COALESCE(MAX(id),1),true) FROM cases;
 SELECT setval(pg_get_serial_sequence('notices','id'),COALESCE(MAX(id),1),true) FROM notices;
 SELECT setval(pg_get_serial_sequence('case_diaries','id'),COALESCE(MAX(id),1),true) FROM case_diaries;
+SELECT setval(pg_get_serial_sequence('doc_templates','id'),COALESCE(MAX(id),1),true) FROM doc_templates;
